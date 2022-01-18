@@ -22,24 +22,28 @@ Home::Home() {
 }
 
 void Home::loop() {
+  if (_loaded == true) {
+    return;
+  }
+
   if (_title_position < 50) {
     _title_position += 5;
     lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, _title_position);
   } else {
-    startButton();
+    lv_obj_t * start_button = lv_btn_create(_screen);
+    lv_obj_align(start_button, LV_ALIGN_CENTER, 0, 40);
+    lv_obj_add_flag(start_button, LV_OBJ_FLAG_CHECKABLE);
+    lv_obj_set_height(start_button, LV_SIZE_CONTENT);
+
+    lv_obj_t * label = lv_label_create(start_button);
+    lv_label_set_text(label, "Start");
+    lv_obj_center(label);
+    _loaded = true;
   }
 }
 
 void Home::startButton() {
-  lv_obj_t * label;
-  lv_obj_t * start_button = lv_btn_create(_screen);
-  lv_obj_align(start_button, LV_ALIGN_CENTER, 0, 40);
-  lv_obj_add_flag(start_button, LV_OBJ_FLAG_CHECKABLE);
-  lv_obj_set_height(start_button, LV_SIZE_CONTENT);
 
-  label = lv_label_create(start_button);
-  lv_label_set_text(label, "Start");
-  lv_obj_center(label);
 }
 
 
