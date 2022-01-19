@@ -2,7 +2,7 @@
 #include "Home.h"
 
 Pokegotchi::Pokegotchi() {
-  _home = new Home();
+  _home = Home::getInstance();
 }
 
 void Pokegotchi::setup() {
