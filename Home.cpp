@@ -3,7 +3,10 @@
 #include "assets/homescreen.c"
 #include "assets/pokegotchi_title.c"
 #include "Home.h"
+#include "Menu.h"
 #include "Utils.h"
+
+Home * Home::instance = nullptr;
 
 Home::Home() {
   _screen = create_window();
@@ -20,19 +23,24 @@ Home::Home() {
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
 }
 
-Home * Home::instance = nullptr;
-
-Home* Home::getInstance() {
-  if (instance == nullptr) {
-    instance = new Home();
-  }
-
-  return instance;
+void Home::close() {
+  _closed = true;
 }
 
 static void start_button_event_handler(lv_event_t * e) {
+  Serial.printf("Home button pressed\r\n");
+
   Home * h = Home::getInstance();
   lv_obj_add_flag(h->getScreen(), LV_OBJ_FLAG_HIDDEN);
+
+  h->close();
+
+  Menu * m = Menu::getInstance();
+  m->setup();
+  Serial.printf("Menu created and Home destroyed\r\n");
+
+  lv_obj_del(h->getScreen());
+  delete h;
 }
 
 

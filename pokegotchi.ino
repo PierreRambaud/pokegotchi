@@ -1,6 +1,7 @@
 #include <M5Core2.h>
 #include <lvgl.h>
 #include "Pokegotchi.h"
+#include "Utils.h"
 
 static lv_disp_draw_buf_t draw_buf;
 Pokegotchi *pokegotchi;

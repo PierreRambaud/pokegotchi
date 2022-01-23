@@ -1,5 +1,8 @@
-#pragma once
+#ifndef POKEGOTCHI_POKEGOTCHI
+#define POKEGOTCHI_POKEGOTCHI
+
 #include "Home.h"
+#include "Menu.h"
 
 class Pokegotchi {
  public:
@@ -9,4 +12,6 @@ class Pokegotchi {
 
  protected:
   Home * _home;
+  Menu * _menu;
 };
+#endif
