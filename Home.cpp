@@ -6,7 +6,7 @@
 #include "Menu.h"
 #include "Utils.h"
 
-Home * Home::instance = nullptr;
+Home* Home::instance = nullptr;
 
 Home::Home() {
   _screen = create_window();
@@ -23,26 +23,23 @@ Home::Home() {
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
 }
 
-void Home::close() {
-  _closed = true;
-}
+void Home::close() { _closed = true; }
 
-static void start_button_event_handler(lv_event_t * e) {
+static void start_button_event_handler(lv_event_t* e) {
   Serial.printf("Home button pressed\r\n");
 
-  Home * h = Home::getInstance();
+  Home* h = Home::getInstance();
   lv_obj_add_flag(h->getScreen(), LV_OBJ_FLAG_HIDDEN);
 
   h->close();
 
-  Menu * m = Menu::getInstance();
+  Menu* m = Menu::getInstance();
   m->setup();
   Serial.printf("Menu created and Home destroyed\r\n");
 
   lv_obj_del(h->getScreen());
   delete h;
 }
-
 
 void Home::loop() {
   if (_loaded == true) {
@@ -53,13 +50,13 @@ void Home::loop() {
     _title_position += 5;
     lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, _title_position);
   } else {
-    lv_obj_t * start_button = lv_btn_create(_screen);
+    lv_obj_t* start_button = lv_btn_create(_screen);
     lv_obj_align(start_button, LV_ALIGN_CENTER, 0, 40);
     lv_obj_add_flag(start_button, LV_OBJ_FLAG_CHECKABLE);
     lv_obj_set_height(start_button, LV_SIZE_CONTENT);
     lv_obj_add_event_cb(start_button, start_button_event_handler, LV_EVENT_CLICKED, NULL);
 
-    lv_obj_t * label = lv_label_create(start_button);
+    lv_obj_t* label = lv_label_create(start_button);
     lv_label_set_text(label, "Start");
     lv_obj_center(label);
 

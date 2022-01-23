@@ -7,9 +7,7 @@ Pokegotchi::Pokegotchi() {
   _menu = Menu::getInstance();
 }
 
-void Pokegotchi::setup() {
-
-}
+void Pokegotchi::setup() {}
 
 void Pokegotchi::loop() {
   if (_home->isClosed() == false) {

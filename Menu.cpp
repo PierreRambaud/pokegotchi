@@ -9,10 +9,9 @@
 #include "assets/menu/options.c"
 #include "assets/menu/options_pressed.c"
 
-Menu * Menu::instance = nullptr;
+Menu* Menu::instance = nullptr;
 
-Menu::Menu() {
-}
+Menu::Menu() {}
 
 void Menu::setup() {
   _screen = create_window();
@@ -28,13 +27,13 @@ void Menu::setup() {
   LV_IMG_DECLARE(save);
   LV_IMG_DECLARE(save_pressed);
 
-  lv_obj_t * save_button = lv_menu_button_create(_screen, &save, &save_pressed, "Save");
+  lv_obj_t* save_button = lv_menu_button_create(_screen, &save, &save_pressed, "Save");
   lv_obj_set_pos(save_button, 10, 55);
 
-  lv_obj_t * options_button = lv_menu_button_create(_screen, &options, &options_pressed, "Options");
+  lv_obj_t* options_button = lv_menu_button_create(_screen, &options, &options_pressed, "Options");
   lv_obj_set_pos(options_button, 10, 105);
 
-  lv_obj_t * pokemon_button = lv_menu_button_create(_screen, &pokeball, &pokeball_pressed, "Pokemon");
+  lv_obj_t* pokemon_button = lv_menu_button_create(_screen, &pokeball, &pokeball_pressed, "Pokemon");
   lv_obj_set_pos(pokemon_button, 165, 55);
 }
 
