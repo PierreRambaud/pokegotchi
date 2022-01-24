@@ -11,7 +11,7 @@ class Pokegotchi {
   void loop();
 
  protected:
-  Home * _home;
-  Menu * _menu;
+  Home* _home;
+  Menu* _menu;
 };
 #endif

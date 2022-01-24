@@ -1,9 +1,9 @@
 #include "includes/lodepng.h"
 #include <lvgl.h>
-#include "assets/homescreen.c"
+#include "assets/background/background_16.c"
 #include "assets/pokegotchi_title.c"
 #include "Home.h"
-#include "Menu.h"
+#include "Game.h"
 #include "Utils.h"
 
 Home* Home::instance = nullptr;
@@ -12,9 +12,9 @@ Home::Home() {
   _screen = create_window();
   lv_scr_load(_screen);
 
-  LV_IMG_DECLARE(homescreen);
+  LV_IMG_DECLARE(background_16);
   _background = lv_img_create(_screen);
-  lv_img_set_src(_background, &homescreen);
+  lv_img_set_src(_background, &background_16);
   lv_obj_set_pos(_background, 0, 0);
 
   LV_IMG_DECLARE(pokegotchi_title);
@@ -23,21 +23,27 @@ Home::Home() {
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
 }
 
-void Home::close() { _closed = true; }
+Home::~Home() {
+  lv_obj_del(_screen);
+  Serial.printf("Home destroyed\r\n");
+}
+
+void Home::close() {
+  lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
+  _closed = true;
+}
 
 static void start_button_event_handler(lv_event_t* e) {
   Serial.printf("Home button pressed\r\n");
 
   Home* h = Home::getInstance();
-  lv_obj_add_flag(h->getScreen(), LV_OBJ_FLAG_HIDDEN);
-
   h->close();
 
-  Menu* m = Menu::getInstance();
-  m->setup();
-  Serial.printf("Menu created and Home destroyed\r\n");
+  Game* g = Game::getInstance();
+  g->setup();
 
-  lv_obj_del(h->getScreen());
+  Serial.printf("Game created\r\n");
+
   delete h;
 }
 
@@ -61,5 +67,6 @@ void Home::loop() {
     lv_obj_center(label);
 
     _loaded = true;
+    Serial.printf("Home loaded\r\n");
   }
 }

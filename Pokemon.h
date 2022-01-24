@@ -13,5 +13,5 @@ class Pokemon {
   void Pokemon();
 
  private:
-  pokemon_data * data;
+  pokemon_data* data;
 };
