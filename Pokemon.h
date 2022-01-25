@@ -1,17 +1,33 @@
-#pragma once
+#ifndef POKEGOTCHI_POKEMON
+#define POKEGOTCHI_POKEMON
+
+#include <lvgl.h>
 
 struct pokemon_data {
   char name[20];
 
-  int8_t life;
-  int8_t level;
-  int8_t mood;
+  int8_t level = 1;
+  int8_t life = 100;
+  int8_t mood = 10;
+  int8_t hungry = 0;
 };
 
 class Pokemon {
  public:
-  void Pokemon();
+  static Pokemon* getInstance() {
+    if (instance == nullptr) {
+      instance = new Pokemon();
+    }
+
+    return instance;
+  }
 
  private:
-  pokemon_data* data;
+  Pokemon();
+  static Pokemon* instance;
+
+  pokemon_data* _data;
+
+  lv_obj_t* _image;
 };
+#endif

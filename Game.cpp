@@ -2,6 +2,7 @@
 #include <lvgl.h>
 #include "Game.h"
 #include "Menu.h"
+#include "Pokemon.h"
 #include "Utils.h"
 #include "assets/background/background_1.c"
 #include "assets/background/background_2.c"
@@ -73,13 +74,15 @@ static const lv_img_dsc_t* anim_day[11] = {
   &background_6,
 };
 
+
 static void night_animation(void* img, int32_t id) {
-  Serial.printf("Animated day image: %d", id);
+  Serial.printf("Animated day image: %d\r\n", id);
   lv_img_set_src((lv_obj_t*)img, anim_night[id]);
+
 }
 
 static void day_animation(void* img, int32_t id) {
-  Serial.printf("Animated day image: %d", id);
+  Serial.printf("Animated day image: %d\r\n", id);
   lv_img_set_src((lv_obj_t*)img, anim_day[id]);
 }
 
@@ -118,4 +121,6 @@ void Game::switch_to_night() {
   lv_anim_start(&_anim);
 }
 
-void Game::loop() {}
+void Game::loop() {
+  Pokemon::getInstance();
+}

@@ -2,6 +2,7 @@
 #define POKEGOTCHI_GAME
 
 #include <lvgl.h>
+#include "Pokemon.h"
 
 class Game {
  public:
