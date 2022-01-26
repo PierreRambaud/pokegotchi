@@ -3,17 +3,15 @@
 
 #include <lvgl.h>
 
-struct pokemon_data {
-  char name[20];
-
-  int8_t level = 1;
-  int8_t life = 100;
-  int8_t mood = 10;
-  int8_t hungry = 0;
-};
+const int8_t MAX_LIFE = 100;
+const int8_t MAX_SLEEPINESS = 100;
+const int8_t MAX_MOOD = 10;
+const int8_t MAX_HUNGER = 10;
 
 class Pokemon {
  public:
+  void loop();
+
   static Pokemon* getInstance() {
     if (instance == nullptr) {
       instance = new Pokemon();
@@ -22,11 +20,36 @@ class Pokemon {
     return instance;
   }
 
+  int8_t get_level() { return _level; }
+  int8_t get_life() { return _life; }
+  int8_t get_mood() { return _mood; }
+  int8_t get_hunger() { return _hunger; }
+  int8_t get_sleepiness() { return _sleepiness; }
+
+  bool is_sick() { return _is_sick; }
+
+  void eat();
+  void heal(int8_t number);
+  void train();
+  void play();
+  void sleep();
+  void tiredness(int8_t number);
+  void boredom(int8_t number);
+  void hungry(int8_t number);
+
  private:
   Pokemon();
   static Pokemon* instance;
 
-  pokemon_data* _data;
+  char _name[20];
+
+  int8_t _level = 1;
+  int8_t _sleepiness = 0;
+  int8_t _life = MAX_LIFE;
+  int8_t _mood = MAX_MOOD;
+  int8_t _hunger = 0;
+
+  bool _is_sick = false;
 
   lv_obj_t* _image;
 };

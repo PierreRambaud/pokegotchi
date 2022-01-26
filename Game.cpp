@@ -74,11 +74,9 @@ static const lv_img_dsc_t* anim_day[11] = {
   &background_6,
 };
 
-
 static void night_animation(void* img, int32_t id) {
   Serial.printf("Animated day image: %d\r\n", id);
   lv_img_set_src((lv_obj_t*)img, anim_night[id]);
-
 }
 
 static void day_animation(void* img, int32_t id) {
@@ -109,6 +107,22 @@ void Game::setup() {
   lv_anim_set_repeat_count(&_anim, 0);
 
   switch_to_day();
+
+  _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE);
+  lv_obj_set_pos(_mood_bar, 10, 30);
+  lv_bar_set_value(_mood_bar, 0, LV_ANIM_ON);
+
+  _life_bar = lv_game_bar_create(_screen, LV_PALETTE_RED);
+  lv_obj_set_pos(_life_bar, 10, 70);
+  lv_bar_set_value(_life_bar, 0, LV_ANIM_ON);
+
+  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_GREY);
+  lv_obj_set_pos(_sleepiness_bar, 180, 30);
+  lv_bar_set_value(_sleepiness_bar, 0, LV_ANIM_ON);
+
+  _hunger_bar = lv_game_bar_create(_screen, LV_PALETTE_YELLOW);
+  lv_obj_set_pos(_hunger_bar, 180, 70);
+  lv_bar_set_value(_hunger_bar, 0, LV_ANIM_ON);
 }
 
 void Game::switch_to_day() {
@@ -122,5 +136,31 @@ void Game::switch_to_night() {
 }
 
 void Game::loop() {
-  Pokemon::getInstance();
+  Pokemon* p = Pokemon::getInstance();
+  p->loop();
+  lv_bar_set_value(_mood_bar, p->get_mood(), LV_ANIM_ON);
+  lv_bar_set_value(_life_bar, p->get_life(), LV_ANIM_ON);
+  lv_bar_set_value(_sleepiness_bar, p->get_sleepiness(), LV_ANIM_ON);
+  lv_bar_set_value(_hunger_bar, p->get_hunger(), LV_ANIM_ON);
+
+  if (check_action_time(_last_eat_time, PERIOD_EAT)) {
+    p->hungry(2);
+  }
+
+  if (check_action_time(_last_sleep_time, PERIOD_SLEEP)) {
+    p->tiredness(10);
+  }
 }
+
+void Game::action_train() {}
+
+void Game::action_eat() {}
+
+void Game::action_heal() {}
+
+void Game::action_sleep() {
+  switch_to_night();
+  Pokemon::getInstance()->sleep();
+}
+
+void Game::action_wakeup() { switch_to_day(); }

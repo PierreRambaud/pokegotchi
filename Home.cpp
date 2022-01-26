@@ -21,6 +21,18 @@ Home::Home() {
   _title = lv_img_create(_screen);
   lv_img_set_src(_title, &pokegotchi_title);
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
+
+  lv_anim_t anim;
+
+  lv_anim_init(&anim);
+  lv_anim_set_var(&anim, _title);
+  lv_anim_set_values(&anim, -50, 50);
+  lv_anim_set_path_cb(&anim, lv_anim_path_overshoot);
+  lv_anim_set_time(&anim, 1500);
+  lv_anim_set_repeat_count(&anim, 0);
+  lv_anim_set_exec_cb(&anim, anim_y_callback);
+
+  lv_anim_start(&anim);
 }
 
 Home::~Home() {
@@ -52,10 +64,7 @@ void Home::loop() {
     return;
   }
 
-  if (_title_position < 50) {
-    _title_position += 5;
-    lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, _title_position);
-  } else {
+  if (lv_obj_get_y(_title) >= 50) {
     lv_obj_t* start_button = lv_btn_create(_screen);
     lv_obj_align(start_button, LV_ALIGN_CENTER, 0, 40);
     lv_obj_add_flag(start_button, LV_OBJ_FLAG_CHECKABLE);
