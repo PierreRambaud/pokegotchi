@@ -108,7 +108,7 @@ void Game::setup() {
 
   switch_to_day();
 
-  _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE);
+  _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_GREEN);
   lv_obj_set_pos(_mood_bar, 10, 30);
   lv_bar_set_value(_mood_bar, 0, LV_ANIM_ON);
 
@@ -116,7 +116,7 @@ void Game::setup() {
   lv_obj_set_pos(_life_bar, 10, 70);
   lv_bar_set_value(_life_bar, 0, LV_ANIM_ON);
 
-  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_GREY);
+  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE);
   lv_obj_set_pos(_sleepiness_bar, 180, 30);
   lv_bar_set_value(_sleepiness_bar, 0, LV_ANIM_ON);
 
@@ -138,6 +138,7 @@ void Game::switch_to_night() {
 void Game::loop() {
   Pokemon* p = Pokemon::getInstance();
   p->loop();
+
   lv_bar_set_value(_mood_bar, p->get_mood(), LV_ANIM_ON);
   lv_bar_set_value(_life_bar, p->get_life(), LV_ANIM_ON);
   lv_bar_set_value(_sleepiness_bar, p->get_sleepiness(), LV_ANIM_ON);
@@ -147,8 +148,14 @@ void Game::loop() {
     p->hungry(2);
   }
 
-  if (check_action_time(_last_sleep_time, PERIOD_SLEEP)) {
-    p->tiredness(10);
+  if (p->is_sleeping() == true) {
+    if (check_action_time(_last_sleep_time, PERIOD_SLEEP)) {
+      p->sleep();
+    }
+  } else {
+    if (check_action_time(_last_time_without_sleep, PERIOD_WITHOUT_SLEEP)) {
+      p->tiredness(10);
+    }
   }
 }
 
@@ -159,8 +166,18 @@ void Game::action_eat() {}
 void Game::action_heal() {}
 
 void Game::action_sleep() {
-  switch_to_night();
-  Pokemon::getInstance()->sleep();
+  Pokemon* p = Pokemon::getInstance();
+  if (p->is_sleeping() == false) {
+    switch_to_night();
+
+    p->sleep();
+  }
 }
 
-void Game::action_wakeup() { switch_to_day(); }
+void Game::action_wake_up() {
+  Pokemon* p = Pokemon::getInstance();
+  if (p->is_sleeping() == true) {
+    switch_to_day();
+    p->wake_up();
+  }
+}

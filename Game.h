@@ -4,6 +4,11 @@
 #include <lvgl.h>
 #include "Pokemon.h"
 
+const unsigned long PERIOD_SLEEP = 5 * 1000UL;  // 30*60*1000UL;
+const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
+const unsigned long PERIOD_EAT = 5 * 1000UL;    // 10*60*1000UL;
+const unsigned long PERIOD_MOOD = 5 * 1000UL;   // 5*60*1000UL;
+
 class Game {
  public:
   void setup();
@@ -23,7 +28,7 @@ class Game {
   void action_heal();
   void action_train();
   void action_sleep();
-  void action_wakeup();
+  void action_wake_up();
 
  private:
   Game();
@@ -41,6 +46,7 @@ class Game {
 
   long unsigned _last_eat_time;
   long unsigned _last_sleep_time;
+  long unsigned _last_time_without_sleep;
   long unsigned _last_hunger_time;
 };
 #endif

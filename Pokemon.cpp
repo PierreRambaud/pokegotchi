@@ -57,10 +57,15 @@ void Pokemon::heal(int8_t restore_points) {
 }
 
 void Pokemon::sleep() {
+  _is_sleeping = true;
   _sleepiness -= 5;
   if (_sleepiness < 0) {
     _sleepiness = 0;
   }
+}
+
+void Pokemon::wake_up() {
+  _is_sleeping = false;
 }
 
 void Pokemon::hungry(int8_t number) {
