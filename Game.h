@@ -2,7 +2,6 @@
 #define POKEGOTCHI_GAME
 
 #include <lvgl.h>
-#include "Pokemon.h"
 
 const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
 const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
