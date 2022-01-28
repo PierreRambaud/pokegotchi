@@ -3,6 +3,9 @@
 
 #include <lvgl.h>
 
+#define ANIMATION_NIGHT 11
+#define ANIMATION_DAY 11
+
 const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
 const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
 const unsigned long PERIOD_EAT = 5 * 1000UL;            // 10*60*1000UL;

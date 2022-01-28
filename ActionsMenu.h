@@ -3,6 +3,8 @@
 
 #include <lvgl.h>
 
+#define BAG_ITEMS_SIZE 1
+
 struct item {
   lv_img_dsc_t image;
   const char* name;
@@ -37,6 +39,6 @@ class ActionsMenu {
   lv_obj_t* _game_screen;
   lv_obj_t* _bag_screen;
 
-  Item _items[1];
+  Item _items[BAG_ITEMS_SIZE];
 };
 #endif

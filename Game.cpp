@@ -47,20 +47,18 @@ LV_IMG_DECLARE(background_18);
 LV_IMG_DECLARE(background_19);
 LV_IMG_DECLARE(background_20);
 
-static const lv_img_dsc_t* anim_night[11] = {
+static const lv_img_dsc_t* anim_night[ANIMATION_NIGHT] = {
     &background_6, &background_7, &background_8, &background_9, &background_10, &background_11, &background_12, &background_13, &background_14, &background_15, &background_16,
 };
-static const lv_img_dsc_t* anim_day[11] = {
+static const lv_img_dsc_t* anim_day[ANIMATION_DAY] = {
     &background_16, &background_17, &background_18, &background_19, &background_20, &background_1, &background_2, &background_3, &background_4, &background_5, &background_6,
 };
 
 static void night_animation(void* img, int32_t id) {
-  Serial.printf("Animated day image: %d\r\n", id);
   lv_img_set_src((lv_obj_t*)img, anim_night[id]);
 }
 
 static void day_animation(void* img, int32_t id) {
-  Serial.printf("Animated day image: %d\r\n", id);
   lv_img_set_src((lv_obj_t*)img, anim_day[id]);
 }
 

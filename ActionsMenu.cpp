@@ -20,9 +20,10 @@ static void use_item_event_handler(lv_event_t* e) { lv_obj_t* item = (lv_obj_t*)
 
 static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getInstance()->display_bag(); }
 
-static void create_object_row(lv_obj_t* tile, Item item) {
+static void create_object_row(lv_obj_t* tile, Item item, int index) {
   lv_obj_t* image = lv_img_create(tile);
   lv_img_set_src(image, &item.image);
+  lv_obj_set_pos(tile, 7, index * 30);
 }
 
 static void toggle_sleep_event_handler(lv_event_t* e) {
@@ -46,11 +47,11 @@ void ActionsMenu::setup(lv_obj_t* screen) {
   _bag_screen = create_window(_screen);
   lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
 
-  // lv_obj_t* tv = lv_tileview_create(_bag_screen);
-  // lv_obj_t* tile = lv_tileview_add_tile(tv, 0, 0, LV_DIR_BOTTOM);
-  // for (int index = 0; index < sizeof(_items); index++) {
-  //   create_object_row(tile, _items[index]);
-  // }
+  lv_obj_t* tv = lv_tileview_create(_bag_screen);
+  lv_obj_t* tile = lv_tileview_add_tile(tv, 0, 0, LV_DIR_BOTTOM);
+  for (int index = 0; index < BAG_ITEMS_SIZE; index++) {
+    create_object_row(tile, _items[index], index);
+  }
 
   Serial.println("ActionsMenu Screen created");
   LV_IMG_DECLARE(background);
@@ -79,9 +80,7 @@ void ActionsMenu::setup(lv_obj_t* screen) {
 }
 
 void ActionsMenu::display_bag() {
-  lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
   lv_scr_load(_bag_screen);
-  lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
 }
 
 void ActionsMenu::toggle() {
@@ -92,6 +91,6 @@ void ActionsMenu::toggle() {
   } else {
     lv_scr_load(_game_screen);
     lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Hide menu");
+    Serial.println("Hide ActionsMenu");
   }
 }
