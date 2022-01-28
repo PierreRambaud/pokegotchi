@@ -1,4 +1,3 @@
-#include "includes/lodepng.h"
 #include <lvgl.h>
 #include "assets/background/background_16.c"
 #include "assets/pokegotchi_title.c"

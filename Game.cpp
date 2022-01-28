@@ -1,9 +1,7 @@
-#include "includes/lodepng.h"
 #include <lvgl.h>
 #include "Game.h"
 #include "ActionsMenu.h"
 #include "Menu.h"
-#include "Pokemon.h"
 #include "Utils.h"
 #include "assets/background/background_1.c"
 #include "assets/background/background_2.c"

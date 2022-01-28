@@ -1,7 +1,6 @@
 #ifndef POKEGOTCHI_UTILS
 #define POKEGOTCHI_UTILS
 
-#include "includes/lodepng.h"
 #include <ArduinoJson.h>
 #include <M5Core2.h>
 #include <lvgl.h>
