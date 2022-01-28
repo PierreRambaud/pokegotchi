@@ -6,8 +6,8 @@
 #include <M5Core2.h>
 #include <lvgl.h>
 
-inline lv_obj_t* create_window() {
-  lv_obj_t* obj = lv_obj_create(NULL);
+inline lv_obj_t* create_window(lv_obj_t* parent = NULL) {
+  lv_obj_t* obj = lv_obj_create(parent);
   lv_obj_set_size(obj, LV_VER_RES_MAX, LV_HOR_RES_MAX);
   lv_obj_set_pos(obj, 0, 0);
 

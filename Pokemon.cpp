@@ -64,9 +64,7 @@ void Pokemon::sleep() {
   }
 }
 
-void Pokemon::wake_up() {
-  _is_sleeping = false;
-}
+void Pokemon::wake_up() { _is_sleeping = false; }
 
 void Pokemon::hungry(int8_t number) {
   _hunger += number;

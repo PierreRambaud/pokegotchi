@@ -1,6 +1,7 @@
 #include "includes/lodepng.h"
 #include <lvgl.h>
 #include "Game.h"
+#include "ActionsMenu.h"
 #include "Menu.h"
 #include "Pokemon.h"
 #include "Utils.h"
@@ -48,30 +49,10 @@ LV_IMG_DECLARE(background_19);
 LV_IMG_DECLARE(background_20);
 
 static const lv_img_dsc_t* anim_night[11] = {
-  &background_6,
-  &background_7,
-  &background_8,
-  &background_9,
-  &background_10,
-  &background_11,
-  &background_12,
-  &background_13,
-  &background_14,
-  &background_15,
-  &background_16,
+    &background_6, &background_7, &background_8, &background_9, &background_10, &background_11, &background_12, &background_13, &background_14, &background_15, &background_16,
 };
 static const lv_img_dsc_t* anim_day[11] = {
-  &background_16,
-  &background_17,
-  &background_18,
-  &background_19,
-  &background_20,
-  &background_1,
-  &background_2,
-  &background_3,
-  &background_4,
-  &background_5,
-  &background_6,
+    &background_16, &background_17, &background_18, &background_19, &background_20, &background_1, &background_2, &background_3, &background_4, &background_5, &background_6,
 };
 
 static void night_animation(void* img, int32_t id) {
@@ -92,8 +73,11 @@ void Game::setup() {
   _screen = create_window();
   lv_scr_load(_screen);
 
-  Menu* m = Menu::getInstance();
-  m->setup(_screen);
+  Menu* menu = Menu::getInstance();
+  menu->setup(_screen);
+
+  ActionsMenu* actions_menu = ActionsMenu::getInstance();
+  actions_menu->setup(_screen);
 
   lv_obj_t* _background = lv_img_create(_screen);
   lv_img_set_src(_background, anim_day[0]);

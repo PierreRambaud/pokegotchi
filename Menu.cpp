@@ -17,13 +17,13 @@ void Menu::setup(lv_obj_t* screen) {
   _game_screen = screen;
   _screen = create_window();
 
-  Serial.printf("Menu Screen created\r\n");
+  Serial.println("Menu Screen created");
   LV_IMG_DECLARE(background);
   _background = lv_img_create(_screen);
   lv_img_set_src(_background, &background);
   lv_obj_set_pos(_background, 0, 0);
 
-  Serial.printf("Menu background created\r\n");
+  Serial.println("Menu background created");
   LV_IMG_DECLARE(save);
   LV_IMG_DECLARE(save_pressed);
 
@@ -36,7 +36,7 @@ void Menu::setup(lv_obj_t* screen) {
   lv_obj_t* pokemon_button = lv_menu_button_create(_screen, &pokeball, &pokeball_pressed, "Pokemon");
   lv_obj_set_pos(pokemon_button, 165, 45);
 
-  Serial.printf("Buttons for menu created\r\n");
+  Serial.println("Buttons for menu created");
 
   toggle();
 }
@@ -45,10 +45,10 @@ void Menu::toggle() {
   if (lv_obj_has_flag(_screen, LV_OBJ_FLAG_HIDDEN)) {
     lv_scr_load(_screen);
     lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.printf("Show Menu\r\n");
+    Serial.println("Show Menu");
   } else {
     lv_scr_load(_game_screen);
     lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.printf("Hide menu\r\n");
+    Serial.println("Hide menu");
   }
 }

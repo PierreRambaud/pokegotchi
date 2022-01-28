@@ -43,7 +43,7 @@ class Pokemon {
   Pokemon();
   static Pokemon* instance;
 
-  char _name[20];
+  const char* _name;
 
   int8_t _level = 1;
   int8_t _sleepiness = 0;

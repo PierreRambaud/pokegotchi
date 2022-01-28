@@ -2,6 +2,7 @@
 #include "Pokegotchi.h"
 #include "Game.h"
 #include "Menu.h"
+#include "ActionsMenu.h"
 #include "Home.h"
 
 Pokegotchi::Pokegotchi() {}
@@ -18,11 +19,9 @@ void Pokegotchi::loop() {
   Game::getInstance()->loop();
 
   if (M5.BtnA.wasPressed()) {
-    Game::getInstance()->action_wake_up();
     Serial.printf("Button A pressed\n\r");
+    ActionsMenu::getInstance()->toggle();
   } else if (M5.BtnB.wasPressed()) {
-    Game::getInstance()->action_sleep();
-
     Serial.printf("Button B pressed\n\r");
   } else if (M5.BtnC.wasPressed()) {
     Serial.printf("Button C pressed\n\r");
