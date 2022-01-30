@@ -19,9 +19,9 @@ void Menu::setup(lv_obj_t* screen) {
 
   Serial.println("Menu Screen created");
   LV_IMG_DECLARE(background);
-  _background = lv_img_create(_screen);
-  lv_img_set_src(_background, &background);
-  lv_obj_set_pos(_background, 0, 0);
+  lv_obj_t* background_image = lv_img_create(_screen);
+  lv_img_set_src(background_image, &background);
+  lv_obj_set_pos(background_image, 0, 0);
 
   Serial.println("Menu background created");
   LV_IMG_DECLARE(save);

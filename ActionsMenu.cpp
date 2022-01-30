@@ -20,12 +20,6 @@ static void use_item_event_handler(lv_event_t* e) { lv_obj_t* item = (lv_obj_t*)
 
 static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getInstance()->display_bag(); }
 
-static void create_object_row(lv_obj_t* tile, Item item, int index) {
-  lv_obj_t* image = lv_img_create(tile);
-  lv_img_set_src(image, &item.image);
-  lv_obj_set_pos(tile, 7, index * 30);
-}
-
 static void toggle_sleep_event_handler(lv_event_t* e) {
   Pokemon* p = Pokemon::getInstance();
   Game* g = Game::getInstance();
@@ -44,20 +38,13 @@ static void toggle_sleep_event_handler(lv_event_t* e) {
 void ActionsMenu::setup(lv_obj_t* screen) {
   _game_screen = screen;
   _screen = create_window();
-  _bag_screen = create_window(_screen);
-  lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
 
-  lv_obj_t* tv = lv_tileview_create(_bag_screen);
-  lv_obj_t* tile = lv_tileview_add_tile(tv, 0, 0, LV_DIR_BOTTOM);
-  for (int index = 0; index < BAG_ITEMS_SIZE; index++) {
-    create_object_row(tile, _items[index], index);
-  }
 
   Serial.println("ActionsMenu Screen created");
   LV_IMG_DECLARE(background);
-  _background = lv_img_create(_screen);
-  lv_img_set_src(_background, &background);
-  lv_obj_set_pos(_background, 0, 0);
+  lv_obj_t* background_image = lv_img_create(_screen);
+  lv_img_set_src(background_image, &background);
+  lv_obj_set_pos(background_image, 0, 0);
 
   Serial.println("ActionsMenu background created");
   LV_IMG_DECLARE(bag);
@@ -76,12 +63,41 @@ void ActionsMenu::setup(lv_obj_t* screen) {
 
   Serial.println("Buttons for actions menu created");
 
+  create_bag();
+
   toggle();
+}
+
+void ActionsMenu::create_bag() {
+  _bag_screen = create_window(_game_screen);
+  LV_IMG_DECLARE(background);
+  lv_obj_t* background_image = lv_img_create(_bag_screen);
+  lv_img_set_src(background_image, &background);
+  lv_obj_set_pos(background_image, 0, 0);
+
+  lv_obj_set_flex_flow(_bag_screen, LV_FLEX_FLOW_COLUMN);
+  lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
+
+  for (Item item: _items) {
+    lv_obj_t* row  = lv_obj_create(_bag_screen);
+    lv_obj_set_size(row, LV_PCT(100), LV_SIZE_CONTENT);
+
+    lv_obj_t* image = lv_img_create(row);
+    lv_img_set_src(image, &item.image);
+    Serial.printf("Create bag item: %s\r\n", item.name);
+
+    lv_obj_t* label = lv_label_create(row);
+    lv_label_set_text(label, item.name);
+    lv_obj_center(label);
+  }
 }
 
 void ActionsMenu::display_bag() {
   lv_scr_load(_bag_screen);
+  lv_obj_clear_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
+  // lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
 }
+
 
 void ActionsMenu::toggle() {
   if (lv_obj_has_flag(_screen, LV_OBJ_FLAG_HIDDEN)) {

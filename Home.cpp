@@ -12,9 +12,9 @@ Home::Home() {
   lv_scr_load(_screen);
 
   LV_IMG_DECLARE(background_16);
-  _background = lv_img_create(_screen);
-  lv_img_set_src(_background, &background_16);
-  lv_obj_set_pos(_background, 0, 0);
+  lv_obj_t* background_image = lv_img_create(_screen);
+  lv_img_set_src(background_image, &background_16);
+  lv_obj_set_pos(background_image, 0, 0);
 
   LV_IMG_DECLARE(pokegotchi_title);
   _title = lv_img_create(_screen);
@@ -36,7 +36,7 @@ Home::Home() {
 
 Home::~Home() {
   lv_obj_del(_screen);
-  Serial.printf("Home destroyed\r\n");
+  Serial.println("Home destroyed");
 }
 
 void Home::close() {
@@ -45,7 +45,7 @@ void Home::close() {
 }
 
 static void start_button_event_handler(lv_event_t* e) {
-  Serial.printf("Home button pressed\r\n");
+  Serial.println("Home button pressed");
 
   Home* h = Home::getInstance();
   h->close();
@@ -53,7 +53,7 @@ static void start_button_event_handler(lv_event_t* e) {
   Game* g = Game::getInstance();
   g->setup();
 
-  Serial.printf("Game created\r\n");
+  Serial.println("Game created");
 
   delete h;
 }
@@ -75,6 +75,6 @@ void Home::loop() {
     lv_obj_center(label);
 
     _loaded = true;
-    Serial.printf("Home loaded\r\n");
+    Serial.println("Home loaded");
   }
 }

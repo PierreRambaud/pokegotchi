@@ -38,7 +38,6 @@ class Game {
   static Game* instance;
 
   lv_obj_t* _screen;
-  lv_obj_t* _background;
   lv_anim_t _anim;
 
   lv_obj_t* _mood_bar;

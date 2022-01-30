@@ -19,12 +19,12 @@ void Pokegotchi::loop() {
   Game::getInstance()->loop();
 
   if (M5.BtnA.wasPressed()) {
-    Serial.printf("Button A pressed\n\r");
+    Serial.println("Button A pressed");
     ActionsMenu::getInstance()->toggle();
   } else if (M5.BtnB.wasPressed()) {
-    Serial.printf("Button B pressed\n\r");
+    Serial.println("Button B pressed");
   } else if (M5.BtnC.wasPressed()) {
-    Serial.printf("Button C pressed\n\r");
+    Serial.println("Button C pressed");
     Menu::getInstance()->toggle();
   }
 }

@@ -76,12 +76,12 @@ void Game::setup() {
   ActionsMenu* actions_menu = ActionsMenu::getInstance();
   actions_menu->setup(_screen);
 
-  lv_obj_t* _background = lv_img_create(_screen);
-  lv_img_set_src(_background, anim_day[0]);
-  lv_obj_set_pos(_background, 0, 0);
+  lv_obj_t* background_image = lv_img_create(_screen);
+  lv_img_set_src(background_image, anim_day[0]);
+  lv_obj_set_pos(background_image, 0, 0);
 
   lv_anim_init(&_anim);
-  lv_anim_set_var(&_anim, _background);
+  lv_anim_set_var(&_anim, background_image);
   lv_anim_set_values(&_anim, 0, 10);
   lv_anim_set_path_cb(&_anim, lv_anim_path_linear);
   lv_anim_set_time(&_anim, 1500);

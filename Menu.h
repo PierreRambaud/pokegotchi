@@ -23,7 +23,6 @@ class Menu {
 
   bool _displayed = false;
 
-  lv_obj_t* _background;
   lv_obj_t* _screen;
   lv_obj_t* _game_screen;
 };
