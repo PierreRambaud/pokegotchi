@@ -8,6 +8,10 @@
 #include "assets/menu/pokeball_pressed.c"
 #include "assets/menu/options.c"
 #include "assets/menu/options_pressed.c"
+#include "assets/menu/trainercard.c"
+#include "assets/menu/trainercard_pressed.c"
+
+static void trainercard_event_handler(lv_event_t* e);
 
 Menu* Menu::instance = nullptr;
 
@@ -18,14 +22,12 @@ void Menu::setup(lv_obj_t* screen) {
   _screen = create_window();
 
   Serial.println("Menu Screen created");
-  LV_IMG_DECLARE(background);
+
   lv_obj_t* background_image = lv_img_create(_screen);
   lv_img_set_src(background_image, &background);
   lv_obj_set_pos(background_image, 0, 0);
 
   Serial.println("Menu background created");
-  LV_IMG_DECLARE(save);
-  LV_IMG_DECLARE(save_pressed);
 
   lv_obj_t* save_button = lv_menu_button_create(_screen, &save, &save_pressed, "Save");
   lv_obj_set_pos(save_button, 7, 45);
@@ -35,6 +37,10 @@ void Menu::setup(lv_obj_t* screen) {
 
   lv_obj_t* pokemon_button = lv_menu_button_create(_screen, &pokeball, &pokeball_pressed, "Pokemon");
   lv_obj_set_pos(pokemon_button, 165, 45);
+
+  lv_obj_t* trainercard_button = lv_menu_button_create(_screen, &trainercard, &trainercard_pressed, "Games");
+  lv_obj_set_pos(trainercard_button, 165, 105);
+  lv_obj_add_event_cb(trainercard_button, trainercard_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for menu created");
 
@@ -49,6 +55,8 @@ void Menu::toggle() {
   } else {
     lv_scr_load(_game_screen);
     lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Hide menu");
+    Serial.println("Hide Menu");
   }
 }
+
+static void trainercard_event_handler(lv_event_t* e) {}

@@ -6,7 +6,7 @@
 const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;
 const int8_t MAX_MOOD = 10;
-const int8_t MAX_HUNGER = 10;
+const int8_t MAX_HUNGER = 20;
 
 class Pokemon {
  public:

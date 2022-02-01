@@ -25,28 +25,6 @@
 #include "assets/background/background_19.c"
 #include "assets/background/background_20.c"
 
-LV_IMG_DECLARE(background_1);
-LV_IMG_DECLARE(background_2);
-LV_IMG_DECLARE(background_3);
-LV_IMG_DECLARE(background_4);
-LV_IMG_DECLARE(background_5);
-LV_IMG_DECLARE(background_6);
-LV_IMG_DECLARE(background_6);
-LV_IMG_DECLARE(background_7);
-LV_IMG_DECLARE(background_8);
-LV_IMG_DECLARE(background_9);
-LV_IMG_DECLARE(background_10);
-LV_IMG_DECLARE(background_11);
-LV_IMG_DECLARE(background_12);
-LV_IMG_DECLARE(background_13);
-LV_IMG_DECLARE(background_14);
-LV_IMG_DECLARE(background_15);
-LV_IMG_DECLARE(background_16);
-LV_IMG_DECLARE(background_17);
-LV_IMG_DECLARE(background_18);
-LV_IMG_DECLARE(background_19);
-LV_IMG_DECLARE(background_20);
-
 static const lv_img_dsc_t* anim_night[ANIMATION_NIGHT] = {
     &background_6, &background_7, &background_8, &background_9, &background_10, &background_11, &background_12, &background_13, &background_14, &background_15, &background_16,
 };
@@ -54,13 +32,9 @@ static const lv_img_dsc_t* anim_day[ANIMATION_DAY] = {
     &background_16, &background_17, &background_18, &background_19, &background_20, &background_1, &background_2, &background_3, &background_4, &background_5, &background_6,
 };
 
-static void night_animation(void* img, int32_t id) {
-  lv_img_set_src((lv_obj_t*)img, anim_night[id]);
-}
+static void night_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_night[id]); }
 
-static void day_animation(void* img, int32_t id) {
-  lv_img_set_src((lv_obj_t*)img, anim_day[id]);
-}
+static void day_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_day[id]); }
 
 Game* Game::instance = nullptr;
 
@@ -89,20 +63,16 @@ void Game::setup() {
 
   switch_to_day();
 
-  _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_GREEN);
-  lv_obj_set_pos(_mood_bar, 10, 30);
+  _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_GREEN, "Mood", 10, 25, MAX_MOOD);
   lv_bar_set_value(_mood_bar, 0, LV_ANIM_ON);
 
-  _life_bar = lv_game_bar_create(_screen, LV_PALETTE_RED);
-  lv_obj_set_pos(_life_bar, 10, 70);
+  _life_bar = lv_game_bar_create(_screen, LV_PALETTE_RED, "Life", 10, 70, MAX_LIFE);
   lv_bar_set_value(_life_bar, 0, LV_ANIM_ON);
 
-  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE);
-  lv_obj_set_pos(_sleepiness_bar, 180, 30);
+  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE, "Sleepiness", 180, 25, MAX_SLEEPINESS);
   lv_bar_set_value(_sleepiness_bar, 0, LV_ANIM_ON);
 
-  _hunger_bar = lv_game_bar_create(_screen, LV_PALETTE_YELLOW);
-  lv_obj_set_pos(_hunger_bar, 180, 70);
+  _hunger_bar = lv_game_bar_create(_screen, LV_PALETTE_YELLOW, "Hunger", 180, 70, MAX_HUNGER);
   lv_bar_set_value(_hunger_bar, 0, LV_ANIM_ON);
 }
 
@@ -140,9 +110,15 @@ void Game::loop() {
   }
 }
 
-void Game::action_train() {}
+void Game::action_train() {
+  Pokemon* p = Pokemon::getInstance();
+  p->train();
+}
 
-void Game::action_eat() {}
+void Game::action_eat() {
+  Pokemon* p = Pokemon::getInstance();
+  p->eat();
+}
 
 void Game::action_heal() {}
 

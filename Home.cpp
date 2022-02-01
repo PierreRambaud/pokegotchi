@@ -11,12 +11,10 @@ Home::Home() {
   _screen = create_window();
   lv_scr_load(_screen);
 
-  LV_IMG_DECLARE(background_16);
   lv_obj_t* background_image = lv_img_create(_screen);
   lv_img_set_src(background_image, &background_16);
   lv_obj_set_pos(background_image, 0, 0);
 
-  LV_IMG_DECLARE(pokegotchi_title);
   _title = lv_img_create(_screen);
   lv_img_set_src(_title, &pokegotchi_title);
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);

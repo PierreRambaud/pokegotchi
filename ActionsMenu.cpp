@@ -9,16 +9,111 @@
 #include "assets/menu/flute.c"
 #include "assets/menu/flute_pressed.c"
 #include "assets/objects/bag/noodles.c"
+#include "assets/objects/bag/water.c"
+#include "assets/objects/bag/candy_box.c"
 
-LV_IMG_DECLARE(noodles);
+static void use_item_event_handler(lv_event_t* e);
+static void display_bag_items_event_handler(lv_event_t* e);
+static void train_event_handler(lv_event_t* e);
+static void toggle_sleep_event_handler(lv_event_t* e);
+static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
 
 ActionsMenu* ActionsMenu::instance = nullptr;
 
-ActionsMenu::ActionsMenu() { _items[0] = Item{noodles, "Noodles", "Hum noodles"}; }
+ActionsMenu::ActionsMenu() {
+  _items[0] = Item{&noodles, "Noodles", "Hum noodles"};
+  _items[1] = Item{&water, "Water", "Perfect water"};
+  _items[2] = Item{&candy_box, "Candy Box", "A box full of candies, not really healthy!"};
+}
 
-static void use_item_event_handler(lv_event_t* e) { lv_obj_t* item = (lv_obj_t*)lv_event_get_user_data(e); }
+void ActionsMenu::setup(lv_obj_t* screen) {
+  _game_screen = screen;
+  _screen = create_window();
+
+  Serial.println("ActionsMenu Screen created");
+
+  lv_obj_t* background_image = lv_img_create(_screen);
+  lv_img_set_src(background_image, &background);
+  lv_obj_set_pos(background_image, 0, 0);
+  Serial.println("ActionsMenu background created");
+
+  _actions_screen = create_window(_screen);
+
+  lv_obj_t* bag_button = lv_menu_button_create(_actions_screen, &bag, &bag_pressed, "Bag");
+  lv_obj_set_pos(bag_button, 7, 45);
+  lv_obj_add_event_cb(bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
+
+  lv_obj_t* sleep_button = lv_menu_button_create(_actions_screen, &flute, &flute_pressed, "Sleep");
+  lv_obj_t* sleep_label = lv_obj_get_child(sleep_button, -1);
+  lv_obj_set_pos(sleep_button, 165, 45);
+  lv_obj_add_event_cb(sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
+
+  Serial.println("Buttons for actions menu created");
+
+  create_bag();
+
+  toggle();
+}
+
+void ActionsMenu::create_bag() {
+  static lv_style_t style_bag_screen;
+  lv_style_init(&style_bag_screen);
+  lv_style_set_pad_top(&style_bag_screen, 25);
+  lv_style_set_pad_right(&style_bag_screen, 10);
+  lv_style_set_pad_bottom(&style_bag_screen, 20);
+  lv_style_set_pad_left(&style_bag_screen, 5);
+
+  _bag_screen = create_window(_screen);
+  lv_obj_add_style(_bag_screen, &style_bag_screen, 0);
+  lv_obj_set_size(_bag_screen, LV_HOR_RES_MAX - 20, LV_VER_RES_MAX - 50);
+  lv_obj_set_scrollbar_mode(_bag_screen, LV_SCROLLBAR_MODE_ON);
+  lv_obj_set_scroll_dir(_bag_screen, LV_DIR_VER);
+
+  lv_obj_align(_bag_screen, LV_ALIGN_OUT_TOP_MID, 10, 5);
+  lv_obj_set_flex_flow(_bag_screen, LV_FLEX_FLOW_COLUMN);
+  lv_obj_set_flex_grow(_bag_screen, 1);
+  lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+
+  for (Item item : _items) {
+    create_row_item(_bag_screen, &item);
+  }
+}
+
+void ActionsMenu::display_bag() {
+  lv_obj_clear_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_add_flag(_actions_screen, LV_OBJ_FLAG_HIDDEN);
+}
+
+void ActionsMenu::toggle() {
+  if (lv_obj_has_flag(_screen, LV_OBJ_FLAG_HIDDEN)) {
+    lv_scr_load(_screen);
+    lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_clear_flag(_actions_screen, LV_OBJ_FLAG_HIDDEN);
+    Serial.println("Show ActionsMenu");
+  } else {
+    lv_scr_load(_game_screen);
+    lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(_actions_screen, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
+    Serial.println("Hide ActionsMenu");
+  }
+}
+static void use_item_event_handler(lv_event_t* e) {
+  Item* item = (Item*)lv_event_get_user_data(e);
+
+  ActionsMenu::getInstance()->toggle();
+  Game* g = Game::getInstance();
+  g->action_eat();
+}
 
 static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getInstance()->display_bag(); }
+
+static void train_event_handler(lv_event_t* e) {
+  Game* g = Game::getInstance();
+
+  ActionsMenu::getInstance()->toggle();
+  g->action_train();
+}
 
 static void toggle_sleep_event_handler(lv_event_t* e) {
   Pokemon* p = Pokemon::getInstance();
@@ -35,78 +130,43 @@ static void toggle_sleep_event_handler(lv_event_t* e) {
   }
 }
 
-void ActionsMenu::setup(lv_obj_t* screen) {
-  _game_screen = screen;
-  _screen = create_window();
+static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item) {
+  static lv_coord_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
+  static lv_coord_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
 
+  static lv_style_t style_label_color;
+  lv_style_set_text_color(&style_label_color, lv_color_white());
 
-  Serial.println("ActionsMenu Screen created");
-  LV_IMG_DECLARE(background);
-  lv_obj_t* background_image = lv_img_create(_screen);
-  lv_img_set_src(background_image, &background);
-  lv_obj_set_pos(background_image, 0, 0);
+  lv_obj_t* cont = lv_obj_create(parent);
+  lv_obj_remove_style_all(cont);
+  lv_obj_set_size(cont, LV_PCT(100), LV_SIZE_CONTENT);
+  lv_obj_set_grid_dsc_array(cont, grid_col_dsc, grid_row_dsc);
 
-  Serial.println("ActionsMenu background created");
-  LV_IMG_DECLARE(bag);
-  LV_IMG_DECLARE(bag_pressed);
+  lv_obj_t* img = lv_img_create(cont);
+  lv_img_set_src(img, item->image);
+  lv_obj_set_grid_cell(img, LV_GRID_ALIGN_CENTER, 0, 1, LV_GRID_ALIGN_CENTER, 0, 2);
 
-  lv_obj_t* bag_button = lv_menu_button_create(_screen, &bag, &bag_pressed, "Bag");
-  lv_obj_set_pos(bag_button, 7, 45);
-  lv_obj_add_event_cb(bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
+  lv_obj_t* label;
+  label = lv_label_create(cont);
+  lv_label_set_text(label, item->name);
+  lv_obj_add_style(label, &style_label_color, 0);
+  lv_obj_set_grid_cell(label, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_END, 0, 1);
 
-  LV_IMG_DECLARE(flute);
-  LV_IMG_DECLARE(flute_pressed);
-  lv_obj_t* sleep_button = lv_menu_button_create(_screen, &flute, &flute_pressed, "Sleep");
-  lv_obj_t* sleep_label = lv_obj_get_child(sleep_button, -1);
-  lv_obj_set_pos(sleep_button, 7, 105);
-  lv_obj_add_event_cb(sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
+  lv_obj_t* desc_label = lv_label_create(cont);
+  lv_label_set_text(desc_label, item->description);
+  lv_label_set_long_mode(desc_label, LV_LABEL_LONG_WRAP);
+  lv_obj_add_style(desc_label, &style_label_color, 0);
+  lv_obj_set_width(label, 100);
+  lv_obj_set_grid_cell(desc_label, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_END, 1, 1);
 
-  Serial.println("Buttons for actions menu created");
+  lv_obj_t* btn = lv_btn_create(cont);
+  lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, 3, 1, LV_GRID_ALIGN_CENTER, 0, 1);
+  lv_obj_add_event_cb(btn, use_item_event_handler, LV_EVENT_CLICKED, item);
 
-  create_bag();
+  lv_obj_t* btn_label = lv_label_create(btn);
+  lv_label_set_text(btn_label, "Use");
 
-  toggle();
-}
+  Serial.printf("Create bag item: %s\r\n", item->name);
 
-void ActionsMenu::create_bag() {
-  _bag_screen = create_window(_game_screen);
-  LV_IMG_DECLARE(background);
-  lv_obj_t* background_image = lv_img_create(_bag_screen);
-  lv_img_set_src(background_image, &background);
-  lv_obj_set_pos(background_image, 0, 0);
-
-  lv_obj_set_flex_flow(_bag_screen, LV_FLEX_FLOW_COLUMN);
-  lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
-
-  for (Item item: _items) {
-    lv_obj_t* row  = lv_obj_create(_bag_screen);
-    lv_obj_set_size(row, LV_PCT(100), LV_SIZE_CONTENT);
-
-    lv_obj_t* image = lv_img_create(row);
-    lv_img_set_src(image, &item.image);
-    Serial.printf("Create bag item: %s\r\n", item.name);
-
-    lv_obj_t* label = lv_label_create(row);
-    lv_label_set_text(label, item.name);
-    lv_obj_center(label);
-  }
-}
-
-void ActionsMenu::display_bag() {
-  lv_scr_load(_bag_screen);
-  lv_obj_clear_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
-  // lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-}
-
-
-void ActionsMenu::toggle() {
-  if (lv_obj_has_flag(_screen, LV_OBJ_FLAG_HIDDEN)) {
-    lv_scr_load(_screen);
-    lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Show ActionsMenu");
-  } else {
-    lv_scr_load(_game_screen);
-    lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Hide ActionsMenu");
-  }
+  return cont;
 }
