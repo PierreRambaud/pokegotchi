@@ -1,4 +1,5 @@
 #include <M5Core2.h>
+#include "lv_i18n.h"
 #include "Pokegotchi.h"
 #include "Game.h"
 #include "Menu.h"
@@ -7,7 +8,10 @@
 
 Pokegotchi::Pokegotchi() {}
 
-void Pokegotchi::setup() {}
+void Pokegotchi::setup() {
+  lv_i18n_init(lv_i18n_language_pack);
+  lv_i18n_set_locale("fr");
+}
 
 void Pokegotchi::loop() {
   if (Home::getInstance()->isClosed() == false) {

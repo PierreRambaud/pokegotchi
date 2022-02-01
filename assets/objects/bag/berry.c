@@ -7,10 +7,10 @@
 #ifndef LV_ATTRIBUTE_MEM_ALIGN
 #define LV_ATTRIBUTE_MEM_ALIGN
 #endif
-#ifndef LV_ATTRIBUTE_IMG_FOOD
-#define LV_ATTRIBUTE_IMG_FOOD
+#ifndef LV_ATTRIBUTE_IMG_BERRY
+#define LV_ATTRIBUTE_IMG_BERRY
 #endif
-const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_IMG_FOOD uint8_t food_map[] = {
+const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_IMG_BERRY uint8_t berry_map[] = {
 #if LV_COLOR_DEPTH == 1 || LV_COLOR_DEPTH == 8
   /*Pixel format: Alpha 8 bit, Red: 3 bit, Green: 3 bit, Blue: 2 bit*/
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -144,7 +144,7 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_IMG_FOOD uint8_t food_map[] = {
 #endif
 };
 
-const lv_img_dsc_t food = {
+const lv_img_dsc_t berry = {
   {
     LV_IMG_CF_TRUE_COLOR_ALPHA,
     0,
@@ -153,5 +153,5 @@ const lv_img_dsc_t food = {
     30,
   },
   900 * LV_IMG_PX_SIZE_ALPHA_BYTE,
-  food_map
+  berry_map
 };

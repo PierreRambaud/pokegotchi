@@ -1,4 +1,5 @@
 #include <lvgl.h>
+#include "lv_i18n.h"
 #include "assets/background/background_16.c"
 #include "assets/pokegotchi_title.c"
 #include "Home.h"
@@ -69,7 +70,7 @@ void Home::loop() {
     lv_obj_add_event_cb(start_button, start_button_event_handler, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t* label = lv_label_create(start_button);
-    lv_label_set_text(label, "Start");
+    lv_label_set_text(label, _("home.start"));
     lv_obj_center(label);
 
     _loaded = true;

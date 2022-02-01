@@ -1,4 +1,5 @@
 #include <lvgl.h>
+#include "lv_i18n.h"
 #include "Menu.h"
 #include "Utils.h"
 #include "assets/menu/background.c"
@@ -29,16 +30,16 @@ void Menu::setup(lv_obj_t* screen) {
 
   Serial.println("Menu background created");
 
-  lv_obj_t* save_button = lv_menu_button_create(_screen, &save, &save_pressed, "Save");
+  lv_obj_t* save_button = lv_menu_button_create(_screen, &save, &save_pressed, _("menu.save"));
   lv_obj_set_pos(save_button, 7, 45);
 
-  lv_obj_t* options_button = lv_menu_button_create(_screen, &options, &options_pressed, "Options");
+  lv_obj_t* options_button = lv_menu_button_create(_screen, &options, &options_pressed, _("menu.options"));
   lv_obj_set_pos(options_button, 7, 105);
 
-  lv_obj_t* pokemon_button = lv_menu_button_create(_screen, &pokeball, &pokeball_pressed, "Pokemon");
+  lv_obj_t* pokemon_button = lv_menu_button_create(_screen, &pokeball, &pokeball_pressed, "Pokémon");
   lv_obj_set_pos(pokemon_button, 165, 45);
 
-  lv_obj_t* trainercard_button = lv_menu_button_create(_screen, &trainercard, &trainercard_pressed, "Games");
+  lv_obj_t* trainercard_button = lv_menu_button_create(_screen, &trainercard, &trainercard_pressed, _("menu.games"));
   lv_obj_set_pos(trainercard_button, 165, 105);
   lv_obj_add_event_cb(trainercard_button, trainercard_event_handler, LV_EVENT_CLICKED, NULL);
 

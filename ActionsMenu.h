@@ -3,7 +3,7 @@
 
 #include <lvgl.h>
 
-#define BAG_ITEMS_SIZE 3
+#define BAG_ITEMS_SIZE 15
 
 struct item {
   const lv_img_dsc_t* image;

@@ -1,4 +1,5 @@
 #include <lvgl.h>
+#include "lv_i18n.h"
 #include "Game.h"
 #include "ActionsMenu.h"
 #include "Menu.h"
@@ -63,16 +64,16 @@ void Game::setup() {
 
   switch_to_day();
 
-  _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_GREEN, "Mood", 10, 25, MAX_MOOD);
+  _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_GREEN, _("bar.mood"), 10, 25, MAX_MOOD);
   lv_bar_set_value(_mood_bar, 0, LV_ANIM_ON);
 
-  _life_bar = lv_game_bar_create(_screen, LV_PALETTE_RED, "Life", 10, 70, MAX_LIFE);
+  _life_bar = lv_game_bar_create(_screen, LV_PALETTE_RED, _("bar.life"), 10, 70, MAX_LIFE);
   lv_bar_set_value(_life_bar, 0, LV_ANIM_ON);
 
-  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE, "Sleepiness", 180, 25, MAX_SLEEPINESS);
+  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE, _("bar.sleepiness"), 180, 25, MAX_SLEEPINESS);
   lv_bar_set_value(_sleepiness_bar, 0, LV_ANIM_ON);
 
-  _hunger_bar = lv_game_bar_create(_screen, LV_PALETTE_YELLOW, "Hunger", 180, 70, MAX_HUNGER);
+  _hunger_bar = lv_game_bar_create(_screen, LV_PALETTE_YELLOW, _("bar.hunger"), 180, 70, MAX_HUNGER);
   lv_bar_set_value(_hunger_bar, 0, LV_ANIM_ON);
 }
 

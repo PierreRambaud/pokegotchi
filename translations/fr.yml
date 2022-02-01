@@ -1,0 +1,43 @@
+fr:
+  actions.menu.bag: Sac
+  actions.menu.sleep: Dormir
+  actions.menu.use: "Utiliser"
+  actions.menu.wake_up: Se réveiller
+  bag.apple.description: Quelle belle pomme
+  bag.apple.name: Pomme
+  bag.beans.description: De bons haricots
+  bag.beans.name: Haricots
+  bag.berry.description: Une simple baie
+  bag.berry.name: Baie
+  bag.candy.description: 'Une boîte pleine, pas très bonne pour la santé!'
+  bag.candy.name: Boîte de bonbons
+  bag.cheese.description: 'Fermier, comme on les aime'
+  bag.cheese.name: Fromage
+  bag.chicken.description: Poulet frit
+  bag.chicken.name: Poulet
+  bag.coconut_milk.description: Très bon avec le poulet
+  bag.coconut_milk.name: Lait de coco
+  bag.frozen_carrots.description: Carotte du sud
+  bag.frozen_carrots.name: Carotte gelée
+  bag.haricots.description: Des légumes verts
+  bag.haricots.name: Haricots verts
+  bag.honey.description: Miel d'acacia
+  bag.honey.name: Miel
+  bag.milk.description: Lait BIO
+  bag.milk.name: Lait
+  bag.noodles.description: Nouilles fraîches!
+  bag.noodles.name: Nouilles
+  bag.spices.description: Pour mettre du piment dans ta vie
+  bag.spices.name: Épices
+  bag.sugar_star.description: Un bonbon magique
+  bag.sugar_star.name: Étoile sucrée
+  bag.water.description: Eau de source
+  bag.water.name: Eau
+  bar.hunger: Faim
+  bar.life: Vie
+  bar.mood: Humeur
+  bar.sleepiness: Sommeil
+  home.start: Commencer
+  menu.games: Jeux
+  menu.options: Options
+  menu.save: Sauvegarder

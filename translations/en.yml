@@ -1,0 +1,43 @@
+en:
+  actions.menu.bag: Bag
+  actions.menu.sleep: Sleep
+  actions.menu.use: Use
+  actions.menu.wake_up: Wake up
+  bag.apple.description: Beautiful fruit
+  bag.apple.name: Apple
+  bag.beans.description: English beans
+  bag.beans.name: Beans
+  bag.berry.description: A simple fruit
+  bag.berry.name: Berry
+  bag.candy.description: 'A box full of candies, not very healthy!'
+  bag.candy.name: Candy box
+  bag.cheese.description: 'French cheese, the best one'
+  bag.cheese.name: Cheese
+  bag.chicken.description: Fried Chicken
+  bag.chicken.name: Chicken
+  bag.coconut_milk.description: Always good with chicken
+  bag.coconut_milk.name: Coconut milt
+  bag.frozen_carrots.description: Come from the south
+  bag.frozen_carrots.name: Frozen carrot
+  bag.haricots.description: Green vegetable
+  bag.haricots.name: Haricots
+  bag.honey.description: Honey of acacia
+  bag.honey.name: Honey
+  bag.milk.description: Organic milk
+  bag.milk.name: Milk
+  bag.noodles.description: Frech noodles!
+  bag.noodles.name: Noodles
+  bag.spices.description: Add some spice to your life
+  bag.spices.name: Spices
+  bag.sugar_star.description: A magic candy
+  bag.sugar_star.name: Sugar star
+  bag.water.description: Perfect water
+  bag.water.name: Water
+  bar.hunger: Hunger
+  bar.life: Life
+  bar.mood: Mood
+  bar.sleepiness: Sleepiness
+  home.start: Start
+  menu.games: Games
+  menu.options: Options
+  menu.save: Save

@@ -1,4 +1,5 @@
 #include <lvgl.h>
+#include "lv_i18n.h"
 #include "ActionsMenu.h"
 #include "Utils.h"
 #include "Pokemon.h"
@@ -8,9 +9,21 @@
 #include "assets/menu/bag_pressed.c"
 #include "assets/menu/flute.c"
 #include "assets/menu/flute_pressed.c"
-#include "assets/objects/bag/noodles.c"
-#include "assets/objects/bag/water.c"
+#include "assets/objects/bag/apple.c"
+#include "assets/objects/bag/beans.c"
+#include "assets/objects/bag/berry.c"
 #include "assets/objects/bag/candy_box.c"
+#include "assets/objects/bag/cheese.c"
+#include "assets/objects/bag/chicken.c"
+#include "assets/objects/bag/coconut_milk.c"
+#include "assets/objects/bag/frozen_carrots.c"
+#include "assets/objects/bag/haricots.c"
+#include "assets/objects/bag/honey.c"
+#include "assets/objects/bag/milk.c"
+#include "assets/objects/bag/noodles.c"
+#include "assets/objects/bag/spices.c"
+#include "assets/objects/bag/sugar_star.c"
+#include "assets/objects/bag/water.c"
 
 static void use_item_event_handler(lv_event_t* e);
 static void display_bag_items_event_handler(lv_event_t* e);
@@ -21,9 +34,21 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
 ActionsMenu* ActionsMenu::instance = nullptr;
 
 ActionsMenu::ActionsMenu() {
-  _items[0] = Item{&noodles, "Noodles", "Hum noodles"};
-  _items[1] = Item{&water, "Water", "Perfect water"};
-  _items[2] = Item{&candy_box, "Candy Box", "A box full of candies, not really healthy!"};
+  _items[0] = Item{&apple, _("bag.apple.name"), _("bag.apple.description")};
+  _items[1] = Item{&beans, _("bag.beans.name"), _("bag.beans.description")};
+  _items[2] = Item{&berry, _("bag.berry.name"), _("bag.berry.description")};
+  _items[3] = Item{&candy_box, _("bag.candy.name"), _("bag.candy.description")};
+  _items[4] = Item{&cheese, _("bag.cheese.name"), _("bag.cheese.description")};
+  _items[5] = Item{&chicken, _("bag.chicken.name"), _("bag.chicken.description")};
+  _items[6] = Item{&coconut_milk, _("bag.coconut_milk.name"), _("bag.coconut_milk.description")};
+  _items[7] = Item{&frozen_carrots, _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description")};
+  _items[8] = Item{&haricots, _("bag.haricots.name"), _("bag.haricots.description")};
+  _items[9] = Item{&honey, _("bag.honey.name"), _("bag.honey.description")};
+  _items[10] = Item{&milk, _("bag.milk.name"), _("bag.milk.description")};
+  _items[11] = Item{&noodles, _("bag.noodles.name"), _("bag.noodles.description")};
+  _items[12] = Item{&spices, _("bag.spices.name"), _("bag.spices.description")};
+  _items[13] = Item{&sugar_star, _("bag.sugar_star.name"), _("bag.sugar_star.description")};
+  _items[14] = Item{&water, _("bag.water.name"), _("bag.water.description")};
 }
 
 void ActionsMenu::setup(lv_obj_t* screen) {
@@ -39,11 +64,11 @@ void ActionsMenu::setup(lv_obj_t* screen) {
 
   _actions_screen = create_window(_screen);
 
-  lv_obj_t* bag_button = lv_menu_button_create(_actions_screen, &bag, &bag_pressed, "Bag");
+  lv_obj_t* bag_button = lv_menu_button_create(_actions_screen, &bag, &bag_pressed, _("actions.menu.bag"));
   lv_obj_set_pos(bag_button, 7, 45);
   lv_obj_add_event_cb(bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
-  lv_obj_t* sleep_button = lv_menu_button_create(_actions_screen, &flute, &flute_pressed, "Sleep");
+  lv_obj_t* sleep_button = lv_menu_button_create(_actions_screen, &flute, &flute_pressed, _("actions.menu.sleep"));
   lv_obj_t* sleep_label = lv_obj_get_child(sleep_button, -1);
   lv_obj_set_pos(sleep_button, 165, 45);
   lv_obj_add_event_cb(sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
@@ -123,10 +148,10 @@ static void toggle_sleep_event_handler(lv_event_t* e) {
   ActionsMenu::getInstance()->toggle();
   if (p->is_sleeping() == true) {
     g->action_wake_up();
-    lv_label_set_text(label, "Sleep");
+    lv_label_set_text(label, _("actions.menu.sleep"));
   } else {
     g->action_sleep();
-    lv_label_set_text(label, "Wake up");
+    lv_label_set_text(label, _("actions.menu.wake_up"));
   }
 }
 
@@ -164,7 +189,7 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item) {
   lv_obj_add_event_cb(btn, use_item_event_handler, LV_EVENT_CLICKED, item);
 
   lv_obj_t* btn_label = lv_label_create(btn);
-  lv_label_set_text(btn_label, "Use");
+  lv_label_set_text(btn_label, _("actions.menu.use"));
 
   Serial.printf("Create bag item: %s\r\n", item->name);
 
