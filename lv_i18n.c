@@ -1,6 +1,5 @@
 #include "./lv_i18n.h"
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Define plural operands
 // http://unicode.org/reports/tr35/tr35-numbers.html#Operands
@@ -12,242 +11,233 @@
 static inline uint32_t op_n(int32_t val) { return (uint32_t)(val < 0 ? -val : val); }
 static inline uint32_t op_i(uint32_t val) { return val; }
 // always zero, when decimal part not exists.
-static inline uint32_t op_v(uint32_t val) { UNUSED(val); return 0;}
-static inline uint32_t op_w(uint32_t val) { UNUSED(val); return 0; }
-static inline uint32_t op_f(uint32_t val) { UNUSED(val); return 0; }
-static inline uint32_t op_t(uint32_t val) { UNUSED(val); return 0; }
+static inline uint32_t op_v(uint32_t val) {
+  UNUSED(val);
+  return 0;
+}
+static inline uint32_t op_w(uint32_t val) {
+  UNUSED(val);
+  return 0;
+}
+static inline uint32_t op_f(uint32_t val) {
+  UNUSED(val);
+  return 0;
+}
+static inline uint32_t op_t(uint32_t val) {
+  UNUSED(val);
+  return 0;
+}
 
 static lv_i18n_phrase_t en_singulars[] = {
-    {"actions.menu.bag", "Bag"},
-    {"actions.menu.sleep", "Sleep"},
-    {"actions.menu.use", "Use"},
-    {"actions.menu.wake_up", "Wake up"},
-    {"bag.apple.description", "Beautiful fruit"},
-    {"bag.apple.name", "Apple"},
-    {"bag.beans.description", "English beans"},
-    {"bag.beans.name", "Beans"},
-    {"bag.berry.description", "A simple fruit"},
-    {"bag.berry.name", "Berry"},
-    {"bag.candy.description", "A box full of candies, not very healthy!"},
-    {"bag.candy.name", "Candy box"},
-    {"bag.cheese.description", "French cheese, the best one"},
-    {"bag.cheese.name", "Cheese"},
-    {"bag.chicken.description", "Fried Chicken"},
-    {"bag.chicken.name", "Chicken"},
-    {"bag.coconut_milk.description", "Always good with chicken"},
-    {"bag.coconut_milk.name", "Coconut milt"},
-    {"bag.frozen_carrots.description", "Come from the south"},
-    {"bag.frozen_carrots.name", "Frozen carrot"},
-    {"bag.haricots.description", "Green vegetable"},
-    {"bag.haricots.name", "Haricots"},
-    {"bag.honey.description", "Honey of acacia"},
-    {"bag.honey.name", "Honey"},
-    {"bag.milk.description", "Organic milk"},
-    {"bag.milk.name", "Milk"},
-    {"bag.noodles.description", "Frech noodles!"},
-    {"bag.noodles.name", "Noodles"},
-    {"bag.spices.description", "Add some spice to your life"},
-    {"bag.spices.name", "Spices"},
-    {"bag.sugar_star.description", "A magic candy"},
-    {"bag.sugar_star.name", "Sugar star"},
-    {"bag.water.description", "Perfect water"},
-    {"bag.water.name", "Water"},
-    {"bar.hunger", "Hunger"},
-    {"bar.life", "Life"},
-    {"bar.mood", "Mood"},
-    {"bar.sleepiness", "Sleepiness"},
-    {"home.start", "Start"},
-    {"menu.games", "Games"},
-    {"menu.options", "Options"},
-    {"menu.save", "Save"},
-    {NULL, NULL} // End mark
+  {"actions.menu.bag", "Bag"},
+  {"actions.menu.sleep", "Sleep"},
+  {"actions.menu.use", "Use"},
+  {"actions.menu.wake_up", "Wake up"},
+  {"bag.apple.description", "Beautiful fruit"},
+  {"bag.apple.name", "Apple"},
+  {"bag.beans.description", "English beans"},
+  {"bag.beans.name", "Beans"},
+  {"bag.berry.description", "A simple fruit"},
+  {"bag.berry.name", "Berry"},
+  {"bag.candy.description", "A box full of candies, not very healthy!"},
+  {"bag.candy.name", "Candy box"},
+  {"bag.cheese.description", "French cheese, the best one"},
+  {"bag.cheese.name", "Cheese"},
+  {"bag.chicken.description", "Fried Chicken"},
+  {"bag.chicken.name", "Chicken"},
+  {"bag.coconut_milk.description", "Always good with chicken"},
+  {"bag.coconut_milk.name", "Coconut milt"},
+  {"bag.frozen_carrots.description", "Come from the south"},
+  {"bag.frozen_carrots.name", "Frozen carrot"},
+  {"bag.haricots.description", "Green vegetable"},
+  {"bag.haricots.name", "Haricots"},
+  {"bag.honey.description", "Honey of acacia"},
+  {"bag.honey.name", "Honey"},
+  {"bag.milk.description", "Organic milk"},
+  {"bag.milk.name", "Milk"},
+  {"bag.noodles.description", "Frech noodles!"},
+  {"bag.noodles.name", "Noodles"},
+  {"bag.spices.description", "Add some spice to your life"},
+  {"bag.spices.name", "Spices"},
+  {"bag.sugar_star.description", "A magic candy"},
+  {"bag.sugar_star.name", "Sugar star"},
+  {"bag.water.description", "Perfect water"},
+  {"bag.water.name", "Water"},
+  {"bar.hunger", "Hunger"},
+  {"bar.life", "Life"},
+  {"bar.mood", "Mood"},
+  {"bar.sleepiness", "Sleepiness"},
+  {"home.start", "Start"},
+  {"menu.games", "Games"},
+  {"menu.options", "Options"},
+  {"menu.save", "Save"},
+  {NULL, NULL}  // End mark
 };
 
+static uint8_t en_plural_fn(int32_t num) {
+  uint32_t n = op_n(num);
+  UNUSED(n);
+  uint32_t i = op_i(n);
+  UNUSED(i);
+  uint32_t v = op_v(n);
+  UNUSED(v);
 
-
-static uint8_t en_plural_fn(int32_t num)
-{
-    uint32_t n = op_n(num); UNUSED(n);
-    uint32_t i = op_i(n); UNUSED(i);
-    uint32_t v = op_v(n); UNUSED(v);
-
-    if ((i == 1 && v == 0)) return LV_I18N_PLURAL_TYPE_ONE;
-    return LV_I18N_PLURAL_TYPE_OTHER;
+  if ((i == 1 && v == 0)) return LV_I18N_PLURAL_TYPE_ONE;
+  return LV_I18N_PLURAL_TYPE_OTHER;
 }
 
-static const lv_i18n_lang_t en_lang = {
-    "en",
-    en_singulars,
-    {},
-    en_plural_fn
-};
+static const lv_i18n_lang_t en_lang = {"en", en_singulars, {}, en_plural_fn};
 
 static lv_i18n_phrase_t fr_singulars[] = {
-    {"actions.menu.bag", "Sac à dos"},
-    {"actions.menu.sleep", "Dormir"},
-    {"actions.menu.use", "Utiliser"},
-    {"actions.menu.wake_up", "Se réveiller"},
-    {"bag.apple.description", "Quelle belle pomme"},
-    {"bag.apple.name", "Pomme"},
-    {"bag.beans.description", "De bons haricots"},
-    {"bag.beans.name", "Haricots"},
-    {"bag.berry.description", "Une simple baie"},
-    {"bag.berry.name", "Baie"},
-    {"bag.candy.description", "Une boîte pleine, pas très bonne pour la santé!"},
-    {"bag.candy.name", "Boîte de bonbons"},
-    {"bag.cheese.description", "Fermier, comme on les aime"},
-    {"bag.cheese.name", "Fromage"},
-    {"bag.chicken.description", "Poulet frit"},
-    {"bag.chicken.name", "Poulet"},
-    {"bag.coconut_milk.description", "Très bon avec le poulet"},
-    {"bag.coconut_milk.name", "Lait de coco"},
-    {"bag.frozen_carrots.description", "Carotte du sud"},
-    {"bag.frozen_carrots.name", "Carotte gelée"},
-    {"bag.haricots.description", "Des légumes verts"},
-    {"bag.haricots.name", "Haricots verts"},
-    {"bag.honey.description", "Miel d'acacia"},
-    {"bag.honey.name", "Miel"},
-    {"bag.milk.description", "Lait BIO"},
-    {"bag.milk.name", "Lait"},
-    {"bag.noodles.description", "Nouilles fraîches!"},
-    {"bag.noodles.name", "Nouilles"},
-    {"bag.spices.description", "Pour mettre du piment dans ta vie"},
-    {"bag.spices.name", "Épices"},
-    {"bag.sugar_star.description", "Un bonbon magique"},
-    {"bag.sugar_star.name", "Étoile sucrée"},
-    {"bag.water.description", "Eau de source"},
-    {"bag.water.name", "Eau"},
-    {"bar.hunger", "Faim"},
-    {"bar.life", "Vie"},
-    {"bar.mood", "Humeur"},
-    {"bar.sleepiness", "Sommeil"},
-    {"home.start", "Commencer"},
-    {"menu.games", "Jeux"},
-    {"menu.options", "Options"},
-    {"menu.save", "Sauvegarder"},
-    {NULL, NULL} // End mark
+  {"actions.menu.bag", "Sac à dos"},
+  {"actions.menu.sleep", "Dormir"},
+  {"actions.menu.use", "Utiliser"},
+  {"actions.menu.wake_up", "Se réveiller"},
+  {"bag.apple.description", "Quelle belle pomme"},
+  {"bag.apple.name", "Pomme"},
+  {"bag.beans.description", "De bons haricots"},
+  {"bag.beans.name", "Haricots"},
+  {"bag.berry.description", "Une simple baie"},
+  {"bag.berry.name", "Baie"},
+  {"bag.candy.description", "Une boîte pleine, pas très bonne pour la santé!"},
+  {"bag.candy.name", "Boîte de bonbons"},
+  {"bag.cheese.description", "Fermier, comme on les aime"},
+  {"bag.cheese.name", "Fromage"},
+  {"bag.chicken.description", "Poulet frit"},
+  {"bag.chicken.name", "Poulet"},
+  {"bag.coconut_milk.description", "Très bon avec le poulet"},
+  {"bag.coconut_milk.name", "Lait de coco"},
+  {"bag.frozen_carrots.description", "Carotte du sud"},
+  {"bag.frozen_carrots.name", "Carotte gelée"},
+  {"bag.haricots.description", "Des légumes verts"},
+  {"bag.haricots.name", "Haricots verts"},
+  {"bag.honey.description", "Miel d'acacia"},
+  {"bag.honey.name", "Miel"},
+  {"bag.milk.description", "Lait BIO"},
+  {"bag.milk.name", "Lait"},
+  {"bag.noodles.description", "Nouilles fraîches!"},
+  {"bag.noodles.name", "Nouilles"},
+  {"bag.spices.description", "Pour mettre du piment dans ta vie"},
+  {"bag.spices.name", "Épices"},
+  {"bag.sugar_star.description", "Un bonbon magique"},
+  {"bag.sugar_star.name", "Étoile sucrée"},
+  {"bag.water.description", "Eau de source"},
+  {"bag.water.name", "Eau"},
+  {"bar.hunger", "Faim"},
+  {"bar.life", "Vie"},
+  {"bar.mood", "Humeur"},
+  {"bar.sleepiness", "Sommeil"},
+  {"home.start", "Commencer"},
+  {"menu.games", "Jeux"},
+  {"menu.options", "Options"},
+  {"menu.save", "Sauvegarder"},
+  {NULL, NULL}  // End mark
 };
 
+static uint8_t fr_plural_fn(int32_t num) {
+  uint32_t n = op_n(num);
+  UNUSED(n);
+  uint32_t i = op_i(n);
+  UNUSED(i);
 
-
-static uint8_t fr_plural_fn(int32_t num)
-{
-    uint32_t n = op_n(num); UNUSED(n);
-    uint32_t i = op_i(n); UNUSED(i);
-
-    if ((((i == 0) || (i == 1)))) return LV_I18N_PLURAL_TYPE_ONE;
-    return LV_I18N_PLURAL_TYPE_OTHER;
+  if ((((i == 0) || (i == 1)))) return LV_I18N_PLURAL_TYPE_ONE;
+  return LV_I18N_PLURAL_TYPE_OTHER;
 }
 
-static const lv_i18n_lang_t fr_lang = {
-    "fr",
-    fr_singulars,
-    {},
-    fr_plural_fn
-};
+static const lv_i18n_lang_t fr_lang = {"fr", fr_singulars, {}, fr_plural_fn};
 
 const lv_i18n_language_pack_t lv_i18n_language_pack[] = {
-    &en_lang,
-    &fr_lang,
-    NULL // End mark
+  &en_lang, &fr_lang,
+  NULL  // End mark
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-
 // Internal state
-static const lv_i18n_language_pack_t * current_lang_pack;
-static const lv_i18n_lang_t * current_lang;
-
+static const lv_i18n_language_pack_t* current_lang_pack;
+static const lv_i18n_lang_t* current_lang;
 
 /**
  * Reset internal state. For testing.
  */
-void __lv_i18n_reset(void)
-{
-    current_lang_pack = NULL;
-    current_lang = NULL;
+void __lv_i18n_reset(void) {
+  current_lang_pack = NULL;
+  current_lang = NULL;
 }
 
 /**
  * Set the languages for internationalization
  * @param langs pointer to the array of languages. (Last element has to be `NULL`)
  */
-int lv_i18n_init(const lv_i18n_language_pack_t * langs)
-{
-    if(langs == NULL) return -1;
-    if(langs[0] == NULL) return -1;
+int lv_i18n_init(const lv_i18n_language_pack_t* langs) {
+  if (langs == NULL) return -1;
+  if (langs[0] == NULL) return -1;
 
-    current_lang_pack = langs;
-    current_lang = langs[0];     /*Automatically select the first language*/
-    return 0;
+  current_lang_pack = langs;
+  current_lang = langs[0]; /*Automatically select the first language*/
+  return 0;
 }
 
 /**
  * Change the localization (language)
  * @param l_name name of the translation locale to use. E.g. "en-GB"
  */
-int lv_i18n_set_locale(const char * l_name)
-{
-    if(current_lang_pack == NULL) return -1;
+int lv_i18n_set_locale(const char* l_name) {
+  if (current_lang_pack == NULL) return -1;
 
-    uint16_t i;
+  uint16_t i;
 
-    for(i = 0; current_lang_pack[i] != NULL; i++) {
-        // Found -> finish
-        if(strcmp(current_lang_pack[i]->locale_name, l_name) == 0) {
-            current_lang = current_lang_pack[i];
-            return 0;
-        }
+  for (i = 0; current_lang_pack[i] != NULL; i++) {
+    // Found -> finish
+    if (strcmp(current_lang_pack[i]->locale_name, l_name) == 0) {
+      current_lang = current_lang_pack[i];
+      return 0;
     }
+  }
 
-    return -1;
+  return -1;
 }
 
-
-static const char * __lv_i18n_get_text_core(lv_i18n_phrase_t * trans, const char * msg_id)
-{
-    uint16_t i;
-    for(i = 0; trans[i].msg_id != NULL; i++) {
-        if(strcmp(trans[i].msg_id, msg_id) == 0) {
-            /*The msg_id has found. Check the translation*/
-            if(trans[i].translation) return trans[i].translation;
-        }
+static const char* __lv_i18n_get_text_core(lv_i18n_phrase_t* trans, const char* msg_id) {
+  uint16_t i;
+  for (i = 0; trans[i].msg_id != NULL; i++) {
+    if (strcmp(trans[i].msg_id, msg_id) == 0) {
+      /*The msg_id has found. Check the translation*/
+      if (trans[i].translation) return trans[i].translation;
     }
+  }
 
-    return NULL;
+  return NULL;
 }
-
 
 /**
  * Get the translation from a message ID
  * @param msg_id message ID
  * @return the translation of `msg_id` on the set local
  */
-const char * lv_i18n_get_text(const char * msg_id)
-{
-    if(current_lang == NULL) return msg_id;
+const char* lv_i18n_get_text(const char* msg_id) {
+  if (current_lang == NULL) return msg_id;
 
-    const lv_i18n_lang_t * lang = current_lang;
-    const void * txt;
+  const lv_i18n_lang_t* lang = current_lang;
+  const void* txt;
 
-    // Search in current locale
-    if(lang->singulars != NULL) {
-        txt = __lv_i18n_get_text_core(lang->singulars, msg_id);
-        if (txt != NULL) return txt;
-    }
+  // Search in current locale
+  if (lang->singulars != NULL) {
+    txt = __lv_i18n_get_text_core(lang->singulars, msg_id);
+    if (txt != NULL) return txt;
+  }
 
-    // Try to fallback
-    if(lang == current_lang_pack[0]) return msg_id;
-    lang = current_lang_pack[0];
+  // Try to fallback
+  if (lang == current_lang_pack[0]) return msg_id;
+  lang = current_lang_pack[0];
 
-    // Repeat search for default locale
-    if(lang->singulars != NULL) {
-        txt = __lv_i18n_get_text_core(lang->singulars, msg_id);
-        if (txt != NULL) return txt;
-    }
+  // Repeat search for default locale
+  if (lang->singulars != NULL) {
+    txt = __lv_i18n_get_text_core(lang->singulars, msg_id);
+    if (txt != NULL) return txt;
+  }
 
-    return msg_id;
+  return msg_id;
 }
 
 /**
@@ -256,47 +246,45 @@ const char * lv_i18n_get_text(const char * msg_id)
  * @param num an integer to select the correct plural form
  * @return the translation of `msg_id` on the set local
  */
-const char * lv_i18n_get_text_plural(const char * msg_id, int32_t num)
-{
-    if(current_lang == NULL) return msg_id;
+const char* lv_i18n_get_text_plural(const char* msg_id, int32_t num) {
+  if (current_lang == NULL) return msg_id;
 
-    const lv_i18n_lang_t * lang = current_lang;
-    const void * txt;
-    lv_i18n_plural_type_t ptype;
+  const lv_i18n_lang_t* lang = current_lang;
+  const void* txt;
+  lv_i18n_plural_type_t ptype;
 
-    // Search in current locale
-    if(lang->locale_plural_fn != NULL) {
-        ptype = lang->locale_plural_fn(num);
+  // Search in current locale
+  if (lang->locale_plural_fn != NULL) {
+    ptype = lang->locale_plural_fn(num);
 
-        if(lang->plurals[ptype] != NULL) {
-            txt = __lv_i18n_get_text_core(lang->plurals[ptype], msg_id);
-            if (txt != NULL) return txt;
-        }
+    if (lang->plurals[ptype] != NULL) {
+      txt = __lv_i18n_get_text_core(lang->plurals[ptype], msg_id);
+      if (txt != NULL) return txt;
     }
+  }
 
-    // Try to fallback
-    if(lang == current_lang_pack[0]) return msg_id;
-    lang = current_lang_pack[0];
+  // Try to fallback
+  if (lang == current_lang_pack[0]) return msg_id;
+  lang = current_lang_pack[0];
 
-    // Repeat search for default locale
-    if(lang->locale_plural_fn != NULL) {
-        ptype = lang->locale_plural_fn(num);
+  // Repeat search for default locale
+  if (lang->locale_plural_fn != NULL) {
+    ptype = lang->locale_plural_fn(num);
 
-        if(lang->plurals[ptype] != NULL) {
-            txt = __lv_i18n_get_text_core(lang->plurals[ptype], msg_id);
-            if (txt != NULL) return txt;
-        }
+    if (lang->plurals[ptype] != NULL) {
+      txt = __lv_i18n_get_text_core(lang->plurals[ptype], msg_id);
+      if (txt != NULL) return txt;
     }
+  }
 
-    return msg_id;
+  return msg_id;
 }
 
 /**
  * Get the name of the currently used locale.
  * @return name of the currently used locale. E.g. "en-GB"
  */
-const char * lv_i18n_get_current_locale(void)
-{
-    if(!current_lang) return NULL;
-    return current_lang->locale_name;
+const char* lv_i18n_get_current_locale(void) {
+  if (!current_lang) return NULL;
+  return current_lang->locale_name;
 }
