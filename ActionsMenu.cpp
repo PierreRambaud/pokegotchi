@@ -85,12 +85,12 @@ void ActionsMenu::create_bag() {
   lv_style_init(&style_bag_screen);
   lv_style_set_pad_top(&style_bag_screen, 25);
   lv_style_set_pad_right(&style_bag_screen, 10);
-  lv_style_set_pad_bottom(&style_bag_screen, 20);
+  lv_style_set_pad_bottom(&style_bag_screen, 0);
   lv_style_set_pad_left(&style_bag_screen, 5);
 
   _bag_screen = create_window(_screen);
   lv_obj_add_style(_bag_screen, &style_bag_screen, 0);
-  lv_obj_set_size(_bag_screen, LV_HOR_RES_MAX - 20, LV_VER_RES_MAX - 50);
+  lv_obj_set_size(_bag_screen, LV_HOR_RES_MAX - 20, LV_VER_RES_MAX - 20);
   lv_obj_set_scrollbar_mode(_bag_screen, LV_SCROLLBAR_MODE_ON);
   lv_obj_set_scroll_dir(_bag_screen, LV_DIR_VER);
 
