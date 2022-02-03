@@ -81,20 +81,13 @@ void ActionsMenu::setup(lv_obj_t* screen) {
 }
 
 void ActionsMenu::create_bag() {
-  static lv_style_t style_bag_screen;
-  lv_style_init(&style_bag_screen);
-  lv_style_set_pad_top(&style_bag_screen, 25);
-  lv_style_set_pad_right(&style_bag_screen, 10);
-  lv_style_set_pad_bottom(&style_bag_screen, 0);
-  lv_style_set_pad_left(&style_bag_screen, 5);
-
-  _bag_screen = create_window(_screen);
-  lv_obj_add_style(_bag_screen, &style_bag_screen, 0);
-  lv_obj_set_size(_bag_screen, LV_HOR_RES_MAX - 20, LV_VER_RES_MAX - 20);
+  _bag_screen = lv_obj_create(_screen);
+  lv_obj_remove_style_all(_bag_screen);
+  lv_obj_set_size(_bag_screen, LV_HOR_RES_MAX - 30, LV_VER_RES_MAX - 40);
+  lv_obj_align(_bag_screen, LV_ALIGN_CENTER, 0, 10);
   lv_obj_set_scrollbar_mode(_bag_screen, LV_SCROLLBAR_MODE_ON);
   lv_obj_set_scroll_dir(_bag_screen, LV_DIR_VER);
 
-  lv_obj_align(_bag_screen, LV_ALIGN_OUT_TOP_MID, 10, 5);
   lv_obj_set_flex_flow(_bag_screen, LV_FLEX_FLOW_COLUMN);
   lv_obj_set_flex_grow(_bag_screen, 1);
   lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
@@ -105,6 +98,7 @@ void ActionsMenu::create_bag() {
 }
 
 void ActionsMenu::display_bag() {
+  lv_obj_scroll_to_y(_bag_screen, 0, LV_ANIM_OFF);
   lv_obj_clear_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
   lv_obj_add_flag(_actions_screen, LV_OBJ_FLAG_HIDDEN);
 }
