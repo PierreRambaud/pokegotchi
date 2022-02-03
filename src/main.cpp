@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <M5Core2.h>
 #include <lvgl.h>
 #include "Pokegotchi.h"
