@@ -13,6 +13,17 @@ static inline lv_obj_t* create_window(lv_obj_t* parent = NULL) {
   return obj;
 }
 
+static inline lv_obj_t* create_sub_window(lv_obj_t* parent) {
+  lv_obj_t* obj = lv_obj_create(parent);
+  lv_obj_remove_style_all(obj);
+  lv_obj_set_size(obj, LV_HOR_RES_MAX - 30, LV_VER_RES_MAX - 40);
+  lv_obj_align(obj, LV_ALIGN_CENTER, 0, 10);
+  lv_obj_set_scrollbar_mode(obj, LV_SCROLLBAR_MODE_ON);
+  lv_obj_set_scroll_dir(obj, LV_DIR_VER);
+
+  return obj;
+}
+
 static inline void anim_y_callback(void* img, int32_t value) {
   lv_obj_set_y((lv_obj_t*)img, value);
   Serial.printf("Move element to y: %d\r\n", value);

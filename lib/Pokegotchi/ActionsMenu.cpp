@@ -81,12 +81,7 @@ void ActionsMenu::setup(lv_obj_t* screen) {
 }
 
 void ActionsMenu::create_bag() {
-  _bag_screen = lv_obj_create(_screen);
-  lv_obj_remove_style_all(_bag_screen);
-  lv_obj_set_size(_bag_screen, LV_HOR_RES_MAX - 30, LV_VER_RES_MAX - 40);
-  lv_obj_align(_bag_screen, LV_ALIGN_CENTER, 0, 10);
-  lv_obj_set_scrollbar_mode(_bag_screen, LV_SCROLLBAR_MODE_ON);
-  lv_obj_set_scroll_dir(_bag_screen, LV_DIR_VER);
+  _bag_screen = create_sub_window(_screen);
 
   lv_obj_set_flex_flow(_bag_screen, LV_FLEX_FLOW_COLUMN);
   lv_obj_set_flex_grow(_bag_screen, 1);

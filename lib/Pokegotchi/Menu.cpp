@@ -60,4 +60,5 @@ void Menu::toggle() {
   }
 }
 
-static void trainercard_event_handler(lv_event_t* e) {}
+static void trainercard_event_handler(lv_event_t* e) {
+}
