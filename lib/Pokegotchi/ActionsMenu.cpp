@@ -93,7 +93,6 @@ void ActionsMenu::create_bag() {
 }
 
 void ActionsMenu::display_bag() {
-  lv_obj_scroll_to_y(_bag_screen, 0, LV_ANIM_OFF);
   lv_obj_clear_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
   lv_obj_add_flag(_actions_screen, LV_OBJ_FLAG_HIDDEN);
 }
