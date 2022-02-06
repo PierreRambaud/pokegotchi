@@ -4,7 +4,6 @@
 #include "Pokegotchi.h"
 #include "Game.h"
 #include "Menu.h"
-#include "ActionsMenu.h"
 #include "Home.h"
 #include "Utils.h"
 
@@ -23,6 +22,9 @@ void Pokegotchi::loop() {
   }
 
   Game::getInstance()->loop();
+  if (check_action_time(_last_refresh_time, PERIOD_REFRESH)) {
+    Menu::getInstance()->refresh_battery_status();
+  }
 
   if (M5.BtnA.wasPressed()) {
     Serial.println("Button A pressed");
