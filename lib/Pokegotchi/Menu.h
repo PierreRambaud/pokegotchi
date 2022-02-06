@@ -25,5 +25,6 @@ class Menu {
 
   lv_obj_t* _screen;
   lv_obj_t* _game_screen;
+  lv_obj_t* _menu_screen;
 };
 #endif

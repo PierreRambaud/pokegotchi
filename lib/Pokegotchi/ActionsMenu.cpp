@@ -62,15 +62,17 @@ void ActionsMenu::setup(lv_obj_t* screen) {
   lv_obj_set_pos(background_image, 0, 0);
   Serial.println("ActionsMenu background created");
 
-  _actions_screen = create_window(_screen);
+  display_battery_level(_screen);
+
+  _actions_screen = create_sub_window(_screen);
 
   lv_obj_t* bag_button = lv_menu_button_create(_actions_screen, &bag, &bag_pressed, _("actions.menu.bag"));
-  lv_obj_set_pos(bag_button, 7, 45);
+  lv_obj_set_pos(bag_button, 7, 25);
   lv_obj_add_event_cb(bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
   lv_obj_t* sleep_button = lv_menu_button_create(_actions_screen, &flute, &flute_pressed, _("actions.menu.sleep"));
   lv_obj_t* sleep_label = lv_obj_get_child(sleep_button, -1);
-  lv_obj_set_pos(sleep_button, 165, 45);
+  lv_obj_set_pos(sleep_button, 165, 25);
   lv_obj_add_event_cb(sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
 
   Serial.println("Buttons for actions menu created");
@@ -99,6 +101,8 @@ void ActionsMenu::display_bag() {
 
 void ActionsMenu::toggle() {
   if (lv_obj_has_flag(_screen, LV_OBJ_FLAG_HIDDEN)) {
+    refresh_battery_status();
+
     lv_scr_load(_screen);
     lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
     lv_obj_clear_flag(_actions_screen, LV_OBJ_FLAG_HIDDEN);

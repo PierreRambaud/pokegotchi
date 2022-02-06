@@ -3,6 +3,17 @@
 
 #include <M5Core2.h>
 #include <lvgl.h>
+#include "assets/battery/battery_charging.c"
+#include "assets/battery/battery_low.c"
+#include "assets/battery/battery_middle.c"
+#include "assets/battery/battery_full.c"
+
+static lv_obj_t* battery_level_icon = nullptr;
+static inline void refresh_battery_status();
+static inline void display_battery_level(lv_obj_t*);
+static inline lv_obj_t* create_window(lv_obj_t*);
+static inline lv_obj_t* create_sub_window(lv_obj_t*);
+static inline void anim_y_callback(void*, int32_t);
 
 static inline lv_obj_t* create_window(lv_obj_t* parent = NULL) {
   lv_obj_t* obj = lv_obj_create(parent);
@@ -16,7 +27,7 @@ static inline lv_obj_t* create_window(lv_obj_t* parent = NULL) {
 static inline lv_obj_t* create_sub_window(lv_obj_t* parent) {
   lv_obj_t* obj = lv_obj_create(parent);
   lv_obj_remove_style_all(obj);
-  lv_obj_set_size(obj, LV_HOR_RES_MAX - 30, LV_VER_RES_MAX - 40);
+  lv_obj_set_size(obj, LV_HOR_RES_MAX, LV_VER_RES_MAX - 40);
   lv_obj_align(obj, LV_ALIGN_CENTER, 0, 10);
   lv_obj_set_scrollbar_mode(obj, LV_SCROLLBAR_MODE_ON);
   lv_obj_set_scroll_dir(obj, LV_DIR_VER);
@@ -91,4 +102,29 @@ static inline bool check_action_time(unsigned long& last_millis, unsigned long w
 
   return false;
 }
+
+static inline void refresh_battery_status() {
+  if (M5.Axp.isCharging() == true) {
+      lv_img_set_src(battery_level_icon, &battery_charging);
+  } else {
+    float battery_level = M5.Axp.GetBatteryLevel();
+    if (battery_level >= 80) {
+      lv_img_set_src(battery_level_icon, &battery_full);
+    } else if (battery_level >= 40) {
+      lv_img_set_src(battery_level_icon, &battery_middle);
+    } else {
+      lv_img_set_src(battery_level_icon, &battery_low);
+    }
+
+    Serial.printf("Battery status: %f\r\n" , battery_level);
+  }
+}
+
+static inline void display_battery_level(lv_obj_t* parent) {
+  battery_level_icon = lv_img_create(parent);
+  lv_obj_set_pos(battery_level_icon, LV_HOR_RES_MAX - 30, 0);
+  refresh_battery_status();
+}
+
+
 #endif

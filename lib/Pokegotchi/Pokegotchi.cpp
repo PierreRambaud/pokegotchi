@@ -6,6 +6,7 @@
 #include "Menu.h"
 #include "ActionsMenu.h"
 #include "Home.h"
+#include "Utils.h"
 
 Pokegotchi::Pokegotchi() {}
 
