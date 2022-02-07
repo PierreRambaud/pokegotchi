@@ -189,8 +189,10 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item) {
   lv_style_set_text_color(&style_label_color, lv_color_white());
 
   lv_obj_t* cont = lv_obj_create(parent);
-  lv_obj_remove_style_all(cont);
   lv_obj_set_size(cont, LV_PCT(100), LV_SIZE_CONTENT);
+  lv_obj_set_style_bg_opa(cont, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_border_side(cont, LV_BORDER_SIDE_BOTTOM, 0);
+  lv_obj_set_style_radius(cont, 0, 0);
   lv_obj_set_grid_dsc_array(cont, grid_col_dsc, grid_row_dsc);
 
   lv_obj_t* img = lv_img_create(cont);
@@ -205,13 +207,11 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item) {
 
   lv_obj_t* desc_label = lv_label_create(cont);
   lv_label_set_text(desc_label, item->description);
-  lv_label_set_long_mode(desc_label, LV_LABEL_LONG_WRAP);
   lv_obj_add_style(desc_label, &style_label_color, 0);
-  lv_obj_set_width(label, 100);
-  lv_obj_set_grid_cell(desc_label, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_END, 1, 1);
+  lv_obj_set_grid_cell(desc_label, LV_GRID_ALIGN_STRETCH, 2, 1, LV_GRID_ALIGN_END, 1, 1);
 
   lv_obj_t* btn = lv_btn_create(cont);
-  lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, 3, 1, LV_GRID_ALIGN_CENTER, 0, 1);
+  lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, 3, 1, LV_GRID_ALIGN_CENTER, 0, 2);
   lv_obj_add_event_cb(btn, use_item_event_handler, LV_EVENT_CLICKED, item);
 
   lv_obj_t* btn_label = lv_label_create(btn);

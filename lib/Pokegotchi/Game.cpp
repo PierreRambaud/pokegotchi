@@ -78,10 +78,10 @@ void Game::setup() {
   lv_obj_t* level_label = lv_label_create(_screen);
   lv_label_set_text(level_label, _("game.level"));
   lv_obj_add_style(level_label, &style_game_label, 0);
-  lv_obj_align(level_label, LV_ALIGN_TOP_MID, 0, 0);
+  lv_obj_align(level_label, LV_ALIGN_TOP_MID, 0, 10);
 
   _level_indic = lv_label_create(_screen);
-  lv_obj_align_to(_level_indic, level_label, LV_ALIGN_OUT_BOTTOM_MID, 10, 10);
+  lv_obj_align_to(_level_indic, level_label, LV_ALIGN_OUT_BOTTOM_MID, 10, 0);
   lv_obj_add_style(_level_indic, &style_game_label, 0);
   lv_label_set_text(_level_indic, "1");
 }
