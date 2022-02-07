@@ -79,11 +79,15 @@ void Game::setup() {
 void Game::switch_to_day() {
   lv_anim_set_exec_cb(&_anim, day_animation);
   lv_anim_start(&_anim);
+  lv_style_set_text_color(&style_game_bar_label, lv_color_black());
+  lv_obj_report_style_change(&style_game_bar_label);
 }
 
 void Game::switch_to_night() {
   lv_anim_set_exec_cb(&_anim, night_animation);
   lv_anim_start(&_anim);
+  lv_style_set_text_color(&style_game_bar_label, lv_color_white());
+  lv_obj_report_style_change(&style_game_bar_label);
 }
 
 void Game::loop() {
