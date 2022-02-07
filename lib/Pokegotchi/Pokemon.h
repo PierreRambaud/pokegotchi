@@ -2,6 +2,7 @@
 #define POKEGOTCHI_POKEMON
 
 #include <lvgl.h>
+#include "Menu.h"
 
 const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;
@@ -29,7 +30,7 @@ class Pokemon {
   bool is_sick() { return _is_sick; }
   bool is_sleeping() { return _is_sleeping; }
 
-  void eat();
+  void eat(Item* item);
   void heal(int8_t number);
   void train();
   void play();

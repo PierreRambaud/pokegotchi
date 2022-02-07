@@ -119,9 +119,9 @@ void Game::action_train() {
   p->train();
 }
 
-void Game::action_eat() {
+void Game::action_eat(Item* item) {
   Pokemon* p = Pokemon::getInstance();
-  p->eat();
+  p->eat(item);
 }
 
 void Game::action_heal() {}

@@ -39,7 +39,7 @@ void Pokemon::play() {
   }
 }
 
-void Pokemon::eat() {
+void Pokemon::eat(Item* item) {
   _hunger -= 5;
   if (_hunger < 0) {
     // @TODO random sick because eat too much

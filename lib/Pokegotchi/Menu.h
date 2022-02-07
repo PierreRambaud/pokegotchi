@@ -12,10 +12,20 @@
 
 #define BAG_ITEMS_SIZE 15
 
+struct bag_item_specifications {
+  const int mood;
+  const int hunger;
+  const int life;
+  const int sleepiness;
+};
+
+typedef struct bag_item_specifications ItemSpecifications;
+
 struct bag_item {
   const lv_img_dsc_t* image;
   const char* name;
   const char* description;
+  // ItemSpecifications* specs;
 };
 
 typedef struct bag_item Item;

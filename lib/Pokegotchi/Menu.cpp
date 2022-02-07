@@ -50,11 +50,11 @@ void Menu::setup(lv_obj_t* screen) {
   lv_obj_t* save_button = lv_menu_button_create(_menu_screen, &save, &save_pressed, _("menu.save"));
   lv_obj_set_pos(save_button, 7, 25);
 
-  lv_obj_t* options_button = lv_menu_button_create(_menu_screen, &options, &options_pressed, _("menu.options"));
-  lv_obj_set_pos(options_button, 7, 85);
-
   lv_obj_t* pokemon_button = lv_menu_button_create(_menu_screen, &pokeball, &pokeball_pressed, "Pokémon");
   lv_obj_set_pos(pokemon_button, 165, 25);
+
+  lv_obj_t* options_button = lv_menu_button_create(_menu_screen, &options, &options_pressed, _("menu.options"));
+  lv_obj_set_pos(options_button, 7, 85);
 
   lv_obj_t* trainercard_button = lv_menu_button_create(_menu_screen, &trainercard, &trainercard_pressed, _("menu.games"));
   lv_obj_set_pos(trainercard_button, 165, 85);
@@ -105,8 +105,8 @@ void ActionsMenu::setup(lv_obj_t* screen) {
   lv_obj_add_event_cb(bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
   lv_obj_t* sleep_button = lv_menu_button_create(_menu_screen, &flute, &flute_pressed, _("actions.menu.sleep"));
-  lv_obj_t* sleep_label = lv_obj_get_child(sleep_button, -1);
   lv_obj_set_pos(sleep_button, 165, 25);
+  lv_obj_t* sleep_label = lv_obj_get_child(sleep_button, -1);
   lv_obj_add_event_cb(sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
 
   Serial.println("Buttons for actions menu created");
@@ -148,7 +148,7 @@ static void use_item_event_handler(lv_event_t* e) {
 
   ActionsMenu::getInstance()->toggle();
   Game* g = Game::getInstance();
-  g->action_eat();
+  g->action_eat(item);
 }
 
 static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getInstance()->display_bag(); }

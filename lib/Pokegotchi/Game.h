@@ -2,6 +2,7 @@
 #define POKEGOTCHI_GAME
 
 #include <lvgl.h>
+#include "Menu.h"
 
 #define ANIMATION_NIGHT 11
 #define ANIMATION_DAY 11
@@ -26,7 +27,7 @@ class Game {
     return instance;
   }
 
-  void action_eat();
+  void action_eat(Item* item);
   void action_heal();
   void action_train();
   void action_sleep();
