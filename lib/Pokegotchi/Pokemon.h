@@ -57,11 +57,9 @@ class Pokemon {
   void hungry(int8_t number);
 
   const lv_img_dsc_t* get_image() {
-    // @todo not working yet
-    // if (_level >= 5){
-    //   return &pokemon_26;
-    // } else
-    if (_level >= 3) {
+    if (_level >= 5){
+      return &pokemon_26;
+    } else if (_level >= 3) {
       return &pokemon_25;
     } else {
       return &pokemon_172;
