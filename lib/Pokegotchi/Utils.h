@@ -6,7 +6,7 @@
 
 static lv_style_t style_game_bar_bg;
 static lv_style_t style_game_bar_indic;
-static lv_style_t style_game_bar_label;
+static lv_style_t style_game_label;
 
 static inline lv_obj_t* create_window(lv_obj_t*);
 static inline lv_obj_t* create_sub_window(lv_obj_t*);
@@ -58,8 +58,8 @@ static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_img_dsc
 }
 
 static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t color, const char* title, const int16_t x, const int16_t y, const int16_t max_range) {
-  lv_style_init(&style_game_bar_label);
-  lv_style_set_text_color(&style_game_bar_label, lv_color_black());
+  lv_style_init(&style_game_label);
+  lv_style_set_text_color(&style_game_label, lv_color_black());
 
   lv_style_init(&style_game_bar_bg);
   lv_style_set_border_width(&style_game_bar_bg, 2);
@@ -86,7 +86,7 @@ static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t 
 
   lv_obj_t* label = lv_label_create(lv_scr_act());
   lv_label_set_text(label, title);
-  lv_obj_add_style(label, &style_game_bar_label, 0);
+  lv_obj_add_style(label, &style_game_label, 0);
   lv_obj_align_to(label, bar, LV_ALIGN_OUT_TOP_MID, 0, -5);
 
   return bar;

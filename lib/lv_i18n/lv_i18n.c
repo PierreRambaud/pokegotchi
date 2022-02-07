@@ -60,6 +60,8 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"menu.games", "Games"},
     {"menu.options", "Options"},
     {"menu.save", "Save"},
+    {"game.level", "Level"},
+    {"menu.train", "Train"},
     {NULL, NULL} // End mark
 };
 
@@ -125,6 +127,8 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"menu.games", "Jeux"},
     {"menu.options", "Options"},
     {"menu.save", "Sauvegarder"},
+    {"game.level", "Niveau"},
+    {"menu.train", "Entraînement"},
     {NULL, NULL} // End mark
 };
 

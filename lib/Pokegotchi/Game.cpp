@@ -69,25 +69,35 @@ void Game::setup() {
   _life_bar = lv_game_bar_create(_screen, LV_PALETTE_RED, _("bar.life"), 10, 70, MAX_LIFE);
   lv_bar_set_value(_life_bar, 0, LV_ANIM_ON);
 
-  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE, _("bar.sleepiness"), 180, 25, MAX_SLEEPINESS);
+  _sleepiness_bar = lv_game_bar_create(_screen, LV_PALETTE_BLUE, _("bar.sleepiness"), 185, 25, MAX_SLEEPINESS);
   lv_bar_set_value(_sleepiness_bar, 0, LV_ANIM_ON);
 
-  _hunger_bar = lv_game_bar_create(_screen, LV_PALETTE_YELLOW, _("bar.hunger"), 180, 70, MAX_HUNGER);
+  _hunger_bar = lv_game_bar_create(_screen, LV_PALETTE_YELLOW, _("bar.hunger"), 185, 70, MAX_HUNGER);
   lv_bar_set_value(_hunger_bar, 0, LV_ANIM_ON);
+
+  lv_obj_t* level_label = lv_label_create(_screen);
+  lv_label_set_text(level_label, _("game.level"));
+  lv_obj_add_style(level_label, &style_game_label, 0);
+  lv_obj_align(level_label, LV_ALIGN_TOP_MID, 0, 0);
+
+  _level_indic = lv_label_create(_screen);
+  lv_obj_align_to(_level_indic, level_label, LV_ALIGN_OUT_BOTTOM_MID, 10, 10);
+  lv_obj_add_style(_level_indic, &style_game_label, 0);
+  lv_label_set_text(_level_indic, "1");
 }
 
 void Game::switch_to_day() {
   lv_anim_set_exec_cb(&_anim, day_animation);
   lv_anim_start(&_anim);
-  lv_style_set_text_color(&style_game_bar_label, lv_color_black());
-  lv_obj_report_style_change(&style_game_bar_label);
+  lv_style_set_text_color(&style_game_label, lv_color_black());
+  lv_obj_report_style_change(&style_game_label);
 }
 
 void Game::switch_to_night() {
   lv_anim_set_exec_cb(&_anim, night_animation);
   lv_anim_start(&_anim);
-  lv_style_set_text_color(&style_game_bar_label, lv_color_white());
-  lv_obj_report_style_change(&style_game_bar_label);
+  lv_style_set_text_color(&style_game_label, lv_color_white());
+  lv_obj_report_style_change(&style_game_label);
 }
 
 void Game::loop() {
@@ -98,9 +108,14 @@ void Game::loop() {
   lv_bar_set_value(_life_bar, p->get_life(), LV_ANIM_ON);
   lv_bar_set_value(_sleepiness_bar, p->get_sleepiness(), LV_ANIM_ON);
   lv_bar_set_value(_hunger_bar, p->get_hunger(), LV_ANIM_ON);
+  lv_label_set_text_fmt(_level_indic, "%d", p->get_level());
 
   if (check_action_time(_last_eat_time, PERIOD_EAT)) {
     p->hungry(2);
+  }
+
+  if (check_action_time(_last_boredom_time, PERIOD_BOREDOM)) {
+    p->boredom(1);
   }
 
   if (p->is_sleeping() == true) {

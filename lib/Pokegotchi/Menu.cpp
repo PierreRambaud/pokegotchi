@@ -14,6 +14,8 @@
 #include "assets/menu/trainercard_pressed.c"
 #include "assets/menu/bag.c"
 #include "assets/menu/bag_pressed.c"
+#include "assets/menu/train.c"
+#include "assets/menu/train_pressed.c"
 #include "assets/menu/flute.c"
 #include "assets/menu/flute_pressed.c"
 #include "assets/objects/bag/apple.c"
@@ -108,6 +110,10 @@ void ActionsMenu::setup(lv_obj_t* screen) {
   lv_obj_set_pos(sleep_button, 165, 25);
   lv_obj_t* sleep_label = lv_obj_get_child(sleep_button, -1);
   lv_obj_add_event_cb(sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
+
+  lv_obj_t* train_button = lv_menu_button_create(_menu_screen, &train, &train_pressed, _("menu.train"));
+  lv_obj_set_pos(train_button, 7, 85);
+  lv_obj_add_event_cb(train_button, train_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for actions menu created");
 
