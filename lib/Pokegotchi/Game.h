@@ -30,6 +30,7 @@ class Game {
 
   void action_eat(Item* item);
   void action_heal();
+  void action_play();
   void action_train();
   void action_sleep();
   void action_wake_up();

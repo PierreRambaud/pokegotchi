@@ -134,6 +134,11 @@ void Game::action_train() {
   p->train();
 }
 
+void Game::action_play() {
+  Pokemon* p = Pokemon::getInstance();
+  p->play();
+}
+
 void Game::action_eat(Item* item) {
   Pokemon* p = Pokemon::getInstance();
   p->eat(item);

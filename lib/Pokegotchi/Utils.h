@@ -37,6 +37,11 @@ static inline void anim_y_callback(void* img, int32_t value) {
   Serial.printf("Move element to y: %d\r\n", value);
 }
 
+static inline void anim_x_callback(void* img, int32_t value) {
+  lv_obj_set_x((lv_obj_t*)img, value);
+  Serial.printf("Move element to x: %d\r\n", value);
+}
+
 static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_img_dsc_t* img_src, const lv_img_dsc_t* img_pressed_src, const char* title) {
   static lv_style_t style_def;
   lv_style_init(&style_def);

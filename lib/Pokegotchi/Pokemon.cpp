@@ -34,17 +34,17 @@ void Pokemon::train() {
 }
 
 void Pokemon::play() {
-  _mood += 1;
+  _mood += 2;
   if (_mood > MAX_MOOD) {
     _mood = MAX_MOOD;
   }
 }
 
 void Pokemon::eat(Item* item) {
-  _hunger -= 5;
-  if (_hunger < 0) {
+  _hunger += 5;
+  if (_hunger > MAX_HUNGER) {
     // @TODO random sick because eat too much
-    _hunger = 0;
+    _hunger = MAX_HUNGER;
   }
 }
 
@@ -57,26 +57,26 @@ void Pokemon::heal(int8_t restore_points) {
 
 void Pokemon::sleep() {
   _is_sleeping = true;
-  _sleepiness -= 5;
-  if (_sleepiness < 0) {
-    _sleepiness = 0;
+  _sleepiness += 5;
+  if (_sleepiness > MAX_SLEEPINESS) {
+    _sleepiness = MAX_SLEEPINESS;
   }
 }
 
 void Pokemon::wake_up() { _is_sleeping = false; }
 
 void Pokemon::hungry(int8_t number) {
-  _hunger += number;
-  if (_hunger > MAX_HUNGER) {
-    _hunger = MAX_HUNGER;
+  _hunger -= number;
+  if (_hunger < 0) {
+    _hunger = 0;
     // @TODO random sick or die
   }
 }
 
 void Pokemon::tiredness(int8_t number) {
-  _sleepiness += number;
-  if (_sleepiness > MAX_SLEEPINESS) {
-    _sleepiness = MAX_SLEEPINESS;
+  _sleepiness -= number;
+  if (_sleepiness < 0) {
+    _sleepiness = 0;
     // @TODO random fall asleep or die
   }
 }
@@ -88,19 +88,3 @@ void Pokemon::boredom(int8_t number) {
     // @TODO random act or die
   }
 }
-
-// void random_move() {
-//   long current_x = lv_obj_get_x(_image);
-//   long new_x = current_x + random(-5, 5);
-//   if (new_x > LV_HOR_RES_MAX) {
-//     new_x = LV_HOR_RES_MAX;
-//   }
-
-//   if (new_x <= 0) {
-//     new_x = 0;
-//   }
-
-//   Serial.printf("New Pokemon position: %ld to %ld\r\n", current_x, new_x);
-
-//   lv_obj_set_x(_image, new_x);
-// }

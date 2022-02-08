@@ -79,10 +79,10 @@ class Pokemon {
   const char* _name;
 
   int8_t _level = 1;
-  int8_t _sleepiness = 0;
+  int8_t _sleepiness = MAX_SLEEPINESS;
   int8_t _life = MAX_LIFE;
   int8_t _mood = MAX_MOOD;
-  int8_t _hunger = 0;
+  int8_t _hunger = MAX_HUNGER;
 
   bool _is_sleeping = false;
   bool _is_sick = false;

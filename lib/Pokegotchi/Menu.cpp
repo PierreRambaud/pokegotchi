@@ -4,20 +4,22 @@
 #include "Utils.h"
 #include "Pokemon.h"
 #include "Game.h"
-#include "assets/menu/save.c"
-#include "assets/menu/save_pressed.c"
-#include "assets/menu/pokeball.c"
-#include "assets/menu/pokeball_pressed.c"
-#include "assets/menu/options.c"
-#include "assets/menu/options_pressed.c"
-#include "assets/menu/trainercard.c"
-#include "assets/menu/trainercard_pressed.c"
 #include "assets/menu/bag.c"
 #include "assets/menu/bag_pressed.c"
-#include "assets/menu/train.c"
-#include "assets/menu/train_pressed.c"
 #include "assets/menu/flute.c"
 #include "assets/menu/flute_pressed.c"
+#include "assets/menu/options.c"
+#include "assets/menu/options_pressed.c"
+#include "assets/menu/play.c"
+#include "assets/menu/play_pressed.c"
+#include "assets/menu/pokeball.c"
+#include "assets/menu/pokeball_pressed.c"
+#include "assets/menu/save.c"
+#include "assets/menu/save_pressed.c"
+#include "assets/menu/train.c"
+#include "assets/menu/train_pressed.c"
+#include "assets/menu/trainercard.c"
+#include "assets/menu/trainercard_pressed.c"
 #include "assets/objects/bag/apple.c"
 #include "assets/objects/bag/beans.c"
 #include "assets/objects/bag/berry.c"
@@ -37,6 +39,7 @@
 static void trainercard_event_handler(lv_event_t* e);
 static void use_item_event_handler(lv_event_t* e);
 static void display_bag_items_event_handler(lv_event_t* e);
+static void play_event_handler(lv_event_t* e);
 static void train_event_handler(lv_event_t* e);
 static void toggle_sleep_event_handler(lv_event_t* e);
 static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
@@ -79,6 +82,11 @@ void Menu::toggle() {
   }
 }
 
+/**
+ * Display trainer card
+ *
+ * @param lv_event_t* e
+ */
 static void trainercard_event_handler(lv_event_t* e) {}
 
 ActionsMenu::ActionsMenu() {
@@ -115,6 +123,10 @@ void ActionsMenu::setup(lv_obj_t* screen) {
   lv_obj_set_pos(train_button, 7, 85);
   lv_obj_add_event_cb(train_button, train_event_handler, LV_EVENT_CLICKED, NULL);
 
+  lv_obj_t* play_button = lv_menu_button_create(_menu_screen, &play, &play_pressed, _("menu.play"));
+  lv_obj_set_pos(play_button, 165, 85);
+  lv_obj_add_event_cb(play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
+
   Serial.println("Buttons for actions menu created");
 
   _bag_screen = create_sub_window(_screen);
@@ -149,6 +161,12 @@ void ActionsMenu::toggle() {
     Serial.println("Hide ActionsMenu");
   }
 }
+
+/**
+ * Use bag item
+ *
+ * @param lv_event_t* e
+ */
 static void use_item_event_handler(lv_event_t* e) {
   Item* item = (Item*)lv_event_get_user_data(e);
 
@@ -157,8 +175,18 @@ static void use_item_event_handler(lv_event_t* e) {
   g->action_eat(item);
 }
 
+/**
+ * Display bag items
+ *
+ * @param lv_event_t* e
+ */
 static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getInstance()->display_bag(); }
 
+/**
+ * Train pokemeon
+ *
+ * @param lv_event_t* e
+ */
 static void train_event_handler(lv_event_t* e) {
   Game* g = Game::getInstance();
 
@@ -166,6 +194,23 @@ static void train_event_handler(lv_event_t* e) {
   g->action_train();
 }
 
+/**
+ * Play with pokemeon
+ *
+ * @param lv_event_t* e
+ */
+static void play_event_handler(lv_event_t* e) {
+  Game* g = Game::getInstance();
+
+  ActionsMenu::getInstance()->toggle();
+  g->action_play();
+}
+
+/**
+ * Toggle sleep event
+ *
+ * @param lv_event_t* e
+ */
 static void toggle_sleep_event_handler(lv_event_t* e) {
   Pokemon* p = Pokemon::getInstance();
   Game* g = Game::getInstance();
@@ -181,6 +226,14 @@ static void toggle_sleep_event_handler(lv_event_t* e) {
   }
 }
 
+/**
+ * Create bag item row
+ *
+ * @param lv_obj_t* parent The parent screen
+ * @param Item* item The item to display
+ *
+ * @return lv_obj_t* the row line
+ */
 static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item) {
   static lv_coord_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
   static lv_coord_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
