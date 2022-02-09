@@ -44,3 +44,5 @@ en:
   game.level: Level
   menu.train: Train
   menu.play: Play
+  menu.options.title: Options
+  menu.options.brightness: Brightness

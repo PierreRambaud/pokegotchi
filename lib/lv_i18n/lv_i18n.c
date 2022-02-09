@@ -63,6 +63,8 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"game.level", "Level"},
     {"menu.train", "Train"},
     {"menu.play", "Play"},
+    {"menu.options.title", "Options"},
+    {"menu.options.brightness", "Brightness"},
     {NULL, NULL} // End mark
 };
 
@@ -131,6 +133,8 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"game.level", "Niveau"},
     {"menu.train", "Entraînement"},
     {"menu.play", "Jouer"},
+    {"menu.options.title", "Options"},
+    {"menu.options.brightness", "Luminosité"},
     {NULL, NULL} // End mark
 };
 

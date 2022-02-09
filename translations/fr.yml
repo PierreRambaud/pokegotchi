@@ -44,3 +44,5 @@ fr:
   game.level: Niveau
   menu.train: Entraînement
   menu.play: Jouer
+  menu.options.title: Options
+  menu.options.brightness: Luminosité
