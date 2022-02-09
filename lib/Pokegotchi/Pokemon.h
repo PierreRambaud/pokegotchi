@@ -12,13 +12,10 @@
 
 #include <lvgl.h>
 #include "Menu.h"
-#include "assets/pokemon/172.c"
-#include "assets/pokemon/25.c"
-#include "assets/pokemon/26.c"
-#include "assets/pokemon/133.c"
-#include "assets/pokemon/134.c"
-#include "assets/pokemon/135.c"
-#include "assets/pokemon/136.c"
+
+LV_IMG_DECLARE(pokemon_25)
+LV_IMG_DECLARE(pokemon_26)
+LV_IMG_DECLARE(pokemon_172)
 
 const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;

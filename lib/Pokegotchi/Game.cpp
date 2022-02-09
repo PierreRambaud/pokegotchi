@@ -4,26 +4,27 @@
 #include "Menu.h"
 #include "Pokemon.h"
 #include "Utils.h"
-#include "assets/background/background_1.c"
-#include "assets/background/background_2.c"
-#include "assets/background/background_3.c"
-#include "assets/background/background_4.c"
-#include "assets/background/background_5.c"
-#include "assets/background/background_6.c"
-#include "assets/background/background_7.c"
-#include "assets/background/background_8.c"
-#include "assets/background/background_9.c"
-#include "assets/background/background_10.c"
-#include "assets/background/background_11.c"
-#include "assets/background/background_12.c"
-#include "assets/background/background_13.c"
-#include "assets/background/background_14.c"
-#include "assets/background/background_15.c"
-#include "assets/background/background_16.c"
-#include "assets/background/background_17.c"
-#include "assets/background/background_18.c"
-#include "assets/background/background_19.c"
-#include "assets/background/background_20.c"
+
+LV_IMG_DECLARE(background_1)
+LV_IMG_DECLARE(background_2)
+LV_IMG_DECLARE(background_3)
+LV_IMG_DECLARE(background_4)
+LV_IMG_DECLARE(background_5)
+LV_IMG_DECLARE(background_6)
+LV_IMG_DECLARE(background_7)
+LV_IMG_DECLARE(background_8)
+LV_IMG_DECLARE(background_9)
+LV_IMG_DECLARE(background_10)
+LV_IMG_DECLARE(background_11)
+LV_IMG_DECLARE(background_12)
+LV_IMG_DECLARE(background_13)
+LV_IMG_DECLARE(background_14)
+LV_IMG_DECLARE(background_15)
+LV_IMG_DECLARE(background_16)
+LV_IMG_DECLARE(background_17)
+LV_IMG_DECLARE(background_18)
+LV_IMG_DECLARE(background_19)
+LV_IMG_DECLARE(background_20)
 
 static const lv_img_dsc_t* anim_night[ANIMATION_NIGHT] = {
     &background_6, &background_7, &background_8, &background_9, &background_10, &background_11, &background_12, &background_13, &background_14, &background_15, &background_16,

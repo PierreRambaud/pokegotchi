@@ -4,37 +4,38 @@
 #include "Utils.h"
 #include "Pokemon.h"
 #include "Game.h"
-#include "assets/menu/bag.c"
-#include "assets/menu/bag_pressed.c"
-#include "assets/menu/flute.c"
-#include "assets/menu/flute_pressed.c"
-#include "assets/menu/options.c"
-#include "assets/menu/options_pressed.c"
-#include "assets/menu/play.c"
-#include "assets/menu/play_pressed.c"
-#include "assets/menu/pokeball.c"
-#include "assets/menu/pokeball_pressed.c"
-#include "assets/menu/save.c"
-#include "assets/menu/save_pressed.c"
-#include "assets/menu/train.c"
-#include "assets/menu/train_pressed.c"
-#include "assets/menu/trainercard.c"
-#include "assets/menu/trainercard_pressed.c"
-#include "assets/objects/bag/apple.c"
-#include "assets/objects/bag/beans.c"
-#include "assets/objects/bag/berry.c"
-#include "assets/objects/bag/candy_box.c"
-#include "assets/objects/bag/cheese.c"
-#include "assets/objects/bag/chicken.c"
-#include "assets/objects/bag/coconut_milk.c"
-#include "assets/objects/bag/frozen_carrots.c"
-#include "assets/objects/bag/haricots.c"
-#include "assets/objects/bag/honey.c"
-#include "assets/objects/bag/milk.c"
-#include "assets/objects/bag/noodles.c"
-#include "assets/objects/bag/spices.c"
-#include "assets/objects/bag/sugar_star.c"
-#include "assets/objects/bag/water.c"
+
+LV_IMG_DECLARE(bag)
+LV_IMG_DECLARE(bag_pressed)
+LV_IMG_DECLARE(flute)
+LV_IMG_DECLARE(flute_pressed)
+LV_IMG_DECLARE(options)
+LV_IMG_DECLARE(options_pressed)
+LV_IMG_DECLARE(play)
+LV_IMG_DECLARE(play_pressed)
+LV_IMG_DECLARE(pokeball)
+LV_IMG_DECLARE(pokeball_pressed)
+LV_IMG_DECLARE(save)
+LV_IMG_DECLARE(save_pressed)
+LV_IMG_DECLARE(train)
+LV_IMG_DECLARE(train_pressed)
+LV_IMG_DECLARE(trainercard)
+LV_IMG_DECLARE(trainercard_pressed)
+LV_IMG_DECLARE(apple)
+LV_IMG_DECLARE(beans)
+LV_IMG_DECLARE(berry)
+LV_IMG_DECLARE(candy_box)
+LV_IMG_DECLARE(cheese)
+LV_IMG_DECLARE(chicken)
+LV_IMG_DECLARE(coconut_milk)
+LV_IMG_DECLARE(frozen_carrots)
+LV_IMG_DECLARE(haricots)
+LV_IMG_DECLARE(honey)
+LV_IMG_DECLARE(milk)
+LV_IMG_DECLARE(noodles)
+LV_IMG_DECLARE(spices)
+LV_IMG_DECLARE(sugar_star)
+LV_IMG_DECLARE(water)
 
 static int options_brightness_slider_value = ((300 * 100) / 800);
 

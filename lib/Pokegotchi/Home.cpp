@@ -1,10 +1,11 @@
 #include <lvgl.h>
 #include "lv_i18n.h"
-#include "assets/background/background_16.c"
-#include "assets/pokegotchi_title.c"
 #include "Home.h"
 #include "Game.h"
 #include "Utils.h"
+
+LV_IMG_DECLARE(background_16)
+LV_IMG_DECLARE(pokegotchi_title)
 
 Home* Home::instance = nullptr;
 

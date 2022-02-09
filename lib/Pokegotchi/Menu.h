@@ -4,13 +4,14 @@
 #include <lvgl.h>
 #include <M5Core2.h>
 #include "Utils.h"
-#include "assets/menu/background.c"
-#include "assets/battery/battery_charging.c"
-#include "assets/battery/battery_low.c"
-#include "assets/battery/battery_middle.c"
-#include "assets/battery/battery_full.c"
 
 #define BAG_ITEMS_SIZE 15
+
+LV_IMG_DECLARE(background);
+LV_IMG_DECLARE(battery_charging);
+LV_IMG_DECLARE(battery_low);
+LV_IMG_DECLARE(battery_middle);
+LV_IMG_DECLARE(battery_full);
 
 struct bag_item_specifications {
   const int mood;

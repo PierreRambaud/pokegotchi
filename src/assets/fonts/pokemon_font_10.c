@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Size: 10 px
  * Bpp: 1
- * Opts:
+ * Opts: 
  ******************************************************************************/
 
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
@@ -21,7 +21,7 @@
  *----------------*/
 
 /*Store the image of the glyphs*/
-static LV_ATTRIBUTE_LARGE_CONST const uint8_t pokemon_font_10_glyph_bitmap[] = {
+static LV_ATTRIBUTE_LARGE_CONST const uint8_t glyph_bitmap[] = {
     /* U+0020 " " */
     0x0,
 
@@ -1327,7 +1327,7 @@ static LV_ATTRIBUTE_LARGE_CONST const uint8_t pokemon_font_10_glyph_bitmap[] = {
  *  GLYPH DESCRIPTION
  *--------------------*/
 
-static const lv_font_fmt_txt_glyph_dsc_t pokemon_font_10_glyph_dsc[] = {
+static const lv_font_fmt_txt_glyph_dsc_t glyph_dsc[] = {
     {.bitmap_index = 0, .adv_w = 0, .box_w = 0, .box_h = 0, .ofs_x = 0, .ofs_y = 0} /* id = 0 reserved */,
     {.bitmap_index = 0, .adv_w = 160, .box_w = 1, .box_h = 1, .ofs_x = 0, .ofs_y = 0},
     {.bitmap_index = 1, .adv_w = 160, .box_w = 5, .box_h = 10, .ofs_x = 2, .ofs_y = 0},
@@ -1705,7 +1705,7 @@ static const lv_font_fmt_txt_glyph_dsc_t pokemon_font_10_glyph_dsc[] = {
  *  CHARACTER MAPPING
  *--------------------*/
 
-static const uint8_t pokemon_font_10_glyph_id_ofs_list_1[] = {
+static const uint8_t glyph_id_ofs_list_1[] = {
     0, 1, 2, 3, 4, 5, 6, 7,
     8, 0, 9, 10, 0, 11, 12, 13,
     14, 0, 0, 15, 0, 16, 17, 18,
@@ -1713,7 +1713,7 @@ static const uint8_t pokemon_font_10_glyph_id_ofs_list_1[] = {
 };
 
 /*Collect the unicode lists and glyph_id offsets*/
-static const lv_font_fmt_txt_cmap_t pokemon_font_10_cmaps[] =
+static const lv_font_fmt_txt_cmap_t cmaps[] =
 {
     {
         .range_start = 32, .range_length = 95, .glyph_id_start = 1,
@@ -1721,7 +1721,7 @@ static const lv_font_fmt_txt_cmap_t pokemon_font_10_cmaps[] =
     },
     {
         .range_start = 161, .range_length = 27, .glyph_id_start = 96,
-        .unicode_list = NULL, .glyph_id_ofs_list = pokemon_font_10_glyph_id_ofs_list_1, .list_length = 27, .type = LV_FONT_FMT_TXT_CMAP_FORMAT0_FULL
+        .unicode_list = NULL, .glyph_id_ofs_list = glyph_id_ofs_list_1, .list_length = 27, .type = LV_FONT_FMT_TXT_CMAP_FORMAT0_FULL
     },
     {
         .range_start = 191, .range_length = 65, .glyph_id_start = 117,
@@ -1745,14 +1745,14 @@ static const lv_font_fmt_txt_cmap_t pokemon_font_10_cmaps[] =
 
 #if LV_VERSION_CHECK(8, 0, 0)
 /*Store all the custom data of the font*/
-static  lv_font_fmt_txt_glyph_cache_t pokemon_font_10_cache;
-static const lv_font_fmt_txt_dsc_t pokemon_font_10_font_dsc = {
+static  lv_font_fmt_txt_glyph_cache_t cache;
+static const lv_font_fmt_txt_dsc_t font_dsc = {
 #else
-static lv_font_fmt_txt_dsc_t pokemon_font_10_font_dsc = {
+static lv_font_fmt_txt_dsc_t font_dsc = {
 #endif
-    .glyph_bitmap = pokemon_font_10_glyph_bitmap,
-    .glyph_dsc = pokemon_font_10_glyph_dsc,
-    .cmaps = pokemon_font_10_cmaps,
+    .glyph_bitmap = glyph_bitmap,
+    .glyph_dsc = glyph_dsc,
+    .cmaps = cmaps,
     .kern_dsc = NULL,
     .kern_scale = 0,
     .cmap_num = 5,
@@ -1760,7 +1760,7 @@ static lv_font_fmt_txt_dsc_t pokemon_font_10_font_dsc = {
     .kern_classes = 0,
     .bitmap_format = 0,
 #if LV_VERSION_CHECK(8, 0, 0)
-    .cache = &pokemon_font_10_cache
+    .cache = &cache
 #endif
 };
 
@@ -1786,9 +1786,10 @@ lv_font_t pokemon_font_10 = {
     .underline_position = -2,
     .underline_thickness = 2,
 #endif
-    .dsc = &pokemon_font_10_font_dsc           /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
+    .dsc = &font_dsc           /*The custom font data. Will be accessed by `get_glyph_bitmap/dsc` */
 };
 
 
 
 #endif /*#if POKEMON_FONT_10*/
+
