@@ -99,17 +99,53 @@ void Menu::display_options() {
 
   _sub_menu_screen = create_sub_window(_screen);
 
+  lv_style_init(&style_default_title);
+  lv_style_set_text_font(&style_default_title, &pokemon_font_12);
+  lv_style_set_text_color(&style_default_title, lv_color_white());
+
+  lv_style_init(&style_default_text);
+  lv_style_set_text_color(&style_default_text, lv_color_white());
+
+  static lv_coord_t options_grid_col_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
+  static lv_coord_t options_grid_row_dsc[] = {
+    LV_GRID_CONTENT,  /*Title*/
+    5,                /*Separator*/
+    LV_GRID_CONTENT,  /*Box title*/
+    30,               /*Boxes*/
+    5,                /*Separator*/
+    LV_GRID_CONTENT,  /*Box title*/
+    30,               /*Boxes*/
+    LV_GRID_TEMPLATE_LAST
+  };
+
+  lv_obj_set_grid_dsc_array(_sub_menu_screen, options_grid_col_dsc, options_grid_row_dsc);
+
+  lv_obj_t * options_title = lv_label_create(_sub_menu_screen);
+  lv_label_set_text(options_title, _("menu.options.title"));
+  lv_obj_add_style(options_title, &style_default_title, 0);
+  lv_obj_set_grid_cell(options_title, LV_GRID_ALIGN_START, 0, 2, LV_GRID_ALIGN_CENTER, 0, 1);
+
+  lv_obj_t * brightness_label = lv_label_create(_sub_menu_screen);
+  lv_label_set_text(brightness_label, _("menu.options.brightness"));
+  lv_obj_set_grid_cell(brightness_label, LV_GRID_ALIGN_START, 0, 1, LV_GRID_ALIGN_START, 2, 1);
+  lv_obj_add_style(brightness_label, &style_default_text, 0);
+
   lv_obj_t* slider_label = lv_label_create(_sub_menu_screen);
-  lv_label_set_text(slider_label, "0%");
+  char buf[8];
+  lv_snprintf(buf, sizeof(buf), "%d%%", options_brightness_slider_value);
+  lv_label_set_text(slider_label, buf);
+  lv_obj_add_style(slider_label, &style_default_text, 0);
 
   /*Create a slider in the center of the display*/
-  lv_obj_t* slider = lv_slider_create(_sub_menu_screen);
-  lv_obj_center(slider);
-  lv_slider_set_value(slider, options_brightness_slider_value, LV_ANIM_OFF);
-  lv_obj_add_event_cb(slider, slider_set_brightness_event_cb, LV_EVENT_VALUE_CHANGED, slider_label);
+  lv_obj_t* brightness_slider = lv_slider_create(_sub_menu_screen);
+  lv_obj_set_width(brightness_slider, LV_PCT(95));
+  lv_obj_refresh_ext_draw_size(brightness_slider);
+  lv_obj_set_grid_cell(brightness_slider, LV_GRID_ALIGN_CENTER, 0, 2, LV_GRID_ALIGN_CENTER, 3, 1);
+  lv_slider_set_value(brightness_slider, options_brightness_slider_value, LV_ANIM_OFF);
+  lv_obj_add_event_cb(brightness_slider, slider_set_brightness_event_cb, LV_EVENT_VALUE_CHANGED, slider_label);
 
   /*Create a label below the slider*/
-  lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+  lv_obj_align_to(slider_label, brightness_slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 }
 
 static void slider_set_brightness_event_cb(lv_event_t* e) {
@@ -271,8 +307,8 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item) {
   static lv_coord_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
   static lv_coord_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
 
-  static lv_style_t style_label_color;
-  lv_style_set_text_color(&style_label_color, lv_color_white());
+  lv_style_init(&style_default_text);
+  lv_style_set_text_color(&style_default_text, lv_color_white());
 
   lv_obj_t* cont = lv_obj_create(parent);
   lv_obj_set_size(cont, LV_PCT(100), LV_SIZE_CONTENT);
@@ -288,12 +324,12 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item) {
   lv_obj_t* label;
   label = lv_label_create(cont);
   lv_label_set_text(label, item->name);
-  lv_obj_add_style(label, &style_label_color, 0);
+  lv_obj_add_style(label, &style_default_text, 0);
   lv_obj_set_grid_cell(label, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_END, 0, 1);
 
   lv_obj_t* desc_label = lv_label_create(cont);
   lv_label_set_text(desc_label, item->description);
-  lv_obj_add_style(desc_label, &style_label_color, 0);
+  lv_obj_add_style(desc_label, &style_default_text, 0);
   lv_obj_set_grid_cell(desc_label, LV_GRID_ALIGN_STRETCH, 2, 1, LV_GRID_ALIGN_END, 1, 1);
 
   lv_obj_t* btn = lv_btn_create(cont);

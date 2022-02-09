@@ -1,6 +1,7 @@
 #include <M5Core2.h>
 #include "lv_i18n.h"
-#include "assets/fonts/pokemon_font.c"
+#include "assets/fonts/pokemon_font_8.c"
+#include "assets/fonts/pokemon_font_12.c"
 #include "Pokegotchi.h"
 #include "Game.h"
 #include "Menu.h"

@@ -356,10 +356,10 @@
 /*Optionally declare custom fonts here.
  *You can use these fonts as default font too and they will be available globally.
  *E.g. #define LV_FONT_CUSTOM_DECLARE   LV_FONT_DECLARE(my_font_1) LV_FONT_DECLARE(my_font_2)*/
-#define LV_FONT_CUSTOM_DECLARE LV_FONT_DECLARE(pokemon_font)
+#define LV_FONT_CUSTOM_DECLARE LV_FONT_DECLARE(pokemon_font_8) LV_FONT_DECLARE(pokemon_font_10) LV_FONT_DECLARE(pokemon_font_12)
 
 /*Always set a default font*/
-#define LV_FONT_DEFAULT &pokemon_font
+#define LV_FONT_DEFAULT &pokemon_font_8
 
 /*Enable handling large font and/or fonts with a lot of characters.
  *The limit depends on the font size, font face and bpp.
