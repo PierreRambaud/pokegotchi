@@ -36,12 +36,16 @@
 #include "assets/objects/bag/sugar_star.c"
 #include "assets/objects/bag/water.c"
 
+static int options_brightness_slider_value = ((300 * 100) / 800);
+
 static void trainercard_event_handler(lv_event_t* e);
 static void use_item_event_handler(lv_event_t* e);
 static void display_bag_items_event_handler(lv_event_t* e);
+static void open_options_event_handler(lv_event_t* e);
 static void play_event_handler(lv_event_t* e);
 static void train_event_handler(lv_event_t* e);
 static void toggle_sleep_event_handler(lv_event_t* e);
+static void slider_set_brightness_event_cb(lv_event_t* e);
 static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
 
 ActionsMenu* ActionsMenu::instance = nullptr;
@@ -60,6 +64,7 @@ void Menu::setup(lv_obj_t* screen) {
 
   lv_obj_t* options_button = lv_menu_button_create(_menu_screen, &options, &options_pressed, _("menu.options"));
   lv_obj_set_pos(options_button, 7, 85);
+  lv_obj_add_event_cb(options_button, open_options_event_handler, LV_EVENT_CLICKED, NULL);
 
   lv_obj_t* trainercard_button = lv_menu_button_create(_menu_screen, &trainercard, &trainercard_pressed, _("menu.games"));
   lv_obj_set_pos(trainercard_button, 165, 85);
@@ -71,16 +76,60 @@ void Menu::setup(lv_obj_t* screen) {
 }
 
 void Menu::toggle() {
+  if (lv_obj_is_valid(_sub_menu_screen)) {
+    // Remove sub menu anyway
+    lv_obj_del(_sub_menu_screen);
+  }
+
   if (lv_obj_has_flag(_screen, LV_OBJ_FLAG_HIDDEN)) {
     lv_scr_load(_screen);
     lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Show Menu");
+    lv_obj_clear_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
+    Serial.println("Show ActionsMenu");
   } else {
     lv_scr_load(_game_screen);
     lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Hide Menu");
+    lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
+    Serial.println("Hide ActionsMenu");
   }
 }
+
+void Menu::display_options() {
+  lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
+
+  _sub_menu_screen = create_sub_window(_screen);
+
+  lv_obj_t* slider_label = lv_label_create(_sub_menu_screen);
+  lv_label_set_text(slider_label, "0%");
+
+  /*Create a slider in the center of the display*/
+  lv_obj_t* slider = lv_slider_create(_sub_menu_screen);
+  lv_obj_center(slider);
+  lv_slider_set_value(slider, options_brightness_slider_value, LV_ANIM_OFF);
+  lv_obj_add_event_cb(slider, slider_set_brightness_event_cb, LV_EVENT_VALUE_CHANGED, slider_label);
+
+  /*Create a label below the slider*/
+  lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+}
+
+static void slider_set_brightness_event_cb(lv_event_t* e) {
+  lv_obj_t* slider = lv_event_get_target(e);
+  char buf[8];
+  lv_snprintf(buf, sizeof(buf), "%d%%", (int)lv_slider_get_value(slider));
+
+  lv_obj_t* slider_label = (lv_obj_t*)lv_event_get_user_data(e);
+  lv_label_set_text(slider_label, buf);
+  lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+  options_brightness_slider_value = (int)lv_slider_get_value(slider);
+  M5.Axp.SetLcdVoltage(2500 + ((options_brightness_slider_value * 800) / 100));
+}
+/**
+ * Open options screen
+ *
+ * @param lv_event_t* e
+ */
+static void open_options_event_handler(lv_event_t* e) { Menu::getInstance()->display_options(); }
 
 /**
  * Display trainer card
@@ -129,36 +178,20 @@ void ActionsMenu::setup(lv_obj_t* screen) {
 
   Serial.println("Buttons for actions menu created");
 
-  _bag_screen = create_sub_window(_screen);
-
-  lv_obj_set_flex_flow(_bag_screen, LV_FLEX_FLOW_COLUMN);
-  lv_obj_set_flex_grow(_bag_screen, 1);
-  lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
-
-  for (Item item : _items) {
-    create_row_item(_bag_screen, &item);
-  }
-
   toggle();
 }
 
 void ActionsMenu::display_bag() {
-  lv_obj_clear_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
   lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
-}
 
-void ActionsMenu::toggle() {
-  if (lv_obj_has_flag(_screen, LV_OBJ_FLAG_HIDDEN)) {
-    lv_scr_load(_screen);
-    lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_clear_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Show ActionsMenu");
-  } else {
-    lv_scr_load(_game_screen);
-    lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(_bag_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Hide ActionsMenu");
+  _sub_menu_screen = create_sub_window(_screen);
+
+  lv_obj_set_flex_flow(_sub_menu_screen, LV_FLEX_FLOW_COLUMN);
+  lv_obj_set_flex_grow(_sub_menu_screen, 1);
+  lv_obj_add_flag(_sub_menu_screen, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+
+  for (Item item : _items) {
+    create_row_item(_sub_menu_screen, &item);
   }
 }
 

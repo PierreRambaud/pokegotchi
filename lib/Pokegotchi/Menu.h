@@ -34,6 +34,7 @@ class Menu {
  public:
   void setup(lv_obj_t* screen);
   void toggle();
+  void display_options();
 
   static Menu* getInstance() {
     if (instance == nullptr) {
@@ -45,6 +46,7 @@ class Menu {
 
   void refresh_battery_status() {
     if (M5.Axp.isCharging() == true) {
+      Serial.println("Battery is charging");
       lv_img_set_src(_battery_level_icon, &battery_charging);
     } else {
       float battery_level = M5.Axp.GetBatteryLevel();
@@ -91,12 +93,12 @@ class Menu {
   lv_obj_t* _screen;
   lv_obj_t* _game_screen;
   lv_obj_t* _menu_screen;
+  lv_obj_t* _sub_menu_screen;
 };
 
 class ActionsMenu : public Menu {
  public:
   void setup(lv_obj_t* screen);
-  void toggle();
   void display_bag();
 
   static ActionsMenu* getInstance() {
@@ -111,8 +113,6 @@ class ActionsMenu : public Menu {
   ActionsMenu();
 
   static ActionsMenu* instance;
-
-  lv_obj_t* _bag_screen;
 
   Item _items[BAG_ITEMS_SIZE];
 };
