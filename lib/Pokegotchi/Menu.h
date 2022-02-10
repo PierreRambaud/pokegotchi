@@ -34,6 +34,8 @@ typedef struct bag_item Item;
 class Menu {
  public:
   void setup(lv_obj_t* screen);
+  void close();
+  void open();
   void toggle();
   void display_options();
 

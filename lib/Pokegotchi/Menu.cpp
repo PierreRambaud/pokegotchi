@@ -76,22 +76,29 @@ void Menu::setup(lv_obj_t* screen) {
   toggle();
 }
 
-void Menu::toggle() {
+void Menu::close() {
+  lv_scr_load(_game_screen);
+  lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
+  Serial.println("Hide Menu");
+}
+void Menu::open() {
   if (lv_obj_is_valid(_sub_menu_screen)) {
     // Remove sub menu anyway
     lv_obj_del(_sub_menu_screen);
   }
 
+  lv_scr_load(_screen);
+  lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
+  lv_obj_clear_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
+  Serial.println("Show Menu");
+}
+
+void Menu::toggle() {
   if (lv_obj_has_flag(_screen, LV_OBJ_FLAG_HIDDEN)) {
-    lv_scr_load(_screen);
-    lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_clear_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Show ActionsMenu");
+    open();
   } else {
-    lv_scr_load(_game_screen);
-    lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
-    Serial.println("Hide ActionsMenu");
+    close();
   }
 }
 
@@ -107,7 +114,7 @@ void Menu::display_options() {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
-  static lv_coord_t options_grid_col_dsc[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
+  static lv_coord_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 10, LV_GRID_TEMPLATE_LAST};
   static lv_coord_t options_grid_row_dsc[] = {LV_GRID_CONTENT, /*Title*/
                                               5,               /*Separator*/
                                               LV_GRID_CONTENT, /*Box title*/
@@ -122,11 +129,11 @@ void Menu::display_options() {
   lv_obj_t* options_title = lv_label_create(_sub_menu_screen);
   lv_label_set_text(options_title, _("menu.options.title"));
   lv_obj_add_style(options_title, &style_default_title, 0);
-  lv_obj_set_grid_cell(options_title, LV_GRID_ALIGN_START, 0, 2, LV_GRID_ALIGN_CENTER, 0, 1);
+  lv_obj_set_grid_cell(options_title, LV_GRID_ALIGN_START, 1, 2, LV_GRID_ALIGN_CENTER, 0, 1);
 
   lv_obj_t* brightness_label = lv_label_create(_sub_menu_screen);
   lv_label_set_text(brightness_label, _("menu.options.brightness"));
-  lv_obj_set_grid_cell(brightness_label, LV_GRID_ALIGN_START, 0, 1, LV_GRID_ALIGN_START, 2, 1);
+  lv_obj_set_grid_cell(brightness_label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 2, 1);
   lv_obj_add_style(brightness_label, &style_default_text, 0);
 
   lv_obj_t* brightness_slider_label  = lv_label_create(_sub_menu_screen);
@@ -134,13 +141,13 @@ void Menu::display_options() {
   lv_obj_set_width(brightness_slider, LV_PCT(95));
   lv_slider_set_value(brightness_slider, options_brightness_slider_value, LV_ANIM_OFF);
   lv_obj_add_event_cb(brightness_slider, slider_set_brightness_event_cb, LV_EVENT_VALUE_CHANGED, brightness_slider_label);
-  lv_obj_set_grid_cell(brightness_slider, LV_GRID_ALIGN_CENTER, 0, 2, LV_GRID_ALIGN_CENTER, 3, 1);
+  lv_obj_set_grid_cell(brightness_slider, LV_GRID_ALIGN_CENTER, 1, 2, LV_GRID_ALIGN_CENTER, 3, 1);
 
   char buf[8];
   lv_snprintf(buf, sizeof(buf), "%d%%", options_brightness_slider_value);
   lv_label_set_text(brightness_slider_label, buf);
   lv_obj_add_style(brightness_slider_label, &style_default_text, 0);
-  lv_obj_set_grid_cell(brightness_slider_label, LV_GRID_ALIGN_CENTER, 0, 2, LV_GRID_ALIGN_CENTER, 4, 1);
+  lv_obj_set_grid_cell(brightness_slider_label, LV_GRID_ALIGN_CENTER, 1, 2, LV_GRID_ALIGN_CENTER, 4, 1);
 }
 
 static void slider_set_brightness_event_cb(lv_event_t* e) {
