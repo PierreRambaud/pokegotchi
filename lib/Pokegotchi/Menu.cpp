@@ -38,7 +38,9 @@ LV_IMG_DECLARE(sugar_star)
 LV_IMG_DECLARE(water)
 
 static int options_brightness_slider_value = ((300 * 100) / 800);
+static int options_bag_scroll_value = 0;
 
+static void options_bag_scroll_value_event_cb(lv_event_t* e);
 static void trainercard_event_handler(lv_event_t* e);
 static void use_item_event_handler(lv_event_t* e);
 static void display_bag_items_event_handler(lv_event_t* e);
@@ -227,10 +229,21 @@ void ActionsMenu::display_bag() {
   lv_obj_set_flex_flow(_sub_menu_screen, LV_FLEX_FLOW_COLUMN);
   lv_obj_set_flex_grow(_sub_menu_screen, 1);
   lv_obj_add_flag(_sub_menu_screen, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+  lv_obj_set_scroll_dir(_sub_menu_screen, LV_DIR_VER);
+  lv_obj_set_scroll_snap_y(_sub_menu_screen, LV_SCROLL_SNAP_START);
+  lv_obj_add_flag(_sub_menu_screen, LV_OBJ_FLAG_SCROLL_ONE);
+  lv_obj_add_event_cb(_sub_menu_screen, options_bag_scroll_value_event_cb, LV_EVENT_SCROLL, NULL);
 
   for (Item item : _items) {
     create_row_item(_sub_menu_screen, &item);
   }
+
+  lv_obj_scroll_to_y(_sub_menu_screen, options_bag_scroll_value, LV_ANIM_OFF);
+}
+
+static void options_bag_scroll_value_event_cb(lv_event_t* e) {
+  lv_obj_t* screen = lv_event_get_target(e);
+  options_bag_scroll_value = lv_obj_get_scroll_y(screen);
 }
 
 /**
