@@ -33,9 +33,9 @@ typedef struct bag_item Item;
 
 class Menu {
  public:
-  void setup(lv_obj_t* screen);
+  virtual void setup(lv_obj_t* screen);
   void close();
-  void open();
+  virtual void open();
   void toggle();
   void display_options();
 
@@ -101,7 +101,8 @@ class Menu {
 
 class ActionsMenu : public Menu {
  public:
-  void setup(lv_obj_t* screen);
+  virtual void setup(lv_obj_t* screen);
+  virtual void open();
   void display_bag();
 
   static ActionsMenu* getInstance() {
@@ -118,5 +119,11 @@ class ActionsMenu : public Menu {
   static ActionsMenu* instance;
 
   Item _items[BAG_ITEMS_SIZE];
+
+ private:
+  lv_obj_t* _bag_button;
+  lv_obj_t* _sleep_button;
+  lv_obj_t* _train_button;
+  lv_obj_t* _play_button;
 };
 #endif

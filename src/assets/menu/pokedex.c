@@ -221,10 +221,11 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_IMG_POKEDEX uint8_t pokedex_map[] = {
 };
 
 const lv_img_dsc_t pokedex = {
+  .header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA,
   .header.always_zero = 0,
+  .header.reserved = 0,
   .header.w = 150,
   .header.h = 49,
   .data_size = 7350 * LV_IMG_PX_SIZE_ALPHA_BYTE,
-  .header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA,
   .data = pokedex_map,
 };

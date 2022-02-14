@@ -3208,13 +3208,11 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_IMG_POKEMON_470 uint8_t pokemon_470_ma
 };
 
 const lv_img_dsc_t pokemon_470 = {
-  {
-    LV_IMG_CF_RAW,
-    0,
-    0,
-    0,
-    0,
-  },
-  41505,
-  pokemon_470_map
+  .header.cf = LV_IMG_CF_RAW,
+  .header.always_zero = 0,
+  .header.reserved = 0,
+  .header.w = 0,
+  .header.h = 0,
+  .data_size = 41505,
+  .data = pokemon_470_map,
 };

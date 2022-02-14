@@ -6,18 +6,21 @@
 #include "Game.h"
 
 LV_IMG_DECLARE(bag)
+LV_IMG_DECLARE(bag_disabled)
 LV_IMG_DECLARE(bag_pressed)
 LV_IMG_DECLARE(flute)
 LV_IMG_DECLARE(flute_pressed)
 LV_IMG_DECLARE(options)
 LV_IMG_DECLARE(options_pressed)
 LV_IMG_DECLARE(play)
+LV_IMG_DECLARE(play_disabled)
 LV_IMG_DECLARE(play_pressed)
 LV_IMG_DECLARE(pokeball)
 LV_IMG_DECLARE(pokeball_pressed)
 LV_IMG_DECLARE(save)
 LV_IMG_DECLARE(save_pressed)
 LV_IMG_DECLARE(train)
+LV_IMG_DECLARE(train_disabled)
 LV_IMG_DECLARE(train_pressed)
 LV_IMG_DECLARE(trainercard)
 LV_IMG_DECLARE(trainercard_pressed)
@@ -199,26 +202,48 @@ ActionsMenu::ActionsMenu() {
 void ActionsMenu::setup(lv_obj_t* screen) {
   Menu::init(screen);
 
-  lv_obj_t* bag_button = lv_menu_button_create(_menu_screen, &bag, &bag_pressed, _("actions.menu.bag"));
-  lv_obj_set_pos(bag_button, 7, 25);
-  lv_obj_add_event_cb(bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
+  _bag_button = lv_menu_button_create(_menu_screen, &bag, &bag_pressed, _("actions.menu.bag"));
+  lv_imgbtn_set_src(_bag_button, LV_IMGBTN_STATE_DISABLED, NULL, &bag_disabled, NULL);
+  lv_obj_set_pos(_bag_button, 7, 25);
+  lv_obj_add_event_cb(_bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
-  lv_obj_t* sleep_button = lv_menu_button_create(_menu_screen, &flute, &flute_pressed, _("actions.menu.sleep"));
-  lv_obj_set_pos(sleep_button, 165, 25);
-  lv_obj_t* sleep_label = lv_obj_get_child(sleep_button, -1);
-  lv_obj_add_event_cb(sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
+  _sleep_button = lv_menu_button_create(_menu_screen, &flute, &flute_pressed, _("actions.menu.sleep"));
+  lv_obj_set_pos(_sleep_button, 165, 25);
+  lv_obj_t* sleep_label = lv_obj_get_child(_sleep_button, -1);
+  lv_obj_add_event_cb(_sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
 
-  lv_obj_t* train_button = lv_menu_button_create(_menu_screen, &train, &train_pressed, _("menu.train"));
-  lv_obj_set_pos(train_button, 7, 85);
-  lv_obj_add_event_cb(train_button, train_event_handler, LV_EVENT_CLICKED, NULL);
+  _train_button = lv_menu_button_create(_menu_screen, &train, &train_pressed, _("menu.train"));
+  lv_imgbtn_set_src(_train_button, LV_IMGBTN_STATE_DISABLED, NULL, &train_disabled, NULL);
+  lv_obj_set_pos(_train_button, 7, 85);
+  lv_obj_add_event_cb(_train_button, train_event_handler, LV_EVENT_CLICKED, NULL);
 
-  lv_obj_t* play_button = lv_menu_button_create(_menu_screen, &play, &play_pressed, _("menu.play"));
-  lv_obj_set_pos(play_button, 165, 85);
-  lv_obj_add_event_cb(play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
+  _play_button = lv_menu_button_create(_menu_screen, &play, &play_pressed, _("menu.play"));
+  lv_imgbtn_set_src(_play_button, LV_IMGBTN_STATE_DISABLED, NULL, &play_disabled, NULL);
+  lv_obj_set_pos(_play_button, 165, 85);
+  lv_obj_add_event_cb(_play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for actions menu created");
 
   toggle();
+}
+
+/**
+ * Change the state of buttons depending on pokemon status
+ */
+void ActionsMenu::open() {
+  Pokemon* p = Pokemon::getInstance();
+  Serial.println("disable buttons");
+  if (p->is_sleeping()) {
+    lv_imgbtn_set_state(_bag_button, LV_IMGBTN_STATE_DISABLED);
+    lv_imgbtn_set_state(_train_button, LV_IMGBTN_STATE_DISABLED);
+    lv_imgbtn_set_state(_play_button, LV_IMGBTN_STATE_DISABLED);
+  } else {
+    lv_obj_clear_state(_bag_button, LV_STATE_DISABLED);
+    lv_obj_clear_state(_train_button, LV_STATE_DISABLED);
+    lv_obj_clear_state(_play_button, LV_STATE_DISABLED);
+  }
+
+  Menu::open();
 }
 
 void ActionsMenu::display_bag() {

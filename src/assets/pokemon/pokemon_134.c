@@ -2788,13 +2788,11 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_IMG_POKEMON_134 uint8_t pokemon_134_ma
 };
 
 const lv_img_dsc_t pokemon_134 = {
-  {
-    LV_IMG_CF_RAW,
-    0,
-    0,
-    0,
-    0,
-  },
-  36040,
-  pokemon_134_map
+  .header.cf = LV_IMG_CF_RAW,
+  .header.always_zero = 0,
+  .header.reserved = 0,
+  .header.w = 0,
+  .header.h = 0,
+  .data_size = 36040,
+  .data = pokemon_134_map,
 };
