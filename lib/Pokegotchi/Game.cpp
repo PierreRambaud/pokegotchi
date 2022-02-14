@@ -115,7 +115,7 @@ void Game::loop() {
     p->hungry(2);
   }
 
-  if (check_action_time(_last_boredom_time, PERIOD_BOREDOM)) {
+  if (p->is_sleeping() == false && check_action_time(_last_boredom_time, PERIOD_BOREDOM)) {
     p->boredom(1);
   }
 

@@ -43,16 +43,18 @@ LV_IMG_DECLARE(water)
 static int options_brightness_slider_value = ((300 * 100) / 800);
 static int options_bag_scroll_value = 0;
 
-static void options_bag_scroll_value_event_cb(lv_event_t* e);
-static void trainercard_event_handler(lv_event_t* e);
-static void use_item_event_handler(lv_event_t* e);
+static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
+
 static void display_bag_items_event_handler(lv_event_t* e);
 static void open_options_event_handler(lv_event_t* e);
+static void open_pokemon_event_handler(lv_event_t* e);
+static void options_bag_scroll_value_event_cb(lv_event_t* e);
 static void play_event_handler(lv_event_t* e);
-static void train_event_handler(lv_event_t* e);
-static void toggle_sleep_event_handler(lv_event_t* e);
 static void slider_set_brightness_event_cb(lv_event_t* e);
-static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
+static void toggle_sleep_event_handler(lv_event_t* e);
+static void train_event_handler(lv_event_t* e);
+static void trainercard_event_handler(lv_event_t* e);
+static void use_item_event_handler(lv_event_t* e);
 
 ActionsMenu* ActionsMenu::instance = nullptr;
 Menu* Menu::instance = nullptr;
@@ -67,6 +69,7 @@ void Menu::setup(lv_obj_t* screen) {
 
   lv_obj_t* pokemon_button = lv_menu_button_create(_menu_screen, &pokeball, &pokeball_pressed, "Pokémon");
   lv_obj_set_pos(pokemon_button, 165, 25);
+  lv_obj_add_event_cb(pokemon_button, open_pokemon_event_handler, LV_EVENT_CLICKED, NULL);
 
   lv_obj_t* options_button = lv_menu_button_create(_menu_screen, &options, &options_pressed, _("menu.options"));
   lv_obj_set_pos(options_button, 7, 85);
@@ -105,6 +108,35 @@ void Menu::toggle() {
   } else {
     close();
   }
+}
+
+void Menu::display_pokemon() {
+  lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
+
+  _sub_menu_screen = create_sub_window(_screen);
+  Pokemon* p = Pokemon::getInstance();
+
+  lv_style_init(&style_default_title);
+  lv_style_set_text_font(&style_default_title, &pokemon_font_12);
+  lv_style_set_text_color(&style_default_title, lv_color_white());
+
+  lv_style_init(&style_default_text);
+  lv_style_set_text_color(&style_default_text, lv_color_white());
+
+  lv_obj_t* img = lv_img_create(_sub_menu_screen);
+  lv_img_set_src(img, p->get_avatar());
+  lv_obj_set_pos(img, 25, 25);
+
+  lv_obj_t* name = lv_label_create(_sub_menu_screen);
+  lv_obj_set_pos(name, 175, 25);
+  lv_label_set_text(name, p->get_name());
+  lv_obj_add_style(name, &style_default_title, 0);
+
+  lv_obj_t* description = lv_label_create(_sub_menu_screen);
+  lv_obj_set_pos(description, 175, 50);
+  lv_obj_set_width(description, 125);
+  lv_label_set_text(description, p->get_description());
+  lv_obj_add_style(description, &style_default_text, 0);
 }
 
 void Menu::display_options() {
@@ -167,12 +199,20 @@ static void slider_set_brightness_event_cb(lv_event_t* e) {
   options_brightness_slider_value = (int)lv_slider_get_value(slider);
   M5.Axp.SetLcdVoltage(2500 + ((options_brightness_slider_value * 800) / 100));
 }
+
 /**
  * Open options screen
  *
  * @param lv_event_t* e
  */
 static void open_options_event_handler(lv_event_t* e) { Menu::getInstance()->display_options(); }
+
+/**
+ * Open pokemon screen
+ *
+ * @param lv_event_t* e
+ */
+static void open_pokemon_event_handler(lv_event_t* e) { Menu::getInstance()->display_pokemon(); }
 
 /**
  * Display trainer card

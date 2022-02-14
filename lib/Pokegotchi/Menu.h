@@ -38,6 +38,7 @@ class Menu {
   virtual void open();
   void toggle();
   void display_options();
+  void display_pokemon();
 
   static Menu* getInstance() {
     if (instance == nullptr) {

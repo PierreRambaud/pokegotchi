@@ -11,11 +11,25 @@
 #define POKEMON_FLAREON 136
 
 #include <lvgl.h>
+#include "lv_i18n.h"
 #include "Menu.h"
 
-LV_IMG_DECLARE(pokemon_25)
-LV_IMG_DECLARE(pokemon_26)
-LV_IMG_DECLARE(pokemon_172)
+LV_IMG_DECLARE(pokemon_25);
+LV_IMG_DECLARE(pokemon_26);
+LV_IMG_DECLARE(pokemon_133);
+LV_IMG_DECLARE(pokemon_134);
+LV_IMG_DECLARE(pokemon_135);
+LV_IMG_DECLARE(pokemon_136);
+LV_IMG_DECLARE(pokemon_172);
+LV_IMG_DECLARE(pokemon_face_25);
+LV_IMG_DECLARE(pokemon_face_26);
+LV_IMG_DECLARE(pokemon_face_133);
+LV_IMG_DECLARE(pokemon_face_134);
+LV_IMG_DECLARE(pokemon_face_135);
+LV_IMG_DECLARE(pokemon_face_136);
+LV_IMG_DECLARE(pokemon_face_172);
+
+
 
 const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;
@@ -53,13 +67,71 @@ class Pokemon {
   void boredom(int8_t number);
   void hungry(int8_t number);
 
-  const lv_img_dsc_t* get_image() {
+  int get_pokemon_type() {
     if (_level >= 5) {
-      return &pokemon_26;
-    } else if (_level >= 3) {
-      return &pokemon_25;
-    } else {
-      return &pokemon_172;
+      return POKEMON_RAICHU;
+    }
+
+    if (_level >= 3) {
+      return POKEMON_PIKACHU;
+    }
+
+    return POKEMON_PICHU;
+  }
+
+  const lv_img_dsc_t* get_image() {
+    int type = get_pokemon_type();
+    switch(type) {
+      case POKEMON_PICHU:
+        return &pokemon_172;
+
+      case POKEMON_PIKACHU:
+        return &pokemon_25;
+
+      case POKEMON_RAICHU:
+        return &pokemon_26;
+    }
+  }
+
+  const lv_img_dsc_t* get_avatar() {
+    int type = get_pokemon_type();
+    switch(type) {
+      case POKEMON_PICHU:
+        return &pokemon_face_172;
+
+      case POKEMON_PIKACHU:
+        return &pokemon_face_25;
+
+      case POKEMON_RAICHU:
+        return &pokemon_face_26;
+    }
+  }
+
+  const char* get_description() {
+    int type = get_pokemon_type();
+    switch(type) {
+      case POKEMON_PICHU:
+        return _("pokemon.pichu.description");
+
+      case POKEMON_PIKACHU:
+        return _("pokemon.pikachu.description");
+
+      case POKEMON_RAICHU:
+        return _("pokemon.raichu.description");
+    }
+  }
+
+  const char* get_name() {
+    int type = get_pokemon_type();
+    switch(type) {
+      case POKEMON_PICHU:
+        return _("pokemon.pichu.name");
+
+      case POKEMON_PIKACHU:
+        return _("pokemon.pikachu.name");
+
+      case POKEMON_RAICHU:
+        return _("pokemon.raichu.name");
     }
   }
 

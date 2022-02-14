@@ -65,6 +65,12 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"menu.play", "Play"},
     {"menu.options.title", "Options"},
     {"menu.options.brightness", "Brightness"},
+    {"pokemon.pichu.description", "Pichu stores electricity in the sacs on its cheeks but discharges it inadvertently when agitated or excited. Being yet immature, the Pokémon's handling of electricity is rather inept."},
+    {"pokemon.pikachu.description", "Possesses cheek sacs in which it stores electricity. This clever forest-dweller roasts tough berries with an electric shock before consuming them."},
+    {"pokemon.raichu.description", "It can discharge bursts of electricity exceeding 100,000 volts—a single strike with that amount of power would incapacitate one of the Copperajah of my homeland."},
+    {"pokemon.pichu.name", "Pichu"},
+    {"pokemon.pikachu.name", "Pikachu"},
+    {"pokemon.raichu.name", "Raichu"},
     {NULL, NULL} // End mark
 };
 
@@ -135,6 +141,12 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"menu.play", "Jouer"},
     {"menu.options.title", "Options"},
     {"menu.options.brightness", "Luminosité"},
+    {"pokemon.pichu.description", "Les Pichu s’amusent à faire jaillir des étincelles en joignant le bout de leur queue. Cela semble être une façon de démontrer leur courage."},
+    {"pokemon.pikachu.description", "Cet astucieux Pokémon gîte en forêt. Ses bajoues contiennent des poches qui emmagasinent l’électricité dont il se sert pour griller les Baies avant de s’en repaître."},
+    {"pokemon.raichu.description", "Il envoie des décharges de 100 000 volts, ce qui lui permet de mettre au tapis des ennemis bien plus imposants que lui en une seule attaque."},
+    {"pokemon.pichu.name", "Pichu"},
+    {"pokemon.pikachu.name", "Pikachu"},
+    {"pokemon.raichu.name", "Raichu"},
     {NULL, NULL} // End mark
 };
 

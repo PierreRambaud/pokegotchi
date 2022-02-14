@@ -46,3 +46,9 @@ en:
   menu.play: Play
   menu.options.title: Options
   menu.options.brightness: Brightness
+  pokemon.pichu.description: "Pichu stores electricity in the sacs on its cheeks but discharges it inadvertently when agitated or excited. Being yet immature, the Pokémon's handling of electricity is rather inept."
+  pokemon.pikachu.description: "Possesses cheek sacs in which it stores electricity. This clever forest-dweller roasts tough berries with an electric shock before consuming them."
+  pokemon.raichu.description: "It can discharge bursts of electricity exceeding 100,000 volts—a single strike with that amount of power would incapacitate one of the Copperajah of my homeland."
+  pokemon.pichu.name: Pichu
+  pokemon.pikachu.name: Pikachu
+  pokemon.raichu.name: Raichu
