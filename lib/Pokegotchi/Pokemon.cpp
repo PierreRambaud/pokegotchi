@@ -23,7 +23,25 @@ Pokemon::Pokemon() {
   lv_anim_start(&anim);
 };
 
-void Pokemon::loop() {}
+void Pokemon::loop() {
+  if (check_action_time(_last_hunger_time, PERIOD_HUNGER)) {
+    hungry(2);
+  }
+
+  if (is_sleeping() == false && check_action_time(_last_boredom_time, PERIOD_BOREDOM)) {
+    boredom(1);
+  }
+
+  if (is_sleeping() == true) {
+    if (check_action_time(_last_sleep_time, PERIOD_SLEEP)) {
+      sleep();
+    }
+  } else {
+    if (check_action_time(_last_time_without_sleep, PERIOD_WITHOUT_SLEEP)) {
+      tiredness(10);
+    }
+  }
+}
 
 void Pokemon::train() {
   _level += 1;

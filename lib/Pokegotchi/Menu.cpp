@@ -1,4 +1,5 @@
 #include <lvgl.h>
+#include <ArduinoJson.h>
 #include "lv_i18n.h"
 #include "Menu.h"
 #include "Utils.h"
@@ -50,6 +51,7 @@ static void open_options_event_handler(lv_event_t* e);
 static void open_pokemon_event_handler(lv_event_t* e);
 static void options_bag_scroll_value_event_cb(lv_event_t* e);
 static void play_event_handler(lv_event_t* e);
+static void save_game_event_handler(lv_event_t* e);
 static void slider_set_brightness_event_cb(lv_event_t* e);
 static void toggle_sleep_event_handler(lv_event_t* e);
 static void train_event_handler(lv_event_t* e);
@@ -64,19 +66,18 @@ Menu::Menu() {}
 void Menu::setup(lv_obj_t* screen) {
   Menu::init(screen);
 
-  lv_obj_t* save_button = lv_menu_button_create(_menu_screen, &save, &save_pressed, _("menu.save"));
-  lv_obj_set_pos(save_button, 7, 25);
+  if (is_sd_card_available() == true) {
+    lv_obj_t* save_button = lv_menu_button_create(_menu_screen, &save, &save_pressed, _("menu.save"));
+    lv_obj_add_event_cb(save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
+  }
 
   lv_obj_t* pokemon_button = lv_menu_button_create(_menu_screen, &pokeball, &pokeball_pressed, "Pokémon");
-  lv_obj_set_pos(pokemon_button, 165, 25);
   lv_obj_add_event_cb(pokemon_button, open_pokemon_event_handler, LV_EVENT_CLICKED, NULL);
 
   lv_obj_t* options_button = lv_menu_button_create(_menu_screen, &options, &options_pressed, _("menu.options"));
-  lv_obj_set_pos(options_button, 7, 85);
   lv_obj_add_event_cb(options_button, open_options_event_handler, LV_EVENT_CLICKED, NULL);
 
   lv_obj_t* trainercard_button = lv_menu_button_create(_menu_screen, &trainercard, &trainercard_pressed, _("menu.games"));
-  lv_obj_set_pos(trainercard_button, 165, 85);
   lv_obj_add_event_cb(trainercard_button, trainercard_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for menu created");
@@ -173,7 +174,7 @@ void Menu::display_options() {
   lv_obj_set_grid_cell(brightness_label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 2, 1);
   lv_obj_add_style(brightness_label, &style_default_text, 0);
 
-  lv_obj_t* brightness_slider_label  = lv_label_create(_sub_menu_screen);
+  lv_obj_t* brightness_slider_label = lv_label_create(_sub_menu_screen);
   lv_obj_t* brightness_slider = lv_slider_create(_sub_menu_screen);
   lv_obj_set_width(brightness_slider, LV_PCT(95));
   lv_slider_set_value(brightness_slider, options_brightness_slider_value, LV_ANIM_OFF);
@@ -198,6 +199,47 @@ static void slider_set_brightness_event_cb(lv_event_t* e) {
 
   options_brightness_slider_value = (int)lv_slider_get_value(slider);
   M5.Axp.SetLcdVoltage(2500 + ((options_brightness_slider_value * 800) / 100));
+}
+
+/**
+ * Save game information
+ *
+ * @param lv_event_t* e
+ */
+static void save_game_event_handler(lv_event_t* e) {
+  Pokemon* p = Pokemon::getInstance();
+
+  StaticJsonDocument<900> doc;
+  doc["options"]["brightness"] = options_brightness_slider_value;
+
+  JsonObject pokemon = doc.createNestedObject("pokemon");
+  pokemon["type"] = p->get_pokemon_type();
+  pokemon["level"] = p->get_level();
+  pokemon["life"] = p->get_life();
+  pokemon["mood"] = p->get_mood();
+  pokemon["hunger"] = p->get_hunger();
+  pokemon["sleepiness"] = p->get_sleepiness();
+
+  JsonObject pokemon_time = pokemon.createNestedObject("time");
+  pokemon_time["boredom"] = p->get_last_boredom_time();
+  pokemon_time["hunger"] = p->get_last_hunger_time();
+  pokemon_time["sleep"] = p->get_last_sleep_time();
+  pokemon_time["without_sleep"] = p->get_last_without_sleep_time();
+
+  File file = SD.open("/.pokegotchi/pokegotchi.json", FILE_WRITE);
+  if (!file) {
+    static const char* btns[] = {""};
+    lv_obj_t* confirm_box = lv_msgbox_create(NULL, "", "Failed to save file", btns, true);
+    lv_obj_center(confirm_box);
+    return;
+  }
+
+  serializeJson(doc, file);
+  file.close();
+
+  static const char* btns[] = {""};
+  lv_obj_t* confirm_box = lv_msgbox_create(NULL, "", "Save complete", btns, true);
+  lv_obj_center(confirm_box);
 }
 
 /**
@@ -244,22 +286,18 @@ void ActionsMenu::setup(lv_obj_t* screen) {
 
   _bag_button = lv_menu_button_create(_menu_screen, &bag, &bag_pressed, _("actions.menu.bag"));
   lv_imgbtn_set_src(_bag_button, LV_IMGBTN_STATE_DISABLED, NULL, &bag_disabled, NULL);
-  lv_obj_set_pos(_bag_button, 7, 25);
   lv_obj_add_event_cb(_bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
   _sleep_button = lv_menu_button_create(_menu_screen, &flute, &flute_pressed, _("actions.menu.sleep"));
-  lv_obj_set_pos(_sleep_button, 165, 25);
   lv_obj_t* sleep_label = lv_obj_get_child(_sleep_button, -1);
   lv_obj_add_event_cb(_sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
 
   _train_button = lv_menu_button_create(_menu_screen, &train, &train_pressed, _("menu.train"));
   lv_imgbtn_set_src(_train_button, LV_IMGBTN_STATE_DISABLED, NULL, &train_disabled, NULL);
-  lv_obj_set_pos(_train_button, 7, 85);
   lv_obj_add_event_cb(_train_button, train_event_handler, LV_EVENT_CLICKED, NULL);
 
   _play_button = lv_menu_button_create(_menu_screen, &play, &play_pressed, _("menu.play"));
   lv_imgbtn_set_src(_play_button, LV_IMGBTN_STATE_DISABLED, NULL, &play_disabled, NULL);
-  lv_obj_set_pos(_play_button, 165, 85);
   lv_obj_add_event_cb(_play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for actions menu created");

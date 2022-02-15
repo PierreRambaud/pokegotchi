@@ -106,4 +106,11 @@ static inline bool check_action_time(unsigned long& last_millis, unsigned long w
   return false;
 }
 
+static inline bool is_sd_card_available() {
+  if (SD.begin()) {
+    return true;
+  }
+
+  return false;
+}
 #endif

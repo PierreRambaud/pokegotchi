@@ -110,24 +110,6 @@ void Game::loop() {
   lv_bar_set_value(_sleepiness_bar, p->get_sleepiness(), LV_ANIM_ON);
   lv_bar_set_value(_hunger_bar, p->get_hunger(), LV_ANIM_ON);
   lv_label_set_text_fmt(_level_indic, "%d", p->get_level());
-
-  if (check_action_time(_last_eat_time, PERIOD_EAT)) {
-    p->hungry(2);
-  }
-
-  if (p->is_sleeping() == false && check_action_time(_last_boredom_time, PERIOD_BOREDOM)) {
-    p->boredom(1);
-  }
-
-  if (p->is_sleeping() == true) {
-    if (check_action_time(_last_sleep_time, PERIOD_SLEEP)) {
-      p->sleep();
-    }
-  } else {
-    if (check_action_time(_last_time_without_sleep, PERIOD_WITHOUT_SLEEP)) {
-      p->tiredness(10);
-    }
-  }
 }
 
 void Game::action_train() {

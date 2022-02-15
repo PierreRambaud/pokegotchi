@@ -10,6 +10,12 @@
 #define POKEMON_JOLTEON 135
 #define POKEMON_FLAREON 136
 
+const unsigned long PERIOD_BOREDOM = 5 * 1000UL;        // 30*60*1000UL;
+const unsigned long PERIOD_HUNGER = 5 * 1000UL;         // 10*60*1000UL;
+const unsigned long PERIOD_MOOD = 5 * 1000UL;           // 5*60*1000UL;
+const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
+const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
+
 #include <lvgl.h>
 #include "lv_i18n.h"
 #include "Menu.h"
@@ -28,8 +34,6 @@ LV_IMG_DECLARE(pokemon_face_134);
 LV_IMG_DECLARE(pokemon_face_135);
 LV_IMG_DECLARE(pokemon_face_136);
 LV_IMG_DECLARE(pokemon_face_172);
-
-
 
 const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;
@@ -53,6 +57,11 @@ class Pokemon {
   int8_t get_mood() { return _mood; }
   int8_t get_hunger() { return _hunger; }
   int8_t get_sleepiness() { return _sleepiness; }
+
+  long unsigned get_last_boredom_time() { return _last_boredom_time; }
+  long unsigned get_last_hunger_time() { return _last_hunger_time; }
+  long unsigned get_last_sleep_time() { return _last_sleep_time; }
+  long unsigned get_last_without_sleep_time() { return _last_time_without_sleep; }
 
   bool is_sick() { return _is_sick; }
   bool is_sleeping() { return _is_sleeping; }
@@ -81,7 +90,7 @@ class Pokemon {
 
   const lv_img_dsc_t* get_image() {
     int type = get_pokemon_type();
-    switch(type) {
+    switch (type) {
       case POKEMON_PICHU:
         return &pokemon_172;
 
@@ -95,7 +104,7 @@ class Pokemon {
 
   const lv_img_dsc_t* get_avatar() {
     int type = get_pokemon_type();
-    switch(type) {
+    switch (type) {
       case POKEMON_PICHU:
         return &pokemon_face_172;
 
@@ -109,7 +118,7 @@ class Pokemon {
 
   const char* get_description() {
     int type = get_pokemon_type();
-    switch(type) {
+    switch (type) {
       case POKEMON_PICHU:
         return _("pokemon.pichu.description");
 
@@ -123,7 +132,7 @@ class Pokemon {
 
   const char* get_name() {
     int type = get_pokemon_type();
-    switch(type) {
+    switch (type) {
       case POKEMON_PICHU:
         return _("pokemon.pichu.name");
 
@@ -157,5 +166,10 @@ class Pokemon {
   bool _is_sick = false;
 
   lv_obj_t* _image;
+
+  long unsigned _last_boredom_time;
+  long unsigned _last_hunger_time;
+  long unsigned _last_sleep_time;
+  long unsigned _last_time_without_sleep;
 };
 #endif

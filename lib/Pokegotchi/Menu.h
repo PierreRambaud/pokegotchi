@@ -26,7 +26,7 @@ struct bag_item {
   const lv_img_dsc_t* image;
   const char* name;
   const char* description;
-  // ItemSpecifications* specs;
+  ItemSpecifications* specs;
 };
 
 typedef struct bag_item Item;
@@ -86,7 +86,13 @@ class Menu {
 
     Serial.println("Menu background created");
 
+    static lv_style_t flex_style;
+    lv_style_set_flex_flow(&flex_style, LV_FLEX_FLOW_ROW_WRAP);
+    lv_style_set_layout(&flex_style, LV_LAYOUT_FLEX);
+
     _menu_screen = create_sub_window(_screen);
+
+    lv_obj_add_style(_menu_screen, &flex_style, 0);
     Serial.println("Menu Screen created");
   }
 

@@ -1,4 +1,5 @@
 #include <lvgl.h>
+#include <ArduinoJson.h>
 #include "lv_i18n.h"
 #include "Home.h"
 #include "Game.h"
@@ -6,6 +7,11 @@
 
 LV_IMG_DECLARE(background_16)
 LV_IMG_DECLARE(pokegotchi_title)
+
+const char* pokegotchi_save_file_path = "/.pokegotchi/pokegotchi.json";
+
+static void load_button_event_handler(lv_event_t* e);
+static void start_button_event_handler(lv_event_t* e);
 
 Home* Home::instance = nullptr;
 
@@ -34,28 +40,11 @@ Home::Home() {
   lv_anim_start(&anim);
 }
 
-Home::~Home() {
-  lv_obj_del(_screen);
-  Serial.println("Home destroyed");
-}
+Home::~Home() { lv_obj_del(_screen); }
 
 void Home::close() {
   lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
   _closed = true;
-}
-
-static void start_button_event_handler(lv_event_t* e) {
-  Serial.println("Home button pressed");
-
-  Home* h = Home::getInstance();
-  h->close();
-
-  Game* g = Game::getInstance();
-  g->setup();
-
-  Serial.println("Game created");
-
-  delete h;
 }
 
 void Home::loop() {
@@ -66,15 +55,82 @@ void Home::loop() {
   if (lv_obj_get_y(_title) >= 50) {
     lv_obj_t* start_button = lv_btn_create(_screen);
     lv_obj_align(start_button, LV_ALIGN_CENTER, 0, 40);
-    lv_obj_add_flag(start_button, LV_OBJ_FLAG_CHECKABLE);
-    lv_obj_set_height(start_button, LV_SIZE_CONTENT);
+    // lv_obj_set_height(start_button, LV_SIZE_CONTENT);
     lv_obj_add_event_cb(start_button, start_button_event_handler, LV_EVENT_CLICKED, NULL);
 
-    lv_obj_t* label = lv_label_create(start_button);
+    lv_obj_t* label;
+
+    label = lv_label_create(start_button);
     lv_label_set_text(label, _("home.start"));
     lv_obj_center(label);
 
+    if (SD.exists(pokegotchi_save_file_path)) {
+      lv_obj_t* load_button = lv_btn_create(_screen);
+      lv_obj_align_to(load_button, start_button, LV_ALIGN_OUT_BOTTOM_MID, 10, 0);
+      // lv_obj_set_height(load_button, LV_SIZE_CONTENT);
+      lv_obj_add_event_cb(load_button, load_button_event_handler, LV_EVENT_CLICKED, NULL);
+
+      label = lv_label_create(load_button);
+      lv_label_set_text(label, _("home.load"));
+      lv_obj_center(label);
+    }
+
     _loaded = true;
-    Serial.println("Home loaded");
   }
+}
+
+/**
+ * Start a new game
+ *
+ * @param lv_event_t* e
+ */
+static void start_button_event_handler(lv_event_t* e) {
+  Home* h = Home::getInstance();
+  h->close();
+
+  Game* g = Game::getInstance();
+  g->setup();
+
+  delete h;
+}
+
+/**
+ * Load game if data exists on SD card
+ *
+ * @param lv_event_t* e
+ */
+static void load_button_event_handler(lv_event_t* e) {
+  StaticJsonDocument<384> doc;
+
+  File file = SD.open(pokegotchi_save_file_path);
+  if (!file) {
+    Serial.println("Cannot load save file, probably not exists");
+    return;
+  }
+
+  DeserializationError error = deserializeJson(doc, file);
+
+  if (error) {
+    Serial.println("deserializeJson() failed: ");
+    Serial.println(error.c_str());
+    return;
+  }
+
+  int options_brightness = doc["options"]["brightness"];
+
+  JsonObject pokemon = doc["pokemon"];
+  int pokemon_type = pokemon["type"];
+  int pokemon_level = pokemon["level"];
+  int pokemon_life = pokemon["life"];
+  int pokemon_mood = pokemon["mood"];
+  int pokemon_hunger = pokemon["hunger"];
+  int pokemon_sleepiness = pokemon["sleepiness"];
+
+  JsonObject pokemon_time = pokemon["time"];
+  long unsigned pokemon_time_boredom = pokemon_time["boredom"];
+  long unsigned pokemon_time_hunger = pokemon_time["hunger"];
+  long unsigned pokemon_time_sleep = pokemon_time["sleep"];
+  long unsigned pokemon_time_without_sleep = pokemon_time["without_sleep"];
+
+  start_button_event_handler(e);
 }

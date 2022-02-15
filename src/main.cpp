@@ -81,6 +81,15 @@ void setup() {
   init_disp_driver();
   init_touch_driver();
 
+  if (is_sd_card_available() == false) {
+    Serial.println("SD card not available");
+  } else {
+    if (SD.exists("/.pokegotchi") == false) {
+      Serial.println("Create .pokegotchi directory");
+      SD.mkdir("/.pokegotchi");
+    }
+  }
+
   // Setup Pokegotchi
   pokegotchi = new Pokegotchi();
   pokegotchi->setup();
