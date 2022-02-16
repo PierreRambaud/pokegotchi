@@ -1,6 +1,7 @@
 #include <M5Core2.h>
 #include "lv_i18n.h"
 #include "Pokegotchi.h"
+#include "Config.h"
 #include "Game.h"
 #include "Menu.h"
 #include "Home.h"
@@ -11,6 +12,24 @@ Pokegotchi::Pokegotchi() {}
 void Pokegotchi::setup() {
   lv_i18n_init(lv_i18n_language_pack);
   lv_i18n_set_locale("fr");
+
+  Config* c = Config::getInstance();
+  if (c->is_sd_card_available) {
+    Serial.println("SD card available!");
+    File entry = SD.open(c->sd_directory_path);
+    if (entry && !entry.isDirectory()) {
+      entry.close();
+      SD.remove(c->sd_directory_path);
+    }
+
+    entry = SD.open(c->sd_directory_path);
+    if (!entry) {
+      SD.mkdir(c->sd_directory_path);
+      Serial.printf("Directory %s created\n", c->sd_directory_path);
+    } else {
+      Serial.printf("Directory %s already exists\n", c->sd_directory_path);
+    }
+  }
 }
 
 void Pokegotchi::loop() {

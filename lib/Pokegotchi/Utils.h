@@ -34,15 +34,9 @@ static inline lv_obj_t* create_sub_window(lv_obj_t* parent) {
   return obj;
 }
 
-static inline void anim_y_callback(void* img, int32_t value) {
-  lv_obj_set_y((lv_obj_t*)img, value);
-  Serial.printf("Move element to y: %d\r\n", value);
-}
+static inline void anim_y_callback(void* obj, int32_t value) { lv_obj_set_y((lv_obj_t*)obj, value); }
 
-static inline void anim_x_callback(void* img, int32_t value) {
-  lv_obj_set_x((lv_obj_t*)img, value);
-  Serial.printf("Move element to x: %d\r\n", value);
-}
+static inline void anim_x_callback(void* obj, int32_t value) { lv_obj_set_x((lv_obj_t*)obj, value); }
 
 static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_img_dsc_t* img_src, const lv_img_dsc_t* img_pressed_src, const char* title) {
   lv_style_init(&style_default_text);
@@ -106,11 +100,4 @@ static inline bool check_action_time(unsigned long& last_millis, unsigned long w
   return false;
 }
 
-static inline bool is_sd_card_available() {
-  if (SD.begin()) {
-    return true;
-  }
-
-  return false;
-}
 #endif

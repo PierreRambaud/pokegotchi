@@ -2,6 +2,7 @@
 #include <M5Core2.h>
 #include <lvgl.h>
 #include "Pokegotchi.h"
+#include "Config.h"
 #include "Utils.h"
 
 static lv_disp_draw_buf_t draw_buf;
@@ -9,7 +10,7 @@ Pokegotchi *pokegotchi;
 M5Display *tft;
 
 void tft_lv_initialization() {
-  M5.begin();
+  M5.begin(true, false);
 
   lv_init();
 
@@ -81,13 +82,9 @@ void setup() {
   init_disp_driver();
   init_touch_driver();
 
-  if (is_sd_card_available() == false) {
-    Serial.println("SD card not available");
-  } else {
-    if (SD.exists("/.pokegotchi") == false) {
-      Serial.println("Create .pokegotchi directory");
-      SD.mkdir("/.pokegotchi");
-    }
+  Config::getInstance()->is_sd_card_available = SD.begin(TFCARD_CS_PIN, SPI, 40000000);;
+  if (Config::getInstance()->is_sd_card_available == false) {
+    Serial.println("SD Card failed, or not present");
   }
 
   // Setup Pokegotchi

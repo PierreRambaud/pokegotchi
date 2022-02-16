@@ -1,6 +1,7 @@
 #include <lvgl.h>
 #include <ArduinoJson.h>
 #include "lv_i18n.h"
+#include "Config.h"
 #include "Home.h"
 #include "Game.h"
 #include "Utils.h"
@@ -8,14 +9,18 @@
 LV_IMG_DECLARE(background_16)
 LV_IMG_DECLARE(pokegotchi_title)
 
-const char* pokegotchi_save_file_path = "/.pokegotchi/pokegotchi.json";
-
 static void load_button_event_handler(lv_event_t* e);
 static void start_button_event_handler(lv_event_t* e);
 
 Home* Home::instance = nullptr;
 
 Home::Home() {
+  if (Config::getInstance()->is_sd_card_available) {
+    if (SD.exists(Config::getInstance()->save_file_path)) {
+      _has_save_file = true;
+    }
+  }
+
   _screen = create_window();
   lv_scr_load(_screen);
 
@@ -54,8 +59,7 @@ void Home::loop() {
 
   if (lv_obj_get_y(_title) >= 50) {
     lv_obj_t* start_button = lv_btn_create(_screen);
-    lv_obj_align(start_button, LV_ALIGN_CENTER, 0, 40);
-    // lv_obj_set_height(start_button, LV_SIZE_CONTENT);
+    lv_obj_align(start_button, LV_ALIGN_CENTER, 0, 25);
     lv_obj_add_event_cb(start_button, start_button_event_handler, LV_EVENT_CLICKED, NULL);
 
     lv_obj_t* label;
@@ -64,10 +68,9 @@ void Home::loop() {
     lv_label_set_text(label, _("home.start"));
     lv_obj_center(label);
 
-    if (SD.exists(pokegotchi_save_file_path)) {
+    if (_has_save_file == true) {
       lv_obj_t* load_button = lv_btn_create(_screen);
-      lv_obj_align_to(load_button, start_button, LV_ALIGN_OUT_BOTTOM_MID, 10, 0);
-      // lv_obj_set_height(load_button, LV_SIZE_CONTENT);
+      lv_obj_align(load_button, LV_ALIGN_CENTER, 0, 60);
       lv_obj_add_event_cb(load_button, load_button_event_handler, LV_EVENT_CLICKED, NULL);
 
       label = lv_label_create(load_button);
@@ -102,13 +105,14 @@ static void start_button_event_handler(lv_event_t* e) {
 static void load_button_event_handler(lv_event_t* e) {
   StaticJsonDocument<384> doc;
 
-  File file = SD.open(pokegotchi_save_file_path);
+  File file = SD.open(Config::getInstance()->save_file_path);
   if (!file) {
     Serial.println("Cannot load save file, probably not exists");
     return;
   }
 
   DeserializationError error = deserializeJson(doc, file);
+  file.close();
 
   if (error) {
     Serial.println("deserializeJson() failed: ");

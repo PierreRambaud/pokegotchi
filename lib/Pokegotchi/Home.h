@@ -24,6 +24,7 @@ class Home {
 
   static Home* instance;
 
+  bool _has_save_file = false;
   bool _loaded = false;
   bool _closed = false;
 

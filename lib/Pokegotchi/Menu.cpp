@@ -1,6 +1,7 @@
 #include <lvgl.h>
 #include <ArduinoJson.h>
 #include "lv_i18n.h"
+#include "Config.h"
 #include "Menu.h"
 #include "Utils.h"
 #include "Pokemon.h"
@@ -66,7 +67,7 @@ Menu::Menu() {}
 void Menu::setup(lv_obj_t* screen) {
   Menu::init(screen);
 
-  if (is_sd_card_available() == true) {
+  if (Config::getInstance()->is_sd_card_available == true) {
     lv_obj_t* save_button = lv_menu_button_create(_menu_screen, &save, &save_pressed, _("menu.save"));
     lv_obj_add_event_cb(save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
   }
@@ -226,7 +227,7 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon_time["sleep"] = p->get_last_sleep_time();
   pokemon_time["without_sleep"] = p->get_last_without_sleep_time();
 
-  File file = SD.open("/.pokegotchi/pokegotchi.json", FILE_WRITE);
+  File file = SD.open(Config::getInstance()->save_file_path, FILE_WRITE);
   if (!file) {
     static const char* btns[] = {""};
     lv_obj_t* confirm_box = lv_msgbox_create(NULL, "", "Failed to save file", btns, true);
@@ -234,6 +235,7 @@ static void save_game_event_handler(lv_event_t* e) {
     return;
   }
 
+  serializeJson(doc, Serial);
   serializeJson(doc, file);
   file.close();
 

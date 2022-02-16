@@ -88,6 +88,7 @@ class Menu {
 
     static lv_style_t flex_style;
     lv_style_set_flex_flow(&flex_style, LV_FLEX_FLOW_ROW_WRAP);
+    lv_style_set_flex_main_place(&flex_style, LV_FLEX_ALIGN_SPACE_AROUND);
     lv_style_set_layout(&flex_style, LV_LAYOUT_FLEX);
 
     _menu_screen = create_sub_window(_screen);
