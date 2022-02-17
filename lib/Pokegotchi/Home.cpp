@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "Home.h"
 #include "Game.h"
+#include "Pokemon.h"
 #include "Utils.h"
 
 LV_IMG_DECLARE(background_16)
@@ -15,10 +16,12 @@ static void start_button_event_handler(lv_event_t* e);
 Home* Home::instance = nullptr;
 
 Home::Home() {
-  if (Config::getInstance()->is_sd_card_available) {
+  if (sd_begin()) {
     if (SD.exists(Config::getInstance()->save_file_path)) {
       _has_save_file = true;
     }
+
+    SD.end();
   }
 
   _screen = create_window();
@@ -103,11 +106,16 @@ static void start_button_event_handler(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void load_button_event_handler(lv_event_t* e) {
-  StaticJsonDocument<384> doc;
+  StaticJsonDocument<900> doc;
+
+  if (sd_begin() == false) {
+    display_alert("", "SD card not available");
+    return;
+  }
 
   File file = SD.open(Config::getInstance()->save_file_path);
   if (!file) {
-    Serial.println("Cannot load save file, probably not exists");
+    display_alert("", "Cannot load save file, probably not exists");
     return;
   }
 
@@ -120,21 +128,15 @@ static void load_button_event_handler(lv_event_t* e) {
     return;
   }
 
-  int options_brightness = doc["options"]["brightness"];
+  set_lcd_brightness(doc["options"]["brightness"]);
 
-  JsonObject pokemon = doc["pokemon"];
-  int pokemon_type = pokemon["type"];
-  int pokemon_level = pokemon["level"];
-  int pokemon_life = pokemon["life"];
-  int pokemon_mood = pokemon["mood"];
-  int pokemon_hunger = pokemon["hunger"];
-  int pokemon_sleepiness = pokemon["sleepiness"];
+  Home* h = Home::getInstance();
+  h->close();
 
-  JsonObject pokemon_time = pokemon["time"];
-  long unsigned pokemon_time_boredom = pokemon_time["boredom"];
-  long unsigned pokemon_time_hunger = pokemon_time["hunger"];
-  long unsigned pokemon_time_sleep = pokemon_time["sleep"];
-  long unsigned pokemon_time_without_sleep = pokemon_time["without_sleep"];
+  Game* g = Game::getInstance();
+  g->setup();
 
-  start_button_event_handler(e);
+  Pokemon::getInstance()->load(doc["pokemon"]);
+
+  delete h;
 }

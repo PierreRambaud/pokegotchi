@@ -13,8 +13,9 @@ void Pokegotchi::setup() {
   lv_i18n_init(lv_i18n_language_pack);
   lv_i18n_set_locale("fr");
 
-  Config* c = Config::getInstance();
-  if (c->is_sd_card_available) {
+  if (sd_begin()) {
+    Config* c = Config::getInstance();
+
     Serial.println("SD card available!");
     File entry = SD.open(c->sd_directory_path);
     if (entry && !entry.isDirectory()) {
@@ -29,6 +30,8 @@ void Pokegotchi::setup() {
     } else {
       Serial.printf("Directory %s already exists\n", c->sd_directory_path);
     }
+
+    SD.end();
   }
 }
 

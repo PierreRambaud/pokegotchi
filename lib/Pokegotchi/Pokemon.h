@@ -17,6 +17,7 @@ const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
 const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
 
 #include <lvgl.h>
+#include <ArduinoJson.h>
 #include "lv_i18n.h"
 #include "Menu.h"
 
@@ -61,7 +62,7 @@ class Pokemon {
   long unsigned get_last_boredom_time() { return _last_boredom_time; }
   long unsigned get_last_hunger_time() { return _last_hunger_time; }
   long unsigned get_last_sleep_time() { return _last_sleep_time; }
-  long unsigned get_last_without_sleep_time() { return _last_time_without_sleep; }
+  long unsigned get_last_without_sleep_time() { return _last_without_sleep_time; }
 
   bool is_sick() { return _is_sick; }
   bool is_sleeping() { return _is_sleeping; }
@@ -144,6 +145,23 @@ class Pokemon {
     }
   }
 
+  void load(JsonObject pokemon) {
+    int pokemon_type = pokemon["type"];
+    _level = pokemon["level"];
+    _life = pokemon["life"];
+    _mood = pokemon["mood"];
+    _hunger = pokemon["hunger"];
+    _sleepiness = pokemon["sleepiness"];
+
+    JsonObject pokemon_time = pokemon["time"];
+    _last_boredom_time = pokemon_time["boredom"];
+    _last_hunger_time = pokemon_time["hunger"];
+    _last_sleep_time = pokemon_time["sleep"];
+    _last_without_sleep_time = pokemon_time["without_sleep"];
+
+    lv_gif_set_src(_image, get_image());
+  }
+
  private:
   Pokemon();
   static Pokemon* instance;
@@ -170,6 +188,6 @@ class Pokemon {
   long unsigned _last_boredom_time;
   long unsigned _last_hunger_time;
   long unsigned _last_sleep_time;
-  long unsigned _last_time_without_sleep;
+  long unsigned _last_without_sleep_time;
 };
 #endif

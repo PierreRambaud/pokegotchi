@@ -37,7 +37,7 @@ void Pokemon::loop() {
       sleep();
     }
   } else {
-    if (check_action_time(_last_time_without_sleep, PERIOD_WITHOUT_SLEEP)) {
+    if (check_action_time(_last_without_sleep_time, PERIOD_WITHOUT_SLEEP)) {
       tiredness(10);
     }
   }

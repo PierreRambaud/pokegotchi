@@ -91,6 +91,14 @@ static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t 
   return bar;
 }
 
+/**
+ * Check if an action should be executed
+ *
+ * @param unsigned long& last_millis
+ * @param unsigned long wait
+ *
+ * return bool
+ */
 static inline bool check_action_time(unsigned long& last_millis, unsigned long wait) {
   if (millis() - last_millis >= wait) {
     last_millis = millis();
@@ -100,4 +108,19 @@ static inline bool check_action_time(unsigned long& last_millis, unsigned long w
   return false;
 }
 
+/**
+ * Start SD card
+ */
+static inline bool sd_begin() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
+
+static inline lv_obj_t* display_alert(const char* title, const char* message) {
+  static const char* btns[] = {""};
+
+  lv_obj_t* msg_box = lv_msgbox_create(NULL, title, message, btns, true);
+  lv_obj_center(msg_box);
+
+  return msg_box;
+}
+
+static inline void set_lcd_brightness(int value) { M5.Axp.SetLcdVoltage(2500 + ((value * 800) / 100)); }
 #endif

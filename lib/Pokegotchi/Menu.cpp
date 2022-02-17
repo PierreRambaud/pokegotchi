@@ -67,10 +67,8 @@ Menu::Menu() {}
 void Menu::setup(lv_obj_t* screen) {
   Menu::init(screen);
 
-  if (Config::getInstance()->is_sd_card_available == true) {
-    lv_obj_t* save_button = lv_menu_button_create(_menu_screen, &save, &save_pressed, _("menu.save"));
-    lv_obj_add_event_cb(save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
-  }
+  lv_obj_t* save_button = lv_menu_button_create(_menu_screen, &save, &save_pressed, _("menu.save"));
+  lv_obj_add_event_cb(save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
 
   lv_obj_t* pokemon_button = lv_menu_button_create(_menu_screen, &pokeball, &pokeball_pressed, "Pokémon");
   lv_obj_add_event_cb(pokemon_button, open_pokemon_event_handler, LV_EVENT_CLICKED, NULL);
@@ -199,7 +197,7 @@ static void slider_set_brightness_event_cb(lv_event_t* e) {
   lv_obj_align_to(brightness_slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 
   options_brightness_slider_value = (int)lv_slider_get_value(slider);
-  M5.Axp.SetLcdVoltage(2500 + ((options_brightness_slider_value * 800) / 100));
+  set_lcd_brightness(options_brightness_slider_value);
 }
 
 /**
@@ -227,21 +225,23 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon_time["sleep"] = p->get_last_sleep_time();
   pokemon_time["without_sleep"] = p->get_last_without_sleep_time();
 
-  File file = SD.open(Config::getInstance()->save_file_path, FILE_WRITE);
-  if (!file) {
-    static const char* btns[] = {""};
-    lv_obj_t* confirm_box = lv_msgbox_create(NULL, "", "Failed to save file", btns, true);
-    lv_obj_center(confirm_box);
+  if (sd_begin() == false) {
+    display_alert("", "SD card not available");
     return;
   }
 
-  serializeJson(doc, Serial);
-  serializeJson(doc, file);
-  file.close();
+  File file = SD.open(Config::getInstance()->save_file_path, FILE_WRITE);
+  if (!file) {
+    display_alert("", "Failed to save file");
+  } else {
+    serializeJson(doc, Serial);
+    serializeJson(doc, file);
+    file.close();
 
-  static const char* btns[] = {""};
-  lv_obj_t* confirm_box = lv_msgbox_create(NULL, "", "Save complete", btns, true);
-  lv_obj_center(confirm_box);
+    display_alert("", "Save complete!");
+  }
+
+  SD.end();
 }
 
 /**

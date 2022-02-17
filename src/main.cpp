@@ -82,11 +82,6 @@ void setup() {
   init_disp_driver();
   init_touch_driver();
 
-  Config::getInstance()->is_sd_card_available = SD.begin(TFCARD_CS_PIN, SPI, 40000000);;
-  if (Config::getInstance()->is_sd_card_available == false) {
-    Serial.println("SD Card failed, or not present");
-  }
-
   // Setup Pokegotchi
   pokegotchi = new Pokegotchi();
   pokegotchi->setup();

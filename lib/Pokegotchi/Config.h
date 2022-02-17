@@ -11,7 +11,6 @@ class Config {
     return instance;
   }
 
-  bool is_sd_card_available = false;
   const char* sd_directory_path;
   const char* save_file_path;
 
