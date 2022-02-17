@@ -10,6 +10,6 @@ class Pokegotchi {
   void loop();
 
  private:
-  long unsigned _last_refresh_time;
+  long unsigned _last_refresh_time = 0;
 };
 #endif

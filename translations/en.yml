@@ -37,7 +37,7 @@ en:
   bar.life: Life
   bar.mood: Mood
   bar.sleepiness: Sleepiness
-  home.start: Start
+  home.start: New game
   menu.games: Games
   menu.options: Options
   menu.save: Save
@@ -46,9 +46,24 @@ en:
   menu.play: Play
   menu.options.title: Options
   menu.options.brightness: Brightness
-  pokemon.pichu.description: "Pichu stores electricity in the sacs on its cheeks but discharges it inadvertently when agitated or excited. Being yet immature, the Pokémon's handling of electricity is rather inept."
-  pokemon.pikachu.description: "Possesses cheek sacs in which it stores electricity. This clever forest-dweller roasts tough berries with an electric shock before consuming them."
-  pokemon.raichu.description: "It can discharge bursts of electricity exceeding 100,000 volts—a single strike with that amount of power would incapacitate one of the Copperajah of my homeland."
+  pokemon.pichu.description: >-
+    Pichu stores electricity in the sacs on its cheeks but discharges it
+    inadvertently when agitated or excited. Being yet immature, the Pokémon's
+    handling of electricity is rather inept.
+  pokemon.pikachu.description: >-
+    Possesses cheek sacs in which it stores electricity. This clever
+    forest-dweller roasts tough berries with an electric shock before consuming
+    them.
+  pokemon.raichu.description: >-
+    It can discharge bursts of electricity exceeding 100,000 volts—a single
+    strike with that amount of power would incapacitate one of the Copperajah of
+    my homeland.
   pokemon.pichu.name: Pichu
   pokemon.pikachu.name: Pikachu
   pokemon.raichu.name: Raichu
+  home.load: "Load game"
+  sd.card.not_found: "SD card not found"
+  game.load.error: "Unable to load save file"
+  game.load.unserialize.error: "Unable to unserialize data from the file"
+  game.save.failed: "Error while saving"
+  game.save.success: "Game saved!"

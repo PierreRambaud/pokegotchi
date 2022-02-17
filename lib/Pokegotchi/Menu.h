@@ -34,8 +34,8 @@ typedef struct bag_item Item;
 class Menu {
  public:
   virtual void setup(lv_obj_t* screen);
-  void close();
   virtual void open();
+  void close();
   void toggle();
   void display_options();
   void display_pokemon();

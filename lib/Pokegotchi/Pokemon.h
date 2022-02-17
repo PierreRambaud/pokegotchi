@@ -90,68 +90,69 @@ class Pokemon {
   }
 
   const lv_img_dsc_t* get_image() {
-    int type = get_pokemon_type();
-    switch (type) {
-      case POKEMON_PICHU:
-        return &pokemon_172;
-
+    switch (_type) {
       case POKEMON_PIKACHU:
         return &pokemon_25;
 
       case POKEMON_RAICHU:
         return &pokemon_26;
+
+      case POKEMON_PICHU:
+      default:
+        return &pokemon_172;
     }
   }
 
   const lv_img_dsc_t* get_avatar() {
-    int type = get_pokemon_type();
-    switch (type) {
-      case POKEMON_PICHU:
-        return &pokemon_face_172;
-
+    switch (_type) {
       case POKEMON_PIKACHU:
         return &pokemon_face_25;
 
       case POKEMON_RAICHU:
         return &pokemon_face_26;
+
+      case POKEMON_PICHU:
+      default:
+        return &pokemon_face_172;
     }
   }
 
   const char* get_description() {
-    int type = get_pokemon_type();
-    switch (type) {
-      case POKEMON_PICHU:
-        return _("pokemon.pichu.description");
-
+    switch (_type) {
       case POKEMON_PIKACHU:
         return _("pokemon.pikachu.description");
 
       case POKEMON_RAICHU:
         return _("pokemon.raichu.description");
+
+      case POKEMON_PICHU:
+      default:
+        return _("pokemon.pichu.description");
     }
   }
 
   const char* get_name() {
-    int type = get_pokemon_type();
-    switch (type) {
-      case POKEMON_PICHU:
-        return _("pokemon.pichu.name");
-
+    switch (_type) {
       case POKEMON_PIKACHU:
         return _("pokemon.pikachu.name");
 
       case POKEMON_RAICHU:
         return _("pokemon.raichu.name");
+
+      case POKEMON_PICHU:
+      default:
+        return _("pokemon.pichu.name");
     }
   }
 
   void load(JsonObject pokemon) {
-    int pokemon_type = pokemon["type"];
+    _type = pokemon["type"];
     _level = pokemon["level"];
     _life = pokemon["life"];
     _mood = pokemon["mood"];
     _hunger = pokemon["hunger"];
     _sleepiness = pokemon["sleepiness"];
+    _is_sleeping = pokemon["is_sleeping"];
 
     JsonObject pokemon_time = pokemon["time"];
     _last_boredom_time = pokemon_time["boredom"];
@@ -167,12 +168,28 @@ class Pokemon {
   static Pokemon* instance;
 
   void try_to_evolve() {
-    if (_level == 3 || _level == 5) {
-      lv_gif_set_src(_image, get_image());
+    if (_level == 3) {
+      if (_type == POKEMON_PICHU) {
+        _type = POKEMON_PIKACHU;
+      } else if (_type == POKEMON_EEVEE) {
+        _type = POKEMON_FLAREON;
+      }
+    } else if (_level == 5) {
+      if (_type == POKEMON_PIKACHU) {
+        _type = POKEMON_RAICHU;
+      } else if (_type == POKEMON_FLAREON) {
+        _type = POKEMON_VAPOREON;
+      }
+    } else {
+      return;
     }
+
+    lv_gif_set_src(_image, get_image());
   }
 
   const char* _name;
+
+  int _type = POKEMON_PICHU;
 
   int8_t _level = 1;
   int8_t _sleepiness = MAX_SLEEPINESS;

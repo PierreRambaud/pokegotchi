@@ -37,7 +37,7 @@ fr:
   bar.life: Vie
   bar.mood: Humeur
   bar.sleepiness: Sommeil
-  home.start: Commencer
+  home.start: Nouvelle partie
   menu.games: Jeux
   menu.options: Options
   menu.save: Sauvegarder
@@ -46,9 +46,22 @@ fr:
   menu.play: Jouer
   menu.options.title: Options
   menu.options.brightness: Luminosité
-  pokemon.pichu.description: "Les Pichu s’amusent à faire jaillir des étincelles en joignant le bout de leur queue. Cela semble être une façon de démontrer leur courage."
-  pokemon.pikachu.description: "Cet astucieux Pokémon gîte en forêt. Ses bajoues contiennent des poches qui emmagasinent l’électricité dont il se sert pour griller les Baies avant de s’en repaître."
-  pokemon.raichu.description: "Il envoie des décharges de 100 000 volts, ce qui lui permet de mettre au tapis des ennemis bien plus imposants que lui en une seule attaque."
+  pokemon.pichu.description: >-
+    Les Pichu s’amusent à faire jaillir des étincelles en joignant le bout de
+    leur queue. Cela semble être une façon de démontrer leur courage.
+  pokemon.pikachu.description: >-
+    Cet astucieux Pokémon gîte en forêt. Ses bajoues contiennent des poches qui
+    emmagasinent l’électricité dont il se sert pour griller les Baies avant de
+    s’en repaître.
+  pokemon.raichu.description: >-
+    Il envoie des décharges de 100 000 volts, ce qui lui permet de mettre au
+    tapis des ennemis bien plus imposants que lui en une seule attaque.
   pokemon.pichu.name: Pichu
   pokemon.pikachu.name: Pikachu
   pokemon.raichu.name: Raichu
+  home.load: Charger
+  sd.card.not_found: "Carte SD introuvable"
+  game.load.error: "Erreur lors du chargement du fichier"
+  game.load.unserialize.error: "Problème lors de la récupération des données"
+  game.save.failed: "Impossible de sauvegarder"
+  game.save.success: "Sauvegarde effectuée"

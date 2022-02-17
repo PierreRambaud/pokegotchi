@@ -109,13 +109,13 @@ static void load_button_event_handler(lv_event_t* e) {
   StaticJsonDocument<900> doc;
 
   if (sd_begin() == false) {
-    display_alert("", "SD card not available");
+    display_alert("", _("sd.card.not_found"));
     return;
   }
 
   File file = SD.open(Config::getInstance()->save_file_path);
   if (!file) {
-    display_alert("", "Cannot load save file, probably not exists");
+    display_alert("", _("game.load.error"));
     return;
   }
 
@@ -123,6 +123,7 @@ static void load_button_event_handler(lv_event_t* e) {
   file.close();
 
   if (error) {
+    display_alert("", _("game.load.unserialize.error"));
     Serial.println("deserializeJson() failed: ");
     Serial.println(error.c_str());
     return;

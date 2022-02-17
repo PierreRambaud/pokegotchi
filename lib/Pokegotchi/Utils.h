@@ -118,6 +118,9 @@ static inline lv_obj_t* display_alert(const char* title, const char* message) {
 
   lv_obj_t* msg_box = lv_msgbox_create(NULL, title, message, btns, true);
   lv_obj_center(msg_box);
+  lv_obj_t* close_button = lv_msgbox_get_close_btn(msg_box);
+  lv_obj_t* close_label = lv_obj_get_child(close_button, -1);
+  lv_label_set_text(close_label, "X");
 
   return msg_box;
 }

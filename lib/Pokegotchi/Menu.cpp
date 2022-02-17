@@ -218,6 +218,7 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon["mood"] = p->get_mood();
   pokemon["hunger"] = p->get_hunger();
   pokemon["sleepiness"] = p->get_sleepiness();
+  pokemon["is_sleeping"] = p->is_sleeping();
 
   JsonObject pokemon_time = pokemon.createNestedObject("time");
   pokemon_time["boredom"] = p->get_last_boredom_time();
@@ -226,19 +227,19 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon_time["without_sleep"] = p->get_last_without_sleep_time();
 
   if (sd_begin() == false) {
-    display_alert("", "SD card not available");
+    display_alert("", _("sd.card.not_found"));
     return;
   }
 
   File file = SD.open(Config::getInstance()->save_file_path, FILE_WRITE);
   if (!file) {
-    display_alert("", "Failed to save file");
+    display_alert("", _("game.save.failed"));
   } else {
     serializeJson(doc, Serial);
     serializeJson(doc, file);
     file.close();
 
-    display_alert("", "Save complete!");
+    display_alert("", _("game.save.success"));
   }
 
   SD.end();

@@ -56,7 +56,7 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"bar.life", "Life"},
     {"bar.mood", "Mood"},
     {"bar.sleepiness", "Sleepiness"},
-    {"home.start", "Start"},
+    {"home.start", "New game"},
     {"menu.games", "Games"},
     {"menu.options", "Options"},
     {"menu.save", "Save"},
@@ -71,6 +71,12 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"pokemon.pichu.name", "Pichu"},
     {"pokemon.pikachu.name", "Pikachu"},
     {"pokemon.raichu.name", "Raichu"},
+    {"home.load", "Load game"},
+    {"sd.card.not_found", "SD card not found"},
+    {"game.load.error", "Unable to load save file"},
+    {"game.load.unserialize.error", "Unable to unserialize data from the file"},
+    {"game.save.failed", "Error while saving"},
+    {"game.save.success", "Game saved!"},
     {NULL, NULL} // End mark
 };
 
@@ -132,7 +138,7 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"bar.life", "Vie"},
     {"bar.mood", "Humeur"},
     {"bar.sleepiness", "Sommeil"},
-    {"home.start", "Commencer"},
+    {"home.start", "Nouvelle partie"},
     {"menu.games", "Jeux"},
     {"menu.options", "Options"},
     {"menu.save", "Sauvegarder"},
@@ -147,6 +153,12 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"pokemon.pichu.name", "Pichu"},
     {"pokemon.pikachu.name", "Pikachu"},
     {"pokemon.raichu.name", "Raichu"},
+    {"home.load", "Charger"},
+    {"sd.card.not_found", "Carte SD introuvable"},
+    {"game.load.error", "Erreur lors du chargement du fichier"},
+    {"game.load.unserialize.error", "Problème lors de la récupération des données"},
+    {"game.save.failed", "Impossible de sauvegarder"},
+    {"game.save.success", "Sauvegarde effectuée"},
     {NULL, NULL} // End mark
 };
 
