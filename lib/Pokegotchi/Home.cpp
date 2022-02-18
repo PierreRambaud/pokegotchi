@@ -7,11 +7,10 @@
 #include "Pokemon.h"
 #include "Utils.h"
 
-LV_IMG_DECLARE(background_16)
-LV_IMG_DECLARE(pokegotchi_title)
-
+static void close_msg_box_event_handler(lv_event_t* e);
 static void load_button_event_handler(lv_event_t* e);
 static void start_button_event_handler(lv_event_t* e);
+static void start_new_game_event_handler(lv_event_t* e);
 
 Home* Home::instance = nullptr;
 
@@ -28,10 +27,12 @@ Home::Home() {
   lv_scr_load(_screen);
 
   lv_obj_t* background_image = lv_img_create(_screen);
+  LV_IMG_DECLARE(background_16)
   lv_img_set_src(background_image, &background_16);
   lv_obj_set_pos(background_image, 0, 0);
 
   _title = lv_img_create(_screen);
+  LV_IMG_DECLARE(pokegotchi_title)
   lv_img_set_src(_title, &pokegotchi_title);
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
 
@@ -86,18 +87,57 @@ void Home::loop() {
 }
 
 /**
- * Start a new game
+ * Choice a pokemon to start a new game
  *
  * @param lv_event_t* e
  */
 static void start_button_event_handler(lv_event_t* e) {
+  lv_obj_t* choice_box = display_alert(_("home.start.choice"), "");
+
+  LV_IMG_DECLARE(pokemon_choice_pichu)
+  lv_obj_t* pichu_btn = lv_imgbtn_create(choice_box);
+  lv_imgbtn_set_src(pichu_btn, LV_IMGBTN_STATE_RELEASED, NULL, &pokemon_choice_pichu, NULL);
+  static int pichu_value = POKEMON_PICHU;
+  lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
+  lv_obj_add_event_cb(pichu_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
+  lv_obj_set_width(pichu_btn, 63);
+  lv_obj_set_pos(pichu_btn, 25, 25);
+
+  LV_IMG_DECLARE(pokemon_choice_eevee)
+  lv_obj_t* eevee_btn = lv_imgbtn_create(choice_box);
+  static int eevee_value = POKEMON_EEVEE;
+  lv_imgbtn_set_src(eevee_btn, LV_IMGBTN_STATE_RELEASED, NULL, &pokemon_choice_eevee, NULL);
+  lv_obj_add_event_cb(eevee_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &eevee_value);
+  lv_obj_add_event_cb(eevee_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
+  lv_obj_set_width(eevee_btn, 63);
+  lv_obj_set_pos(eevee_btn, 155, 25);
+}
+
+/**
+ * Start a new game
+ *
+ * @param lv_event_t* e
+ */
+static void start_new_game_event_handler(lv_event_t* e) {
+  int pokemon_number = *((int*)lv_event_get_user_data(e));
+
+  Serial.printf("New game start with %d as pokemon", pokemon_number);
   Home* h = Home::getInstance();
   h->close();
 
   Game* g = Game::getInstance();
   g->setup();
 
+  Pokemon* p = new Pokemon(pokemon_number);
+  Pokemon::setInstance(p);
+  p->animate();
+
   delete h;
+}
+
+static void close_msg_box_event_handler(lv_event_t* e) {
+  lv_obj_t* choice_box = (lv_obj_t*)lv_event_get_user_data(e);
+  lv_msgbox_close(choice_box);
 }
 
 /**
@@ -137,7 +177,11 @@ static void load_button_event_handler(lv_event_t* e) {
   Game* g = Game::getInstance();
   g->setup();
 
-  Pokemon::getInstance()->load(doc["pokemon"]);
+  JsonObject pokemon_data = doc["pokemon"];
+  Pokemon* p = new Pokemon((int)pokemon_data["number"]);
+  Pokemon::setInstance(p);
+  p->load(pokemon_data);
+  p->animate();
 
   delete h;
 }

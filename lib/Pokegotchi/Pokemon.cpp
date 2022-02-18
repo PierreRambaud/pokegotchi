@@ -3,9 +3,11 @@
 #include "Utils.h"
 #include "Pokemon.h"
 
-Pokemon* Pokemon::instance = nullptr;
+Pokemon* Pokemon::_instance = nullptr;
 
-Pokemon::Pokemon() {
+Pokemon::Pokemon(int number) { _number = number; };
+
+void Pokemon::animate() {
   _image = lv_gif_create(lv_scr_act());
   lv_gif_set_src(_image, get_image());
   lv_obj_align(_image, LV_ALIGN_CENTER, 0, 0);
@@ -21,7 +23,7 @@ Pokemon::Pokemon() {
   lv_anim_set_exec_cb(&anim, anim_y_callback);
 
   lv_anim_start(&anim);
-};
+}
 
 void Pokemon::loop() {
   if (check_action_time(_last_hunger_time, PERIOD_HUNGER)) {

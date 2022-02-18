@@ -212,7 +212,7 @@ static void save_game_event_handler(lv_event_t* e) {
   doc["options"]["brightness"] = options_brightness_slider_value;
 
   JsonObject pokemon = doc.createNestedObject("pokemon");
-  pokemon["type"] = p->get_pokemon_type();
+  pokemon["number"] = p->get_number();
   pokemon["level"] = p->get_level();
   pokemon["life"] = p->get_life();
   pokemon["mood"] = p->get_mood();

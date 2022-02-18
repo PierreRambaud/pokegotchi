@@ -21,21 +21,6 @@ const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
 #include "lv_i18n.h"
 #include "Menu.h"
 
-LV_IMG_DECLARE(pokemon_25);
-LV_IMG_DECLARE(pokemon_26);
-LV_IMG_DECLARE(pokemon_133);
-LV_IMG_DECLARE(pokemon_134);
-LV_IMG_DECLARE(pokemon_135);
-LV_IMG_DECLARE(pokemon_136);
-LV_IMG_DECLARE(pokemon_172);
-LV_IMG_DECLARE(pokemon_face_25);
-LV_IMG_DECLARE(pokemon_face_26);
-LV_IMG_DECLARE(pokemon_face_133);
-LV_IMG_DECLARE(pokemon_face_134);
-LV_IMG_DECLARE(pokemon_face_135);
-LV_IMG_DECLARE(pokemon_face_136);
-LV_IMG_DECLARE(pokemon_face_172);
-
 const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;
 const int8_t MAX_MOOD = 10;
@@ -43,21 +28,19 @@ const int8_t MAX_HUNGER = 20;
 
 class Pokemon {
  public:
+  Pokemon(int number);
   void loop();
+  void animate();
 
-  static Pokemon* getInstance() {
-    if (instance == nullptr) {
-      instance = new Pokemon();
-    }
-
-    return instance;
-  }
+  static void setInstance(Pokemon* instance) { _instance = instance; }
+  static Pokemon* getInstance() { return _instance; }
 
   int8_t get_level() { return _level; }
   int8_t get_life() { return _life; }
   int8_t get_mood() { return _mood; }
   int8_t get_hunger() { return _hunger; }
   int8_t get_sleepiness() { return _sleepiness; }
+  int get_number() { return _number; }
 
   long unsigned get_last_boredom_time() { return _last_boredom_time; }
   long unsigned get_last_hunger_time() { return _last_hunger_time; }
@@ -77,54 +60,74 @@ class Pokemon {
   void boredom(int8_t number);
   void hungry(int8_t number);
 
-  int get_pokemon_type() {
-    if (_level >= 5) {
-      return POKEMON_RAICHU;
-    }
-
-    if (_level >= 3) {
-      return POKEMON_PIKACHU;
-    }
-
-    return POKEMON_PICHU;
-  }
-
   const lv_img_dsc_t* get_image() {
-    switch (_type) {
+    switch (_number) {
+      case POKEMON_EEVEE:
+        LV_IMG_DECLARE(pokemon_133);
+        return &pokemon_133;
+      case POKEMON_VAPOREON:
+        LV_IMG_DECLARE(pokemon_134);
+        return &pokemon_134;
+      case POKEMON_JOLTEON:
+        LV_IMG_DECLARE(pokemon_135);
+        return &pokemon_135;
+      case POKEMON_FLAREON:
+        LV_IMG_DECLARE(pokemon_136);
+        return &pokemon_136;
       case POKEMON_PIKACHU:
+        LV_IMG_DECLARE(pokemon_25);
         return &pokemon_25;
-
       case POKEMON_RAICHU:
+        LV_IMG_DECLARE(pokemon_26);
         return &pokemon_26;
-
       case POKEMON_PICHU:
       default:
+        LV_IMG_DECLARE(pokemon_172);
         return &pokemon_172;
     }
   }
 
   const lv_img_dsc_t* get_avatar() {
-    switch (_type) {
+    switch (_number) {
+      case POKEMON_EEVEE:
+        LV_IMG_DECLARE(pokemon_face_133);
+        return &pokemon_face_133;
+      case POKEMON_VAPOREON:
+        LV_IMG_DECLARE(pokemon_face_134);
+        return &pokemon_face_134;
+      case POKEMON_JOLTEON:
+        LV_IMG_DECLARE(pokemon_face_135);
+        return &pokemon_face_135;
+      case POKEMON_FLAREON:
+        LV_IMG_DECLARE(pokemon_face_136);
+        return &pokemon_face_136;
       case POKEMON_PIKACHU:
+        LV_IMG_DECLARE(pokemon_face_25);
         return &pokemon_face_25;
-
       case POKEMON_RAICHU:
+        LV_IMG_DECLARE(pokemon_face_26);
         return &pokemon_face_26;
-
       case POKEMON_PICHU:
       default:
+        LV_IMG_DECLARE(pokemon_face_172);
         return &pokemon_face_172;
     }
   }
 
   const char* get_description() {
-    switch (_type) {
+    switch (_number) {
+      case POKEMON_EEVEE:
+        return _("pokemon.eevee.description");
+      case POKEMON_VAPOREON:
+        return _("pokemon.vaporeon.description");
+      case POKEMON_JOLTEON:
+        return _("pokemon.jolteon.description");
+      case POKEMON_FLAREON:
+        return _("pokemon.flareon.description");
       case POKEMON_PIKACHU:
         return _("pokemon.pikachu.description");
-
       case POKEMON_RAICHU:
         return _("pokemon.raichu.description");
-
       case POKEMON_PICHU:
       default:
         return _("pokemon.pichu.description");
@@ -132,13 +135,19 @@ class Pokemon {
   }
 
   const char* get_name() {
-    switch (_type) {
+    switch (_number) {
+      case POKEMON_EEVEE:
+        return _("pokemon.eevee.name");
+      case POKEMON_VAPOREON:
+        return _("pokemon.vaporeon.name");
+      case POKEMON_JOLTEON:
+        return _("pokemon.jolteon.name");
+      case POKEMON_FLAREON:
+        return _("pokemon.flareon.name");
       case POKEMON_PIKACHU:
         return _("pokemon.pikachu.name");
-
       case POKEMON_RAICHU:
         return _("pokemon.raichu.name");
-
       case POKEMON_PICHU:
       default:
         return _("pokemon.pichu.name");
@@ -146,7 +155,6 @@ class Pokemon {
   }
 
   void load(JsonObject pokemon) {
-    _type = pokemon["type"];
     _level = pokemon["level"];
     _life = pokemon["life"];
     _mood = pokemon["mood"];
@@ -164,21 +172,24 @@ class Pokemon {
   }
 
  private:
-  Pokemon();
-  static Pokemon* instance;
+  static Pokemon* _instance;
 
   void try_to_evolve() {
     if (_level == 3) {
-      if (_type == POKEMON_PICHU) {
-        _type = POKEMON_PIKACHU;
-      } else if (_type == POKEMON_EEVEE) {
-        _type = POKEMON_FLAREON;
+      if (_number == POKEMON_PICHU) {
+        _number = POKEMON_PIKACHU;
+      } else if (_number == POKEMON_EEVEE) {
+        _number = POKEMON_FLAREON;
       }
     } else if (_level == 5) {
-      if (_type == POKEMON_PIKACHU) {
-        _type = POKEMON_RAICHU;
-      } else if (_type == POKEMON_FLAREON) {
-        _type = POKEMON_VAPOREON;
+      if (_number == POKEMON_PIKACHU) {
+        _number = POKEMON_RAICHU;
+      } else if (_number == POKEMON_FLAREON) {
+        _number = POKEMON_VAPOREON;
+      }
+    } else if (_level == 10) {
+      if (_number == POKEMON_VAPOREON) {
+        _number = POKEMON_JOLTEON;
       }
     } else {
       return;
@@ -189,7 +200,7 @@ class Pokemon {
 
   const char* _name;
 
-  int _type = POKEMON_PICHU;
+  int _number = POKEMON_PICHU;
 
   int8_t _level = 1;
   int8_t _sleepiness = MAX_SLEEPINESS;

@@ -4,9 +4,6 @@
 #include <lvgl.h>
 #include "Menu.h"
 
-#define ANIMATION_NIGHT 11
-#define ANIMATION_DAY 11
-
 class Game {
  public:
   void setup();
