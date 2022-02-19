@@ -60,57 +60,43 @@ class Pokemon {
   void boredom(int8_t number);
   void hungry(int8_t number);
 
-  const lv_img_dsc_t* get_image() {
+  const char* get_image() {
     switch (_number) {
       case POKEMON_EEVEE:
-        LV_IMG_DECLARE(pokemon_133);
-        return &pokemon_133;
+        return "L:pokemon/133.gif";
       case POKEMON_VAPOREON:
-        LV_IMG_DECLARE(pokemon_134);
-        return &pokemon_134;
+        return "L:pokemon/134.gif";
       case POKEMON_JOLTEON:
-        LV_IMG_DECLARE(pokemon_135);
-        return &pokemon_135;
+        return "L:pokemon/135.gif";
       case POKEMON_FLAREON:
-        LV_IMG_DECLARE(pokemon_136);
-        return &pokemon_136;
+        return "L:pokemon/136.gif";
       case POKEMON_PIKACHU:
-        LV_IMG_DECLARE(pokemon_25);
-        return &pokemon_25;
+        return "L:pokemon/25.gif";
       case POKEMON_RAICHU:
-        LV_IMG_DECLARE(pokemon_26);
-        return &pokemon_26;
+        return "L:pokemon/26.gif";
       case POKEMON_PICHU:
       default:
-        LV_IMG_DECLARE(pokemon_172);
-        return &pokemon_172;
+        return "L:pokemon/172.gif";
     }
   }
 
-  const lv_img_dsc_t* get_avatar() {
+  const char* get_avatar() {
     switch (_number) {
       case POKEMON_EEVEE:
-        LV_IMG_DECLARE(pokemon_face_133);
-        return &pokemon_face_133;
+        return "L:pokemon/face/133.gif";
       case POKEMON_VAPOREON:
-        LV_IMG_DECLARE(pokemon_face_134);
-        return &pokemon_face_134;
+        return "L:pokemon/face/134.gif";
       case POKEMON_JOLTEON:
-        LV_IMG_DECLARE(pokemon_face_135);
-        return &pokemon_face_135;
+        return "L:pokemon/face/135.gif";
       case POKEMON_FLAREON:
-        LV_IMG_DECLARE(pokemon_face_136);
-        return &pokemon_face_136;
+        return "L:pokemon/face/136.gif";
       case POKEMON_PIKACHU:
-        LV_IMG_DECLARE(pokemon_face_25);
-        return &pokemon_face_25;
+        return "L:pokemon/face/25.gif";
       case POKEMON_RAICHU:
-        LV_IMG_DECLARE(pokemon_face_26);
-        return &pokemon_face_26;
+        return "L:pokemon/face/26.gif";
       case POKEMON_PICHU:
       default:
-        LV_IMG_DECLARE(pokemon_face_172);
-        return &pokemon_face_172;
+        return "L:pokemon/face/172.gif";
     }
   }
 

@@ -27,13 +27,11 @@ Home::Home() {
   lv_scr_load(_screen);
 
   lv_obj_t* background_image = lv_img_create(_screen);
-  LV_IMG_DECLARE(background_16)
-  lv_img_set_src(background_image, &background_16);
+  lv_img_set_src(background_image, "L:background/16.png");
   lv_obj_set_pos(background_image, 0, 0);
 
   _title = lv_img_create(_screen);
-  LV_IMG_DECLARE(pokegotchi_title)
-  lv_img_set_src(_title, &pokegotchi_title);
+  lv_img_set_src(_title, "L:home/title.png");
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
 
   lv_anim_t anim;
@@ -94,19 +92,17 @@ void Home::loop() {
 static void start_button_event_handler(lv_event_t* e) {
   lv_obj_t* choice_box = display_alert(_("home.start.choice"), "");
 
-  LV_IMG_DECLARE(pokemon_choice_pichu)
   lv_obj_t* pichu_btn = lv_imgbtn_create(choice_box);
-  lv_imgbtn_set_src(pichu_btn, LV_IMGBTN_STATE_RELEASED, NULL, &pokemon_choice_pichu, NULL);
+  lv_imgbtn_set_src(pichu_btn, LV_IMGBTN_STATE_RELEASED, NULL, "L:home/pichu.png", NULL);
   static int pichu_value = POKEMON_PICHU;
   lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
   lv_obj_add_event_cb(pichu_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
   lv_obj_set_width(pichu_btn, 63);
   lv_obj_set_pos(pichu_btn, 25, 25);
 
-  LV_IMG_DECLARE(pokemon_choice_eevee)
   lv_obj_t* eevee_btn = lv_imgbtn_create(choice_box);
   static int eevee_value = POKEMON_EEVEE;
-  lv_imgbtn_set_src(eevee_btn, LV_IMGBTN_STATE_RELEASED, NULL, &pokemon_choice_eevee, NULL);
+  lv_imgbtn_set_src(eevee_btn, LV_IMGBTN_STATE_RELEASED, NULL, "L:home/eevee.png", NULL);
   lv_obj_add_event_cb(eevee_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &eevee_value);
   lv_obj_add_event_cb(eevee_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
   lv_obj_set_width(eevee_btn, 63);

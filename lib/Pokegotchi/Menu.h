@@ -7,12 +7,6 @@
 
 #define BAG_ITEMS_SIZE 15
 
-LV_IMG_DECLARE(background);
-LV_IMG_DECLARE(battery_charging);
-LV_IMG_DECLARE(battery_low);
-LV_IMG_DECLARE(battery_middle);
-LV_IMG_DECLARE(battery_full);
-
 struct bag_item_specifications {
   const int mood;
   const int hunger;
@@ -23,7 +17,7 @@ struct bag_item_specifications {
 typedef struct bag_item_specifications ItemSpecifications;
 
 struct bag_item {
-  const lv_img_dsc_t* image;
+  const char* image;
   const char* name;
   const char* description;
   ItemSpecifications* specs;
@@ -51,15 +45,15 @@ class Menu {
   void refresh_battery_status() {
     if (M5.Axp.isCharging() == true) {
       Serial.println("Battery is charging");
-      lv_img_set_src(_battery_level_icon, &battery_charging);
+      lv_img_set_src(_battery_level_icon, "L:menu/battery/charging.png");
     } else {
       float battery_level = M5.Axp.GetBatteryLevel();
       if (battery_level >= 80) {
-        lv_img_set_src(_battery_level_icon, &battery_full);
+        lv_img_set_src(_battery_level_icon, "L:menu/battery/full.png");
       } else if (battery_level >= 40) {
-        lv_img_set_src(_battery_level_icon, &battery_middle);
+        lv_img_set_src(_battery_level_icon, "L:menu/battery/middle.png");
       } else {
-        lv_img_set_src(_battery_level_icon, &battery_low);
+        lv_img_set_src(_battery_level_icon, "L:menu/battery/low.png");
       }
 
       Serial.printf("Battery status: %f\r\n", battery_level);
@@ -76,7 +70,7 @@ class Menu {
     _screen = create_window();
 
     lv_obj_t* background_image = lv_img_create(_screen);
-    lv_img_set_src(background_image, &background);
+    lv_img_set_src(background_image, "L:menu/background.png");
     lv_obj_set_pos(background_image, 0, 0);
 
     _battery_level_icon = lv_img_create(_screen);
