@@ -6,6 +6,12 @@ Everything is done for the M5Core2 in C with [lvgl 8](https://github.com/lvgl/lv
 
 ## Usage
 
+### Requirements
+
+You need to copy the `mklittlefs` tool at the root of the project directory.
+It's available here: https://github.com/earlephilhower/mklittlefs/releases
+
+Then you will be able to upload files into the `LittleFs` partition (SPIFFS).
 
 ### Build translations
 

@@ -60,43 +60,50 @@ class Pokemon {
   void boredom(int8_t number);
   void hungry(int8_t number);
 
-  const char* get_image() {
+  const lv_img_dsc_t* get_image() {
     switch (_number) {
       case POKEMON_EEVEE:
-        return "L:pokemon/133.gif";
+        LV_IMG_DECLARE(pokemon_133);
+        return &pokemon_133;
       case POKEMON_VAPOREON:
-        return "L:pokemon/134.gif";
+        LV_IMG_DECLARE(pokemon_134);
+        return &pokemon_134;
       case POKEMON_JOLTEON:
-        return "L:pokemon/135.gif";
+        LV_IMG_DECLARE(pokemon_135);
+        return &pokemon_135;
       case POKEMON_FLAREON:
-        return "L:pokemon/136.gif";
+        LV_IMG_DECLARE(pokemon_136);
+        return &pokemon_136;
       case POKEMON_PIKACHU:
-        return "L:pokemon/25.gif";
+        LV_IMG_DECLARE(pokemon_25);
+        return &pokemon_25;
       case POKEMON_RAICHU:
-        return "L:pokemon/26.gif";
+        LV_IMG_DECLARE(pokemon_26);
+        return &pokemon_26;
       case POKEMON_PICHU:
       default:
-        return "L:pokemon/172.gif";
+        LV_IMG_DECLARE(pokemon_172);
+        return &pokemon_172;
     }
   }
 
   const char* get_avatar() {
     switch (_number) {
       case POKEMON_EEVEE:
-        return "L:pokemon/face/133.gif";
+        return "L:/pokemon/face/133.bin";
       case POKEMON_VAPOREON:
-        return "L:pokemon/face/134.gif";
+        return "L:/pokemon/face/134.bin";
       case POKEMON_JOLTEON:
-        return "L:pokemon/face/135.gif";
+        return "L:/pokemon/face/135.bin";
       case POKEMON_FLAREON:
-        return "L:pokemon/face/136.gif";
+        return "L:/pokemon/face/136.bin";
       case POKEMON_PIKACHU:
-        return "L:pokemon/face/25.gif";
+        return "L:/pokemon/face/25.bin";
       case POKEMON_RAICHU:
-        return "L:pokemon/face/26.gif";
+        return "L:/pokemon/face/26.bin";
       case POKEMON_PICHU:
       default:
-        return "L:pokemon/face/172.gif";
+        return "L:/pokemon/face/172.bin";
     }
   }
 

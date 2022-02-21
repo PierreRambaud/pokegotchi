@@ -7,6 +7,26 @@
 #include "Pokemon.h"
 #include "Game.h"
 
+LV_IMG_DECLARE(bag)
+LV_IMG_DECLARE(bag_disabled)
+LV_IMG_DECLARE(bag_pressed)
+LV_IMG_DECLARE(flute)
+LV_IMG_DECLARE(flute_pressed)
+LV_IMG_DECLARE(options)
+LV_IMG_DECLARE(options_pressed)
+LV_IMG_DECLARE(play)
+LV_IMG_DECLARE(play_disabled)
+LV_IMG_DECLARE(play_pressed)
+LV_IMG_DECLARE(pokeball)
+LV_IMG_DECLARE(pokeball_pressed)
+LV_IMG_DECLARE(save)
+LV_IMG_DECLARE(save_pressed)
+LV_IMG_DECLARE(train)
+LV_IMG_DECLARE(train_disabled)
+LV_IMG_DECLARE(train_pressed)
+LV_IMG_DECLARE(trainercard)
+LV_IMG_DECLARE(trainercard_pressed)
+
 static int options_brightness_slider_value = ((300 * 100) / 800);
 static int options_bag_scroll_value = 0;
 
@@ -32,16 +52,16 @@ Menu::Menu() {}
 void Menu::setup(lv_obj_t* screen) {
   Menu::init(screen);
 
-  lv_obj_t* save_button = lv_menu_button_create(_menu_screen, "L:menu/save.png", "L:menu/save_pressed.png", _("menu.save"));
+  lv_obj_t* save_button = lv_menu_button_create(_menu_screen, &save, &save_pressed, _("menu.save"));
   lv_obj_add_event_cb(save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
 
-  lv_obj_t* pokemon_button = lv_menu_button_create(_menu_screen, "L:menu/pokeball.png", "L:menu/pokeball_pressed.png", "Pokémon");
+  lv_obj_t* pokemon_button = lv_menu_button_create(_menu_screen, &pokeball, &pokeball_pressed, "Pokémon");
   lv_obj_add_event_cb(pokemon_button, open_pokemon_event_handler, LV_EVENT_CLICKED, NULL);
 
-  lv_obj_t* options_button = lv_menu_button_create(_menu_screen, "L:menu/options.png", "L:menu/options_pressed.png", _("menu.options"));
+  lv_obj_t* options_button = lv_menu_button_create(_menu_screen, &options, &options_pressed, _("menu.options"));
   lv_obj_add_event_cb(options_button, open_options_event_handler, LV_EVENT_CLICKED, NULL);
 
-  lv_obj_t* trainercard_button = lv_menu_button_create(_menu_screen, "L:menu/trainercard.png", "L:menu/trainercard_pressed.png", _("menu.games"));
+  lv_obj_t* trainercard_button = lv_menu_button_create(_menu_screen, &trainercard, &trainercard_pressed, _("menu.games"));
   lv_obj_add_event_cb(trainercard_button, trainercard_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for menu created");
@@ -232,40 +252,40 @@ static void open_pokemon_event_handler(lv_event_t* e) { Menu::getInstance()->dis
 static void trainercard_event_handler(lv_event_t* e) {}
 
 ActionsMenu::ActionsMenu() {
-  _items[0] = Item{"L:menu/bag/apple.png", _("bag.apple.name"), _("bag.apple.description")};
-  _items[1] = Item{"L:menu/bag/beans.png", _("bag.beans.name"), _("bag.beans.description")};
-  _items[2] = Item{"L:menu/bag/berry.png", _("bag.berry.name"), _("bag.berry.description")};
-  _items[3] = Item{"L:menu/bag/candy_box.png", _("bag.candy.name"), _("bag.candy.description")};
-  _items[4] = Item{"L:menu/bag/cheese.png", _("bag.cheese.name"), _("bag.cheese.description")};
-  _items[5] = Item{"L:menu/bag/chicken.png", _("bag.chicken.name"), _("bag.chicken.description")};
-  _items[6] = Item{"L:menu/bag/coconut_milk.png", _("bag.coconut_milk.name"), _("bag.coconut_milk.description")};
-  _items[7] = Item{"L:menu/bag/frozen_carrots.png", _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description")};
-  _items[8] = Item{"L:menu/bag/haricots.png", _("bag.haricots.name"), _("bag.haricots.description")};
-  _items[9] = Item{"L:menu/bag/honey.png", _("bag.honey.name"), _("bag.honey.description")};
-  _items[10] = Item{"L:menu/bag/milk.png", _("bag.milk.name"), _("bag.milk.description")};
-  _items[11] = Item{"L:menu/bag/noodles.png", _("bag.noodles.name"), _("bag.noodles.description")};
-  _items[12] = Item{"L:menu/bag/spices.png", _("bag.spices.name"), _("bag.spices.description")};
-  _items[13] = Item{"L:menu/bag/sugar_star.png", _("bag.sugar_star.name"), _("bag.sugar_star.description")};
-  _items[14] = Item{"L:menu/bag/water.png", _("bag.water.name"), _("bag.water.description")};
+  _items[0] = Item{"L:/menu/bag/apple.bin", _("bag.apple.name"), _("bag.apple.description")};
+  _items[1] = Item{"L:/menu/bag/beans.bin", _("bag.beans.name"), _("bag.beans.description")};
+  _items[2] = Item{"L:/menu/bag/berry.bin", _("bag.berry.name"), _("bag.berry.description")};
+  _items[3] = Item{"L:/menu/bag/candy_box.bin", _("bag.candy.name"), _("bag.candy.description")};
+  _items[4] = Item{"L:/menu/bag/cheese.bin", _("bag.cheese.name"), _("bag.cheese.description")};
+  _items[5] = Item{"L:/menu/bag/chicken.bin", _("bag.chicken.name"), _("bag.chicken.description")};
+  _items[6] = Item{"L:/menu/bag/coconut_milk.bin", _("bag.coconut_milk.name"), _("bag.coconut_milk.description")};
+  _items[7] = Item{"L:/menu/bag/frozen_carrots.bin", _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description")};
+  _items[8] = Item{"L:/menu/bag/haricots.bin", _("bag.haricots.name"), _("bag.haricots.description")};
+  _items[9] = Item{"L:/menu/bag/honey.bin", _("bag.honey.name"), _("bag.honey.description")};
+  _items[10] = Item{"L:/menu/bag/milk.bin", _("bag.milk.name"), _("bag.milk.description")};
+  _items[11] = Item{"L:/menu/bag/noodles.bin", _("bag.noodles.name"), _("bag.noodles.description")};
+  _items[12] = Item{"L:/menu/bag/spices.bin", _("bag.spices.name"), _("bag.spices.description")};
+  _items[13] = Item{"L:/menu/bag/sugar_star.bin", _("bag.sugar_star.name"), _("bag.sugar_star.description")};
+  _items[14] = Item{"L:/menu/bag/water.bin", _("bag.water.name"), _("bag.water.description")};
 }
 
 void ActionsMenu::setup(lv_obj_t* screen) {
   Menu::init(screen);
 
-  _bag_button = lv_menu_button_create(_menu_screen, "L:menu/bag.png", "L:menu/bag_pressed.png", _("actions.menu.bag"));
-  lv_imgbtn_set_src(_bag_button, LV_IMGBTN_STATE_DISABLED, NULL, "L:menu/bag_disabled.png", NULL);
+  _bag_button = lv_menu_button_create(_menu_screen, &bag, &bag_pressed, _("actions.menu.bag"));
+  lv_imgbtn_set_src(_bag_button, LV_IMGBTN_STATE_DISABLED, NULL, &bag_disabled, NULL);
   lv_obj_add_event_cb(_bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
-  _sleep_button = lv_menu_button_create(_menu_screen, "L:menu/flute.png", "L:menu/flute_pressed.png", _("actions.menu.sleep"));
+  _sleep_button = lv_menu_button_create(_menu_screen, &flute, &flute_pressed, _("actions.menu.sleep"));
   lv_obj_t* sleep_label = lv_obj_get_child(_sleep_button, -1);
   lv_obj_add_event_cb(_sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
 
-  _train_button = lv_menu_button_create(_menu_screen, "L:menu/train.png", "L:menu/train_pressed.png", _("menu.train"));
-  lv_imgbtn_set_src(_train_button, LV_IMGBTN_STATE_DISABLED, NULL, "L:menu/train_disabled.png", NULL);
+  _train_button = lv_menu_button_create(_menu_screen, &train, &train_pressed, _("menu.train"));
+  lv_imgbtn_set_src(_train_button, LV_IMGBTN_STATE_DISABLED, NULL, &train_disabled, NULL);
   lv_obj_add_event_cb(_train_button, train_event_handler, LV_EVENT_CLICKED, NULL);
 
-  _play_button = lv_menu_button_create(_menu_screen, "L:menu/play.pgn", "L:menu/play_pressed.png", _("menu.play"));
-  lv_imgbtn_set_src(_play_button, LV_IMGBTN_STATE_DISABLED, NULL, "L:menu/play_disabled.png", NULL);
+  _play_button = lv_menu_button_create(_menu_screen, &play, &play_pressed, _("menu.play"));
+  lv_imgbtn_set_src(_play_button, LV_IMGBTN_STATE_DISABLED, NULL, &play_disabled, NULL);
   lv_obj_add_event_cb(_play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for actions menu created");

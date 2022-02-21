@@ -7,6 +7,8 @@
 
 #define BAG_ITEMS_SIZE 15
 
+LV_IMG_DECLARE(background);
+
 struct bag_item_specifications {
   const int mood;
   const int hunger;
@@ -43,20 +45,26 @@ class Menu {
   }
 
   void refresh_battery_status() {
+    const char* battery_image = "";
     if (M5.Axp.isCharging() == true) {
       Serial.println("Battery is charging");
-      lv_img_set_src(_battery_level_icon, "L:menu/battery/charging.png");
+      battery_image = "L:/menu/battery/charging.bin";
     } else {
       float battery_level = M5.Axp.GetBatteryLevel();
       if (battery_level >= 80) {
-        lv_img_set_src(_battery_level_icon, "L:menu/battery/full.png");
+        battery_image = "L:/menu/battery/full.bin";
       } else if (battery_level >= 40) {
-        lv_img_set_src(_battery_level_icon, "L:menu/battery/middle.png");
+        battery_image = "L:/menu/battery/middle.bin";
       } else {
-        lv_img_set_src(_battery_level_icon, "L:menu/battery/low.png");
+        battery_image = "L:/menu/battery/low.bin";
       }
 
       Serial.printf("Battery status: %f\r\n", battery_level);
+    }
+
+    if (_previous_battery_image != battery_image) {
+      lv_img_set_src(_battery_level_icon, battery_image);
+      _previous_battery_image = battery_image;
     }
   }
 
@@ -70,7 +78,7 @@ class Menu {
     _screen = create_window();
 
     lv_obj_t* background_image = lv_img_create(_screen);
-    lv_img_set_src(background_image, "L:menu/background.png");
+    lv_img_set_src(background_image, &background);
     lv_obj_set_pos(background_image, 0, 0);
 
     _battery_level_icon = lv_img_create(_screen);
@@ -99,6 +107,8 @@ class Menu {
   lv_obj_t* _game_screen;
   lv_obj_t* _menu_screen;
   lv_obj_t* _sub_menu_screen;
+
+  const char* _previous_battery_image = "";
 };
 
 class ActionsMenu : public Menu {

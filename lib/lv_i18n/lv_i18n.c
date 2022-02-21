@@ -162,7 +162,7 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"pokemon.pichu.name", "Pichu"},
     {"pokemon.pikachu.name", "Pikachu"},
     {"pokemon.raichu.name", "Raichu"},
-    {"home.load", "Charger"},
+    {"home.load", "Charger une partie"},
     {"sd.card.not_found", "Carte SD introuvable"},
     {"game.load.error", "Erreur lors du chargement du fichier"},
     {"game.load.unserialize.error", "Problème lors de la récupération des données"},

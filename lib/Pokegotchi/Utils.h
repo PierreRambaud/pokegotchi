@@ -38,7 +38,7 @@ static inline void anim_y_callback(void* obj, int32_t value) { lv_obj_set_y((lv_
 
 static inline void anim_x_callback(void* obj, int32_t value) { lv_obj_set_x((lv_obj_t*)obj, value); }
 
-static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const char* img_src, const char* img_pressed_src, const char* title) {
+static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_img_dsc_t* img_src, const lv_img_dsc_t* img_pressed_src, const char* title) {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 

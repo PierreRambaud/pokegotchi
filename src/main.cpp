@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "lv_port_fs_littlefs.h"
 #include <M5Core2.h>
 #include <lvgl.h>
 #include "Pokegotchi.h"
@@ -81,6 +82,7 @@ void setup() {
 
   init_disp_driver();
   init_touch_driver();
+  lv_port_littlefs_init();
 
   // Setup Pokegotchi
   pokegotchi = new Pokegotchi();
