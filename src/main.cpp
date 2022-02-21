@@ -77,12 +77,18 @@ void init_disp_driver() {
   lv_disp_drv_register(&disp_drv);  // Finally register the driver
 }
 
+void custom_log_cb(const char * buf)
+{
+  Serial.println(buf);
+}
+
 void setup() {
   tft_lv_initialization();
 
   init_disp_driver();
   init_touch_driver();
   lv_port_littlefs_init();
+  lv_log_register_print_cb(custom_log_cb);
 
   // Setup Pokegotchi
   pokegotchi = new Pokegotchi();

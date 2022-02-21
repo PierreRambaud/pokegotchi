@@ -250,21 +250,21 @@ static void open_pokemon_event_handler(lv_event_t* e) { Menu::getInstance()->dis
 static void trainercard_event_handler(lv_event_t* e) {}
 
 ActionsMenu::ActionsMenu() {
-  _items[0] = Item{"L:/menu/bag/apple.bin", _("bag.apple.name"), _("bag.apple.description")};
-  _items[1] = Item{"L:/menu/bag/beans.bin", _("bag.beans.name"), _("bag.beans.description")};
-  _items[2] = Item{"L:/menu/bag/berry.bin", _("bag.berry.name"), _("bag.berry.description")};
-  _items[3] = Item{"L:/menu/bag/candy_box.bin", _("bag.candy.name"), _("bag.candy.description")};
-  _items[4] = Item{"L:/menu/bag/cheese.bin", _("bag.cheese.name"), _("bag.cheese.description")};
-  _items[5] = Item{"L:/menu/bag/chicken.bin", _("bag.chicken.name"), _("bag.chicken.description")};
-  _items[6] = Item{"L:/menu/bag/coconut_milk.bin", _("bag.coconut_milk.name"), _("bag.coconut_milk.description")};
-  _items[7] = Item{"L:/menu/bag/frozen_carrots.bin", _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description")};
-  _items[8] = Item{"L:/menu/bag/haricots.bin", _("bag.haricots.name"), _("bag.haricots.description")};
-  _items[9] = Item{"L:/menu/bag/honey.bin", _("bag.honey.name"), _("bag.honey.description")};
-  _items[10] = Item{"L:/menu/bag/milk.bin", _("bag.milk.name"), _("bag.milk.description")};
-  _items[11] = Item{"L:/menu/bag/noodles.bin", _("bag.noodles.name"), _("bag.noodles.description")};
-  _items[12] = Item{"L:/menu/bag/spices.bin", _("bag.spices.name"), _("bag.spices.description")};
-  _items[13] = Item{"L:/menu/bag/sugar_star.bin", _("bag.sugar_star.name"), _("bag.sugar_star.description")};
-  _items[14] = Item{"L:/menu/bag/water.bin", _("bag.water.name"), _("bag.water.description")};
+  _items[0] = Item{"L:/objects/bag/apple.bin", _("bag.apple.name"), _("bag.apple.description")};
+  _items[1] = Item{"L:/objects/bag/beans.bin", _("bag.beans.name"), _("bag.beans.description")};
+  _items[2] = Item{"L:/objects/bag/berry.bin", _("bag.berry.name"), _("bag.berry.description")};
+  _items[3] = Item{"L:/objects/bag/candy_box.bin", _("bag.candy.name"), _("bag.candy.description")};
+  _items[4] = Item{"L:/objects/bag/cheese.bin", _("bag.cheese.name"), _("bag.cheese.description")};
+  _items[5] = Item{"L:/objects/bag/chicken.bin", _("bag.chicken.name"), _("bag.chicken.description")};
+  _items[6] = Item{"L:/objects/bag/coconut_milk.bin", _("bag.coconut_milk.name"), _("bag.coconut_milk.description")};
+  _items[7] = Item{"L:/objects/bag/frozen_carrots.bin", _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description")};
+  _items[8] = Item{"L:/objects/bag/haricots.bin", _("bag.haricots.name"), _("bag.haricots.description")};
+  _items[9] = Item{"L:/objects/bag/honey.bin", _("bag.honey.name"), _("bag.honey.description")};
+  _items[10] = Item{"L:/objects/bag/milk.bin", _("bag.milk.name"), _("bag.milk.description")};
+  _items[11] = Item{"L:/objects/bag/noodles.bin", _("bag.noodles.name"), _("bag.noodles.description")};
+  _items[12] = Item{"L:/objects/bag/spices.bin", _("bag.spices.name"), _("bag.spices.description")};
+  _items[13] = Item{"L:/objects/bag/sugar_star.bin", _("bag.sugar_star.name"), _("bag.sugar_star.description")};
+  _items[14] = Item{"L:/objects/bag/water.bin", _("bag.water.name"), _("bag.water.description")};
 }
 
 void ActionsMenu::setup(lv_obj_t* screen) {
