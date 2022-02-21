@@ -27,7 +27,6 @@ LV_IMG_DECLARE(train_pressed)
 LV_IMG_DECLARE(trainercard)
 LV_IMG_DECLARE(trainercard_pressed)
 
-static int options_brightness_slider_value = ((300 * 100) / 800);
 static int options_bag_scroll_value = 0;
 
 static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
@@ -161,12 +160,12 @@ void Menu::display_options() {
   lv_obj_t* brightness_slider_label = lv_label_create(_sub_menu_screen);
   lv_obj_t* brightness_slider = lv_slider_create(_sub_menu_screen);
   lv_obj_set_width(brightness_slider, LV_PCT(95));
-  lv_slider_set_value(brightness_slider, options_brightness_slider_value, LV_ANIM_OFF);
+  lv_slider_set_value(brightness_slider, Options::getInstance()->get_brightness(), LV_ANIM_OFF);
   lv_obj_add_event_cb(brightness_slider, slider_set_brightness_event_cb, LV_EVENT_VALUE_CHANGED, brightness_slider_label);
   lv_obj_set_grid_cell(brightness_slider, LV_GRID_ALIGN_CENTER, 1, 2, LV_GRID_ALIGN_CENTER, 3, 1);
 
   char buf[8];
-  lv_snprintf(buf, sizeof(buf), "%d%%", options_brightness_slider_value);
+  lv_snprintf(buf, sizeof(buf), "%d%%", Options::getInstance()->get_brightness());
   lv_label_set_text(brightness_slider_label, buf);
   lv_obj_add_style(brightness_slider_label, &style_default_text, 0);
   lv_obj_set_grid_cell(brightness_slider_label, LV_GRID_ALIGN_CENTER, 1, 2, LV_GRID_ALIGN_CENTER, 4, 1);
@@ -181,8 +180,7 @@ static void slider_set_brightness_event_cb(lv_event_t* e) {
   lv_label_set_text(brightness_slider_label, buf);
   lv_obj_align_to(brightness_slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 
-  options_brightness_slider_value = (int)lv_slider_get_value(slider);
-  set_lcd_brightness(options_brightness_slider_value);
+  set_lcd_brightness((int)lv_slider_get_value(slider));
 }
 
 /**
@@ -194,7 +192,7 @@ static void save_game_event_handler(lv_event_t* e) {
   Pokemon* p = Pokemon::getInstance();
 
   StaticJsonDocument<900> doc;
-  doc["options"]["brightness"] = options_brightness_slider_value;
+  doc["options"]["brightness"] = Options::getInstance()->get_brightness();
 
   JsonObject pokemon = doc.createNestedObject("pokemon");
   pokemon["number"] = p->get_number();

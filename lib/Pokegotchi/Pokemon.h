@@ -160,8 +160,6 @@ class Pokemon {
     _last_hunger_time = pokemon_time["hunger"];
     _last_sleep_time = pokemon_time["sleep"];
     _last_without_sleep_time = pokemon_time["without_sleep"];
-
-    lv_gif_set_src(_image, get_image());
   }
 
  private:

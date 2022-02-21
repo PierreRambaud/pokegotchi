@@ -13,6 +13,10 @@ It's available here: https://github.com/earlephilhower/mklittlefs/releases
 
 Then you will be able to upload files into the `LittleFs` partition (SPIFFS).
 
+```
+$ pio run -t uploadfs
+```
+
 ### Build translations
 
 ```shell

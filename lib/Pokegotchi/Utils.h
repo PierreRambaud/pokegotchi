@@ -3,6 +3,7 @@
 
 #include <M5Core2.h>
 #include <lvgl.h>
+#include "Options.h"
 
 static lv_style_t style_default_title;
 static lv_style_t style_default_text;
@@ -125,5 +126,8 @@ static inline lv_obj_t* display_alert(const char* title, const char* message) {
   return msg_box;
 }
 
-static inline void set_lcd_brightness(int value) { M5.Axp.SetLcdVoltage(2500 + ((value * 800) / 100)); }
+static inline void set_lcd_brightness(int value) {
+  Options::getInstance()->set_brightness(value);
+  M5.Axp.SetLcdVoltage(2500 + ((value * 800) / 100));
+}
 #endif

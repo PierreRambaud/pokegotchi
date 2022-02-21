@@ -159,6 +159,7 @@ static void load_button_event_handler(lv_event_t* e) {
 
   DeserializationError error = deserializeJson(doc, file);
   file.close();
+  SD.end();
 
   if (error) {
     display_alert("", _("game.load.unserialize.error"));
