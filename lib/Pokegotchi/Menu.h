@@ -19,7 +19,7 @@ struct bag_item_specifications {
 typedef struct bag_item_specifications ItemSpecifications;
 
 struct bag_item {
-  const char* image;
+  const lv_img_dsc_t* image;
   const char* name;
   const char* description;
   ItemSpecifications* specs;

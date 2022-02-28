@@ -43,6 +43,29 @@ void Pokemon::loop() {
       tiredness(10);
     }
   }
+
+  if (check_action_time(_last_simple_check_time, PERIOD_SIMPLE_CHECK)) {
+    simple_check();
+  }
+}
+
+void Pokemon::simple_check() {
+  if (_mood == 0) {
+    _life -= 3;
+  }
+
+  if (_hunger == 0) {
+    _life -= 5;
+  }
+
+  if (_sleepiness == 0) {
+    _life -= 4;
+  }
+
+  if (_life <= 0) {
+    _life = 0;
+    _is_ko = true;
+  }
 }
 
 void Pokemon::train() {

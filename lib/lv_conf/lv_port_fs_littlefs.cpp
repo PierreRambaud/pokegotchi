@@ -59,9 +59,11 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode) {
   else if (mode == (LV_FS_MODE_WR | LV_FS_MODE_RD))
     flags = FILE_WRITE;
 
-  Serial.printf("Try to open file: %s\r\n", path);
-
   File f = LittleFS.open(path, flags);
+  if (!f) {
+    return NULL;
+  }
+
   LittleFile* lf = new LittleFile(f);
 
   return (void*)lf;
@@ -76,7 +78,6 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode) {
 static lv_fs_res_t fs_close(lv_fs_drv_t* drv, void* file_p) {
   LV_UNUSED(drv);
   LittleFile* lf = (LittleFile*)file_p;
-  Serial.printf("Close file: %s\r\n", lf->get_file().name());
 
   lf->get_file().close();
 
@@ -98,7 +99,6 @@ static lv_fs_res_t fs_read(lv_fs_drv_t* drv, void* file_p, void* buf, uint32_t b
   LittleFile* lf = (LittleFile*)file_p;
 
   *br = lf->get_file().read((uint8_t*)buf, btr);
-  Serial.printf("Read file: %s\r\n", lf->get_file().name());
 
   return (int32_t)(*br) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
 }
@@ -116,7 +116,6 @@ static lv_fs_res_t fs_write(lv_fs_drv_t* drv, void* file_p, const void* buf, uin
   LV_UNUSED(drv);
   LittleFile* lf = (LittleFile*)file_p;
   *bw = lf->get_file().write((uint8_t*)buf, btw);
-  Serial.printf("Write file: %s\r\n", lf->get_file().name());
   return (int32_t)(*bw) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
 }
 
@@ -139,7 +138,6 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t* drv, void* file_p, uint32_t pos, lv_fs_w
     mode = SeekEnd;
 
   LittleFile* lf = (LittleFile*)file_p;
-  Serial.printf("Seek file: %s\r\n", lf->get_file().name());
   lf->get_file().seek(pos, mode);
   return LV_FS_RES_OK;
 }

@@ -15,6 +15,7 @@ const unsigned long PERIOD_HUNGER = 5 * 1000UL;         // 10*60*1000UL;
 const unsigned long PERIOD_MOOD = 5 * 1000UL;           // 5*60*1000UL;
 const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
 const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
+const unsigned long PERIOD_SIMPLE_CHECK = 5 * 1000UL;   // 1*60*1000UL;
 
 #include <lvgl.h>
 #include <ArduinoJson.h>
@@ -42,6 +43,7 @@ class Pokemon {
   int8_t get_sleepiness() { return _sleepiness; }
   int get_number() { return _number; }
 
+  long unsigned get_last_simple_check_time() { return _last_simple_check_time; }
   long unsigned get_last_boredom_time() { return _last_boredom_time; }
   long unsigned get_last_hunger_time() { return _last_hunger_time; }
   long unsigned get_last_sleep_time() { return _last_sleep_time; }
@@ -49,6 +51,7 @@ class Pokemon {
 
   bool is_sick() { return _is_sick; }
   bool is_sleeping() { return _is_sleeping; }
+  bool is_ko() { return _is_ko; }
 
   void eat(Item* item);
   void heal(int8_t number);
@@ -59,6 +62,7 @@ class Pokemon {
   void tiredness(int8_t number);
   void boredom(int8_t number);
   void hungry(int8_t number);
+  void simple_check();
 
   const lv_img_dsc_t* get_image() {
     switch (_number) {
@@ -156,6 +160,7 @@ class Pokemon {
     _is_sleeping = pokemon["is_sleeping"];
 
     JsonObject pokemon_time = pokemon["time"];
+    _last_simple_check_time = pokemon_time["simple_check"];
     _last_boredom_time = pokemon_time["boredom"];
     _last_hunger_time = pokemon_time["hunger"];
     _last_sleep_time = pokemon_time["sleep"];
@@ -201,6 +206,7 @@ class Pokemon {
 
   bool _is_sleeping = false;
   bool _is_sick = false;
+  bool _is_ko = false;
 
   lv_obj_t* _image;
 
@@ -208,5 +214,6 @@ class Pokemon {
   long unsigned _last_hunger_time;
   long unsigned _last_sleep_time;
   long unsigned _last_without_sleep_time;
+  long unsigned _last_simple_check_time;
 };
 #endif

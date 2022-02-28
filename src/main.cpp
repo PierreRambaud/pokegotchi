@@ -38,10 +38,10 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
 }
 
 // Read the touchpad
-void my_touchpad_read(lv_indev_drv_t * indev_driver, lv_indev_data_t * data) {
+void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
   TouchPoint_t pos = M5.Touch.getPressPoint();
 
-  bool touched = ( pos.x == -1 ) ? false : true;
+  bool touched = (pos.x == -1) ? false : true;
   if (!touched) {
     data->state = LV_INDEV_STATE_REL;
   } else {
@@ -58,9 +58,9 @@ void init_touch_driver() {
   lv_indev_drv_init(&indev_drv);
 
   indev_drv.type = LV_INDEV_TYPE_POINTER;
-  indev_drv.read_cb = my_touchpad_read; // set touchpad callback
+  indev_drv.read_cb = my_touchpad_read;  // set touchpad callback
 
-  lv_indev_drv_register(&indev_drv); // Register the driver
+  lv_indev_drv_register(&indev_drv);  // Register the driver
 }
 
 // Initialize the display
@@ -77,17 +77,16 @@ void init_disp_driver() {
   lv_disp_drv_register(&disp_drv);  // Finally register the driver
 }
 
-void custom_log_cb(const char * buf)
-{
-  Serial.println(buf);
-}
+void custom_log_cb(const char *buf) { Serial.println(buf); }
 
 void setup() {
   tft_lv_initialization();
 
   init_disp_driver();
   init_touch_driver();
+
   lv_port_littlefs_init();
+
   lv_log_register_print_cb(custom_log_cb);
 
   // Setup Pokegotchi

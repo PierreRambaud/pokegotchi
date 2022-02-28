@@ -7,6 +7,22 @@
 #include "Pokemon.h"
 #include "Game.h"
 
+LV_IMG_DECLARE(object_apple)
+LV_IMG_DECLARE(object_candy_box)
+LV_IMG_DECLARE(object_coconut_milk)
+LV_IMG_DECLARE(object_honey)
+LV_IMG_DECLARE(object_spices)
+LV_IMG_DECLARE(object_beans)
+LV_IMG_DECLARE(object_cheese)
+LV_IMG_DECLARE(object_frozen_carrots)
+LV_IMG_DECLARE(object_milk)
+LV_IMG_DECLARE(object_sugar_star)
+LV_IMG_DECLARE(object_berry)
+LV_IMG_DECLARE(object_chicken)
+LV_IMG_DECLARE(object_haricots)
+LV_IMG_DECLARE(object_noodles)
+LV_IMG_DECLARE(object_water)
+
 LV_IMG_DECLARE(bag)
 LV_IMG_DECLARE(bag_disabled)
 LV_IMG_DECLARE(bag_pressed)
@@ -204,6 +220,7 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon["is_sleeping"] = p->is_sleeping();
 
   JsonObject pokemon_time = pokemon.createNestedObject("time");
+  pokemon_time["simple_check"] = p->get_last_simple_check_time();
   pokemon_time["boredom"] = p->get_last_boredom_time();
   pokemon_time["hunger"] = p->get_last_hunger_time();
   pokemon_time["sleep"] = p->get_last_sleep_time();
@@ -250,21 +267,21 @@ static void open_pokemon_event_handler(lv_event_t* e) { Menu::getInstance()->dis
 static void trainercard_event_handler(lv_event_t* e) {}
 
 ActionsMenu::ActionsMenu() {
-  _items[0] = Item{"L:/objects/bag/apple.bin", _("bag.apple.name"), _("bag.apple.description")};
-  _items[1] = Item{"L:/objects/bag/beans.bin", _("bag.beans.name"), _("bag.beans.description")};
-  _items[2] = Item{"L:/objects/bag/berry.bin", _("bag.berry.name"), _("bag.berry.description")};
-  _items[3] = Item{"L:/objects/bag/candy_box.bin", _("bag.candy.name"), _("bag.candy.description")};
-  _items[4] = Item{"L:/objects/bag/cheese.bin", _("bag.cheese.name"), _("bag.cheese.description")};
-  _items[5] = Item{"L:/objects/bag/chicken.bin", _("bag.chicken.name"), _("bag.chicken.description")};
-  _items[6] = Item{"L:/objects/bag/coconut_milk.bin", _("bag.coconut_milk.name"), _("bag.coconut_milk.description")};
-  _items[7] = Item{"L:/objects/bag/frozen_carrots.bin", _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description")};
-  _items[8] = Item{"L:/objects/bag/haricots.bin", _("bag.haricots.name"), _("bag.haricots.description")};
-  _items[9] = Item{"L:/objects/bag/honey.bin", _("bag.honey.name"), _("bag.honey.description")};
-  _items[10] = Item{"L:/objects/bag/milk.bin", _("bag.milk.name"), _("bag.milk.description")};
-  _items[11] = Item{"L:/objects/bag/noodles.bin", _("bag.noodles.name"), _("bag.noodles.description")};
-  _items[12] = Item{"L:/objects/bag/spices.bin", _("bag.spices.name"), _("bag.spices.description")};
-  _items[13] = Item{"L:/objects/bag/sugar_star.bin", _("bag.sugar_star.name"), _("bag.sugar_star.description")};
-  _items[14] = Item{"L:/objects/bag/water.bin", _("bag.water.name"), _("bag.water.description")};
+  _items[0] = Item{&object_apple, _("bag.apple.name"), _("bag.apple.description")};
+  _items[1] = Item{&object_beans, _("bag.beans.name"), _("bag.beans.description")};
+  _items[2] = Item{&object_berry, _("bag.berry.name"), _("bag.berry.description")};
+  _items[3] = Item{&object_candy_box, _("bag.candy.name"), _("bag.candy.description")};
+  _items[4] = Item{&object_cheese, _("bag.cheese.name"), _("bag.cheese.description")};
+  _items[5] = Item{&object_chicken, _("bag.chicken.name"), _("bag.chicken.description")};
+  _items[6] = Item{&object_coconut_milk, _("bag.coconut_milk.name"), _("bag.coconut_milk.description")};
+  _items[7] = Item{&object_frozen_carrots, _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description")};
+  _items[8] = Item{&object_haricots, _("bag.haricots.name"), _("bag.haricots.description")};
+  _items[9] = Item{&object_honey, _("bag.honey.name"), _("bag.honey.description")};
+  _items[10] = Item{&object_milk, _("bag.milk.name"), _("bag.milk.description")};
+  _items[11] = Item{&object_noodles, _("bag.noodles.name"), _("bag.noodles.description")};
+  _items[12] = Item{&object_spices, _("bag.spices.name"), _("bag.spices.description")};
+  _items[13] = Item{&object_sugar_star, _("bag.sugar_star.name"), _("bag.sugar_star.description")};
+  _items[14] = Item{&object_water, _("bag.water.name"), _("bag.water.description")};
 }
 
 void ActionsMenu::setup(lv_obj_t* screen) {
