@@ -3,10 +3,11 @@
 
 #include <lvgl.h>
 #include "Menu.h"
+#include "Pokemon.h"
 
 class Game {
  public:
-  void setup();
+  void setup(Pokemon* p);
   void loop();
   void switch_to_day();
   void switch_to_night();
@@ -26,11 +27,14 @@ class Game {
   void action_sleep();
   void action_wake_up();
 
+  void create_poo();
+
  private:
   Game();
 
   static Game* instance;
 
+  lv_obj_t* _pokemon_image;
   lv_obj_t* _screen;
   lv_anim_t _anim;
 
@@ -40,5 +44,7 @@ class Game {
   lv_obj_t* _sleepiness_bar;
   lv_obj_t* _hunger_bar;
   lv_obj_t* _life_bar;
+
+  int8_t _poos = 0;
 };
 #endif

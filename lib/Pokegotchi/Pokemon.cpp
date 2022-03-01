@@ -8,21 +8,6 @@ Pokemon* Pokemon::_instance = nullptr;
 Pokemon::Pokemon(int number) { _number = number; };
 
 void Pokemon::animate() {
-  _image = lv_gif_create(lv_scr_act());
-  lv_gif_set_src(_image, get_image());
-  lv_obj_align(_image, LV_ALIGN_CENTER, 0, 0);
-
-  lv_anim_t anim;
-
-  lv_anim_init(&anim);
-  lv_anim_set_var(&anim, _image);
-  lv_anim_set_values(&anim, 160, 80);
-  lv_anim_set_path_cb(&anim, lv_anim_path_overshoot);
-  lv_anim_set_time(&anim, 1500);
-  lv_anim_set_repeat_count(&anim, 0);
-  lv_anim_set_exec_cb(&anim, anim_y_callback);
-
-  lv_anim_start(&anim);
 }
 
 void Pokemon::loop() {
@@ -42,6 +27,10 @@ void Pokemon::loop() {
     if (check_action_time(_last_without_sleep_time, PERIOD_WITHOUT_SLEEP)) {
       tiredness(10);
     }
+  }
+
+  if (check_action_time(_last_poo_time, PERIOD_POO)) {
+    poo();
   }
 
   if (check_action_time(_last_simple_check_time, PERIOD_SIMPLE_CHECK)) {
@@ -68,9 +57,20 @@ void Pokemon::simple_check() {
   }
 }
 
+void Pokemon::poo() {
+  _poos += 1;
+}
+
+void Pokemon::clean_poo() {
+  if (_poos > 0) {
+    _poos -= 1;
+  }
+}
+
 void Pokemon::train() {
-  _level += 1;
-  try_to_evolve();
+  if (_level < 100) {
+    _level += 1;
+  }
 
   hungry(2);
   tiredness(10);

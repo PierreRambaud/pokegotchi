@@ -54,7 +54,7 @@ Game* Game::instance = nullptr;
 
 Game::Game() {}
 
-void Game::setup() {
+void Game::setup(Pokemon* p) {
   _screen = create_window();
   lv_scr_load(_screen);
 
@@ -98,6 +98,22 @@ void Game::setup() {
   lv_obj_align_to(_level_indic, level_label, LV_ALIGN_OUT_BOTTOM_MID, 10, 0);
   lv_obj_add_style(_level_indic, &style_game_label, 0);
   lv_label_set_text(_level_indic, "1");
+
+  _pokemon_image = lv_gif_create(_screen);
+  lv_gif_set_src(_pokemon_image, p->get_image());
+  lv_obj_align(_pokemon_image, LV_ALIGN_CENTER, 0, 0);
+
+  lv_anim_t anim;
+
+  lv_anim_init(&anim);
+  lv_anim_set_var(&anim, _pokemon_image);
+  lv_anim_set_values(&anim, 160, 80);
+  lv_anim_set_path_cb(&anim, lv_anim_path_overshoot);
+  lv_anim_set_time(&anim, 1500);
+  lv_anim_set_repeat_count(&anim, 0);
+  lv_anim_set_exec_cb(&anim, anim_y_callback);
+
+  lv_anim_start(&anim);
 }
 
 void Game::switch_to_day() {
@@ -123,11 +139,23 @@ void Game::loop() {
   lv_bar_set_value(_sleepiness_bar, p->get_sleepiness(), LV_ANIM_ON);
   lv_bar_set_value(_hunger_bar, p->get_hunger(), LV_ANIM_ON);
   lv_label_set_text_fmt(_level_indic, "%d", p->get_level());
+
+  if (p->get_poos() != _poos) {
+    create_poo();
+    _poos += 1;
+  }
+}
+
+void Game::create_poo() {
+  // lv_obj_t* poo = lv_img_create(_screen);
 }
 
 void Game::action_train() {
   Pokemon* p = Pokemon::getInstance();
   p->train();
+  if (p->try_to_evolve() == true) {
+    lv_gif_set_src(_pokemon_image, p->get_image());
+  }
 }
 
 void Game::action_play() {
@@ -146,7 +174,6 @@ void Game::action_sleep() {
   Pokemon* p = Pokemon::getInstance();
   if (p->is_sleeping() == false) {
     switch_to_night();
-
     p->sleep();
   }
 }

@@ -16,6 +16,8 @@ const unsigned long PERIOD_MOOD = 5 * 1000UL;           // 5*60*1000UL;
 const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
 const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
 const unsigned long PERIOD_SIMPLE_CHECK = 5 * 1000UL;   // 1*60*1000UL;
+const unsigned long PERIOD_POO = 30 * 1000UL;        // 10*60*1000UL;
+
 
 #include <lvgl.h>
 #include <ArduinoJson.h>
@@ -36,6 +38,7 @@ class Pokemon {
   static void setInstance(Pokemon* instance) { _instance = instance; }
   static Pokemon* getInstance() { return _instance; }
 
+  int8_t get_poos() { return _poos; }
   int8_t get_level() { return _level; }
   int8_t get_life() { return _life; }
   int8_t get_mood() { return _mood; }
@@ -48,6 +51,7 @@ class Pokemon {
   long unsigned get_last_hunger_time() { return _last_hunger_time; }
   long unsigned get_last_sleep_time() { return _last_sleep_time; }
   long unsigned get_last_without_sleep_time() { return _last_without_sleep_time; }
+  long unsigned get_last_poo_time() { return _last_poo_time; }
 
   bool is_sick() { return _is_sick; }
   bool is_sleeping() { return _is_sleeping; }
@@ -59,6 +63,8 @@ class Pokemon {
   void play();
   void sleep();
   void wake_up();
+  void poo();
+  void clean_poo();
   void tiredness(int8_t number);
   void boredom(int8_t number);
   void hungry(int8_t number);
@@ -167,10 +173,7 @@ class Pokemon {
     _last_without_sleep_time = pokemon_time["without_sleep"];
   }
 
- private:
-  static Pokemon* _instance;
-
-  void try_to_evolve() {
+  bool try_to_evolve() {
     if (_level == 3) {
       if (_number == POKEMON_PICHU) {
         _number = POKEMON_PIKACHU;
@@ -188,16 +191,20 @@ class Pokemon {
         _number = POKEMON_JOLTEON;
       }
     } else {
-      return;
+      return false;
     }
 
-    lv_gif_set_src(_image, get_image());
+    return true;
   }
+
+ private:
+  static Pokemon* _instance;
 
   const char* _name;
 
   int _number = POKEMON_PICHU;
 
+  int8_t _poos = 0;
   int8_t _level = 1;
   int8_t _sleepiness = MAX_SLEEPINESS;
   int8_t _life = MAX_LIFE;
@@ -208,12 +215,11 @@ class Pokemon {
   bool _is_sick = false;
   bool _is_ko = false;
 
-  lv_obj_t* _image;
-
   long unsigned _last_boredom_time;
   long unsigned _last_hunger_time;
   long unsigned _last_sleep_time;
   long unsigned _last_without_sleep_time;
   long unsigned _last_simple_check_time;
+  long unsigned _last_poo_time;
 };
 #endif

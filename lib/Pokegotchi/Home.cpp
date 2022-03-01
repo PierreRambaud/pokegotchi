@@ -123,12 +123,11 @@ static void start_new_game_event_handler(lv_event_t* e) {
   Home* h = Home::getInstance();
   h->close();
 
-  Game* g = Game::getInstance();
-  g->setup();
-
   Pokemon* p = new Pokemon(pokemon_number);
   Pokemon::setInstance(p);
-  p->animate();
+
+  Game* g = Game::getInstance();
+  g->setup(p);
 
   delete h;
 }
@@ -173,14 +172,13 @@ static void load_button_event_handler(lv_event_t* e) {
   Home* h = Home::getInstance();
   h->close();
 
-  Game* g = Game::getInstance();
-  g->setup();
-
   JsonObject pokemon_data = doc["pokemon"];
   Pokemon* p = new Pokemon((int)pokemon_data["number"]);
   Pokemon::setInstance(p);
   p->load(pokemon_data);
-  p->animate();
+
+  Game* g = Game::getInstance();
+  g->setup(p);
 
   delete h;
 }
