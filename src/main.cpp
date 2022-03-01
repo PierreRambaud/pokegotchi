@@ -41,11 +41,11 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
 void my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
   TouchPoint_t pos = M5.Touch.getPressPoint();
 
-  bool touched = (pos.x == -1) ? false : true;
+  bool touched = (pos.x < 0 || pos.y < 0 || pos.x > LV_HOR_RES_MAX || pos.y > LV_VER_RES_MAX) ? false : true;
   if (!touched) {
-    data->state = LV_INDEV_STATE_REL;
+    data->state = LV_INDEV_STATE_RELEASED;
   } else {
-    data->state = LV_INDEV_STATE_PR;
+    data->state = LV_INDEV_STATE_PRESSED;
     data->point.x = pos.x;
     data->point.y = pos.y;
   }
