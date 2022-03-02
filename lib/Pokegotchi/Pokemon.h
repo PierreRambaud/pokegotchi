@@ -16,7 +16,7 @@ const unsigned long PERIOD_MOOD = 5 * 1000UL;           // 5*60*1000UL;
 const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
 const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
 const unsigned long PERIOD_SIMPLE_CHECK = 5 * 1000UL;   // 1*60*1000UL;
-const unsigned long PERIOD_POO = 30 * 1000UL;        // 10*60*1000UL;
+const unsigned long PERIOD_POO = 5 * 1000UL;        // 10*60*1000UL;
 
 
 #include <lvgl.h>

@@ -8,6 +8,8 @@
 #define ANIMATION_NIGHT 6
 #define ANIMATION_DAY 6
 
+LV_IMG_DECLARE(game_poo);
+LV_IMG_DECLARE(game_clean_poo);
 // LV_IMG_DECLARE(background_1)
 LV_IMG_DECLARE(background_2)
 // LV_IMG_DECLARE(background_3)
@@ -52,9 +54,7 @@ static void day_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img
 
 Game* Game::instance = nullptr;
 
-Game::Game() {}
-
-void Game::setup(Pokemon* p) {
+Game::Game() {
   _screen = create_window();
   lv_scr_load(_screen);
 
@@ -74,7 +74,9 @@ void Game::setup(Pokemon* p) {
   lv_anim_set_path_cb(&_anim, lv_anim_path_linear);
   lv_anim_set_time(&_anim, 600);
   lv_anim_set_repeat_count(&_anim, 0);
+}
 
+void Game::setup(Pokemon* p) {
   switch_to_day();
 
   _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_GREEN, _("bar.mood"), 10, 25, MAX_MOOD);
@@ -101,7 +103,7 @@ void Game::setup(Pokemon* p) {
 
   _pokemon_image = lv_gif_create(_screen);
   lv_gif_set_src(_pokemon_image, p->get_image());
-  lv_obj_align(_pokemon_image, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_align(_pokemon_image, LV_ALIGN_CENTER, 0, 160);
 
   lv_anim_t anim;
 
@@ -147,7 +149,9 @@ void Game::loop() {
 }
 
 void Game::create_poo() {
-  // lv_obj_t* poo = lv_img_create(_screen);
+  lv_obj_t* poo = lv_img_create(_screen);
+  lv_img_set_src(poo, &game_poo);
+  lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - 15), random(140, LV_VER_RES_MAX - 30));
 }
 
 void Game::action_train() {

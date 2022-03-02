@@ -1,3 +1,7 @@
+#ifdef ARDUINO_M5STACK_Core2
+#define ANALOG_PIN 35
+#endif
+
 #include <Arduino.h>
 #include "lv_port_fs_littlefs.h"
 #include <M5Core2.h>
@@ -80,6 +84,8 @@ void init_disp_driver() {
 void custom_log_cb(const char *buf) { Serial.println(buf); }
 
 void setup() {
+  randomSeed(analogRead(ANALOG_PIN));
+
   tft_lv_initialization();
 
   init_disp_driver();

@@ -1,14 +1,13 @@
 #include <M5Core2.h>
-#include <lvgl.h>
 #include "Utils.h"
 #include "Pokemon.h"
 
 Pokemon* Pokemon::_instance = nullptr;
 
-Pokemon::Pokemon(int number) { _number = number; };
-
-void Pokemon::animate() {
-}
+Pokemon::Pokemon(int number) {
+  _number = number;
+  _last_boredom_time = _last_hunger_time = _last_poo_time = _last_sleep_time = _last_without_sleep_time = _last_simple_check_time = millis();
+};
 
 void Pokemon::loop() {
   if (check_action_time(_last_hunger_time, PERIOD_HUNGER)) {
@@ -59,6 +58,10 @@ void Pokemon::simple_check() {
 
 void Pokemon::poo() {
   _poos += 1;
+  if (_poos >= 10) {
+    _poos = 10;
+    // @TODO sick
+  }
 }
 
 void Pokemon::clean_poo() {

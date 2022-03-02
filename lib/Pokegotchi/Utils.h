@@ -20,6 +20,7 @@ static inline lv_obj_t* create_window(lv_obj_t* parent = NULL) {
   lv_obj_remove_style_all(obj);
   lv_obj_set_size(obj, LV_HOR_RES_MAX, LV_VER_RES_MAX);
   lv_obj_set_pos(obj, 0, 0);
+  lv_obj_set_scrollbar_mode(obj, LV_SCROLLBAR_MODE_OFF);
 
   return obj;
 }
