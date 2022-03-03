@@ -11,11 +11,11 @@ Pokemon::Pokemon(int number) {
 
 void Pokemon::loop() {
   if (check_action_time(_last_hunger_time, PERIOD_HUNGER)) {
-    hungry(2);
+    _update_property(PROPERTY_HUNGER, -2);
   }
 
   if (is_sleeping() == false && check_action_time(_last_boredom_time, PERIOD_BOREDOM)) {
-    boredom(1);
+    _update_property(PROPERTY_MOOD, -1);
   }
 
   if (is_sleeping() == true) {
@@ -24,7 +24,7 @@ void Pokemon::loop() {
     }
   } else {
     if (check_action_time(_last_without_sleep_time, PERIOD_WITHOUT_SLEEP)) {
-      tiredness(10);
+      _update_property(PROPERTY_SLEEPINESS, -10);
     }
   }
 
@@ -75,62 +75,28 @@ void Pokemon::train() {
     _level += 1;
   }
 
-  hungry(2);
-  tiredness(10);
+  _update_property(PROPERTY_HUNGER, -2);
+  _update_property(PROPERTY_SLEEPINESS, -10);
 }
 
 void Pokemon::play() {
-  _mood += 2;
-  if (_mood > MAX_MOOD) {
-    _mood = MAX_MOOD;
-  }
+  _update_property(PROPERTY_MOOD, 2);
 }
 
 void Pokemon::eat(Item* item) {
-  _hunger += 5;
-  if (_hunger > MAX_HUNGER) {
-    // @TODO random sick because eat too much
-    _hunger = MAX_HUNGER;
-  }
+  _update_property(PROPERTY_HUNGER, item->specs.hunger);
+  _update_property(PROPERTY_SLEEPINESS, item->specs.sleepiness);
+  _update_property(PROPERTY_MOOD, item->specs.mood);
+  _update_property(PROPERTY_LIFE, item->specs.life);
 }
 
 void Pokemon::heal(int8_t restore_points) {
-  _life += restore_points;
-  if (_life > MAX_LIFE) {
-    _life = MAX_LIFE;
-  }
+  _update_property(PROPERTY_LIFE, restore_points);
 }
 
 void Pokemon::sleep() {
   _is_sleeping = true;
-  _sleepiness += 5;
-  if (_sleepiness > MAX_SLEEPINESS) {
-    _sleepiness = MAX_SLEEPINESS;
-  }
+  _update_property(PROPERTY_SLEEPINESS, 5);
 }
 
 void Pokemon::wake_up() { _is_sleeping = false; }
-
-void Pokemon::hungry(int8_t number) {
-  _hunger -= number;
-  if (_hunger < 0) {
-    _hunger = 0;
-    // @TODO random sick or die
-  }
-}
-
-void Pokemon::tiredness(int8_t number) {
-  _sleepiness -= number;
-  if (_sleepiness < 0) {
-    _sleepiness = 0;
-    // @TODO random fall asleep or die
-  }
-}
-
-void Pokemon::boredom(int8_t number) {
-  _mood -= number;
-  if (_mood < 0) {
-    _mood = 0;
-    // @TODO random act or die
-  }
-}

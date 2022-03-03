@@ -3,14 +3,8 @@
 
 #include <LittleFS.h>
 
-class LittleFile {
- public:
-  LittleFile(File file);
-
-  File get_file() { return _file; }
-
- protected:
-  File _file;
+struct LittleFile {
+  File file;
 };
 
 #endif

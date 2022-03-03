@@ -29,6 +29,11 @@ const int8_t MAX_SLEEPINESS = 100;
 const int8_t MAX_MOOD = 10;
 const int8_t MAX_HUNGER = 20;
 
+const int8_t PROPERTY_SLEEPINESS = 1;
+const int8_t PROPERTY_LIFE = 2;
+const int8_t PROPERTY_MOOD = 3;
+const int8_t PROPERTY_HUNGER = 4;
+
 class Pokemon {
  public:
   Pokemon(int number);
@@ -65,9 +70,6 @@ class Pokemon {
   void wake_up();
   void poo();
   void clean_poo();
-  void tiredness(int8_t number);
-  void boredom(int8_t number);
-  void hungry(int8_t number);
   void simple_check();
 
   const lv_img_dsc_t* get_image() {
@@ -210,6 +212,37 @@ class Pokemon {
   int8_t _life = MAX_LIFE;
   int8_t _mood = MAX_MOOD;
   int8_t _hunger = MAX_HUNGER;
+
+  void _update_property(int8_t what, int8_t value) {
+    int8_t max_value;
+    int8_t* property;
+
+    if (what == PROPERTY_HUNGER) {
+      max_value = MAX_HUNGER;
+      property = &_hunger;
+    } else if (what == PROPERTY_LIFE) {
+      max_value = MAX_LIFE;
+      property = &_life;
+    } else if (what == PROPERTY_MOOD) {
+      max_value = MAX_MOOD;
+      property = &_mood;
+    } else if (what == PROPERTY_SLEEPINESS) {
+      max_value = MAX_SLEEPINESS;
+      property = &_sleepiness;
+    } else {
+      Serial.printf("Property %d not found\r\n", what);
+      return;
+    }
+
+
+    *property += value;
+    if (*property > max_value) {
+      *property = max_value;
+    }
+    if (*property < 0) {
+      *property = 0;
+    }
+  }
 
   bool _is_sleeping = false;
   bool _is_sick = false;

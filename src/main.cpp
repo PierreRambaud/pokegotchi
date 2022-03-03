@@ -2,6 +2,8 @@
 #define ANALOG_PIN 35
 #endif
 
+#define REFRESH_MS 50
+
 #include <Arduino.h>
 #include "lv_port_fs_littlefs.h"
 #include <M5Core2.h>
@@ -106,5 +108,5 @@ void loop() {
   lv_task_handler();
 
   pokegotchi->loop();
-  delay(50);
+  delay(REFRESH_MS);
 }

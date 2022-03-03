@@ -267,21 +267,21 @@ static void open_pokemon_event_handler(lv_event_t* e) { Menu::getInstance()->dis
 static void trainercard_event_handler(lv_event_t* e) {}
 
 ActionsMenu::ActionsMenu() {
-  _items[0] = Item{&object_apple, _("bag.apple.name"), _("bag.apple.description")};
-  _items[1] = Item{&object_beans, _("bag.beans.name"), _("bag.beans.description")};
-  _items[2] = Item{&object_berry, _("bag.berry.name"), _("bag.berry.description")};
-  _items[3] = Item{&object_candy_box, _("bag.candy.name"), _("bag.candy.description")};
-  _items[4] = Item{&object_cheese, _("bag.cheese.name"), _("bag.cheese.description")};
-  _items[5] = Item{&object_chicken, _("bag.chicken.name"), _("bag.chicken.description")};
-  _items[6] = Item{&object_coconut_milk, _("bag.coconut_milk.name"), _("bag.coconut_milk.description")};
-  _items[7] = Item{&object_frozen_carrots, _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description")};
-  _items[8] = Item{&object_haricots, _("bag.haricots.name"), _("bag.haricots.description")};
-  _items[9] = Item{&object_honey, _("bag.honey.name"), _("bag.honey.description")};
-  _items[10] = Item{&object_milk, _("bag.milk.name"), _("bag.milk.description")};
-  _items[11] = Item{&object_noodles, _("bag.noodles.name"), _("bag.noodles.description")};
-  _items[12] = Item{&object_spices, _("bag.spices.name"), _("bag.spices.description")};
-  _items[13] = Item{&object_sugar_star, _("bag.sugar_star.name"), _("bag.sugar_star.description")};
-  _items[14] = Item{&object_water, _("bag.water.name"), _("bag.water.description")};
+  _items[0] = Item{&object_apple, _("bag.apple.name"), _("bag.apple.description"), ItemSpecifications{5, 3, 0, 0, 1, 1}};
+  _items[1] = Item{&object_beans, _("bag.beans.name"), _("bag.beans.description"), ItemSpecifications{2, 5, 0, 0, 1, 0}};
+  _items[2] = Item{&object_berry, _("bag.berry.name"), _("bag.berry.description"), ItemSpecifications{5, 3, 0, 0, 1, 0}};
+  _items[3] = Item{&object_candy_box, _("bag.candy.name"), _("bag.candy.description"), ItemSpecifications{20, -5, 0, 0, 1, 0}};
+  _items[4] = Item{&object_cheese, _("bag.cheese.name"), _("bag.cheese.description"), ItemSpecifications{10, 5, 0, -2, 1, 0}};
+  _items[5] = Item{&object_chicken, _("bag.chicken.name"), _("bag.chicken.description"), ItemSpecifications{7, 10, 0, -5, 1, 0}};
+  _items[6] = Item{&object_coconut_milk, _("bag.coconut_milk.name"), _("bag.coconut_milk.description"), ItemSpecifications{0, 5, 0, 0, 1, 3}};
+  _items[7] = Item{&object_frozen_carrots, _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description"), ItemSpecifications{3, 4, 0, 0, 1, 0}};
+  _items[8] = Item{&object_haricots, _("bag.haricots.name"), _("bag.haricots.description"), ItemSpecifications{3, 5, 0, -3, 0, 0}};
+  _items[9] = Item{&object_honey, _("bag.honey.name"), _("bag.honey.description"), ItemSpecifications{10, 1, 0, 0, 0, 1}};
+  _items[10] = Item{&object_milk, _("bag.milk.name"), _("bag.milk.description"), ItemSpecifications{15, 3, 0, 0, 0, 3}};
+  _items[11] = Item{&object_noodles, _("bag.noodles.name"), _("bag.noodles.description"), ItemSpecifications{10, 10, 0, -10, 1, 2}};
+  _items[12] = Item{&object_spices, _("bag.spices.name"), _("bag.spices.description"), ItemSpecifications{5, 5, 0, -5, 0, 0}};
+  _items[13] = Item{&object_sugar_star, _("bag.sugar_star.name"), _("bag.sugar_star.description"), ItemSpecifications{2, 2, 0, -2, 1, 0}};
+  _items[14] = Item{&object_water, _("bag.water.name"), _("bag.water.description"), ItemSpecifications{15, 0, 0, 0, 0, 4}};
 }
 
 void ActionsMenu::setup(lv_obj_t* screen) {

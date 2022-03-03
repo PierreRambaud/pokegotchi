@@ -64,7 +64,7 @@ static void* fs_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t mode) {
     return NULL;
   }
 
-  LittleFile* lf = new LittleFile(f);
+  LittleFile* lf = new LittleFile{f};
 
   return (void*)lf;
 }
@@ -79,7 +79,7 @@ static lv_fs_res_t fs_close(lv_fs_drv_t* drv, void* file_p) {
   LV_UNUSED(drv);
   LittleFile* lf = (LittleFile*)file_p;
 
-  lf->get_file().close();
+  lf->file.close();
 
   delete lf;
   return LV_FS_RES_OK;
@@ -98,7 +98,7 @@ static lv_fs_res_t fs_read(lv_fs_drv_t* drv, void* file_p, void* buf, uint32_t b
   LV_UNUSED(drv);
   LittleFile* lf = (LittleFile*)file_p;
 
-  *br = lf->get_file().read((uint8_t*)buf, btr);
+  *br = lf->file.read((uint8_t*)buf, btr);
 
   return (int32_t)(*br) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
 }
@@ -115,7 +115,7 @@ static lv_fs_res_t fs_read(lv_fs_drv_t* drv, void* file_p, void* buf, uint32_t b
 static lv_fs_res_t fs_write(lv_fs_drv_t* drv, void* file_p, const void* buf, uint32_t btw, uint32_t* bw) {
   LV_UNUSED(drv);
   LittleFile* lf = (LittleFile*)file_p;
-  *bw = lf->get_file().write((uint8_t*)buf, btw);
+  *bw = lf->file.write((uint8_t*)buf, btw);
   return (int32_t)(*bw) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
 }
 
@@ -138,6 +138,6 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t* drv, void* file_p, uint32_t pos, lv_fs_w
     mode = SeekEnd;
 
   LittleFile* lf = (LittleFile*)file_p;
-  lf->get_file().seek(pos, mode);
+  lf->file.seek(pos, mode);
   return LV_FS_RES_OK;
 }

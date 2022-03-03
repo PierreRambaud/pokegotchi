@@ -10,10 +10,12 @@
 LV_IMG_DECLARE(background);
 
 struct bag_item_specifications {
-  const int mood;
-  const int hunger;
-  const int life;
-  const int sleepiness;
+  int8_t mood;
+  int8_t hunger;
+  int8_t life;
+  int8_t sleepiness;
+  int8_t poo;
+  int8_t pee;
 };
 
 typedef struct bag_item_specifications ItemSpecifications;
@@ -22,7 +24,7 @@ struct bag_item {
   const lv_img_dsc_t* image;
   const char* name;
   const char* description;
-  ItemSpecifications* specs;
+  ItemSpecifications specs;
 };
 
 typedef struct bag_item Item;
