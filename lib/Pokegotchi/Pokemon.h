@@ -234,7 +234,6 @@ class Pokemon {
       return;
     }
 
-
     *property += value;
     if (*property > max_value) {
       *property = max_value;
