@@ -136,8 +136,9 @@ class ActionsMenu : public Menu {
 
  private:
   lv_obj_t* _bag_button;
+  lv_obj_t* _clean_button;
+  lv_obj_t* _play_button;
   lv_obj_t* _sleep_button;
   lv_obj_t* _train_button;
-  lv_obj_t* _play_button;
 };
 #endif

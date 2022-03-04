@@ -26,6 +26,8 @@ LV_IMG_DECLARE(object_water)
 LV_IMG_DECLARE(bag)
 LV_IMG_DECLARE(bag_disabled)
 LV_IMG_DECLARE(bag_pressed)
+LV_IMG_DECLARE(clean)
+LV_IMG_DECLARE(clean_pressed)
 LV_IMG_DECLARE(flute)
 LV_IMG_DECLARE(flute_pressed)
 LV_IMG_DECLARE(options)
@@ -47,6 +49,7 @@ static int options_bag_scroll_value = 0;
 
 static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
 
+static void clean_event_handler(lv_event_t* e);
 static void display_bag_items_event_handler(lv_event_t* e);
 static void open_options_event_handler(lv_event_t* e);
 static void open_pokemon_event_handler(lv_event_t* e);
@@ -291,7 +294,7 @@ void ActionsMenu::setup(lv_obj_t* screen) {
   lv_imgbtn_set_src(_bag_button, LV_IMGBTN_STATE_DISABLED, NULL, &bag_disabled, NULL);
   lv_obj_add_event_cb(_bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
-  _sleep_button = lv_menu_button_create(_menu_screen, &flute, &flute_pressed, _("actions.menu.sleep"));
+  _sleep_button = lv_menu_button_create(_menu_screen, &flute, &flute_pressed, Pokemon::getInstance()->is_sleeping() ? _("actions.menu.wake_up") : _("actions.menu.sleep"));
   lv_obj_t* sleep_label = lv_obj_get_child(_sleep_button, -1);
   lv_obj_add_event_cb(_sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
 
@@ -302,6 +305,9 @@ void ActionsMenu::setup(lv_obj_t* screen) {
   _play_button = lv_menu_button_create(_menu_screen, &play, &play_pressed, _("menu.play"));
   lv_imgbtn_set_src(_play_button, LV_IMGBTN_STATE_DISABLED, NULL, &play_disabled, NULL);
   lv_obj_add_event_cb(_play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
+
+  _clean_button = lv_menu_button_create(_menu_screen, &clean, &clean_pressed, _("actions.menu.bag"));
+  lv_obj_add_event_cb(_clean_button, clean_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for actions menu created");
 
@@ -350,6 +356,17 @@ void ActionsMenu::display_bag() {
 static void options_bag_scroll_value_event_cb(lv_event_t* e) {
   lv_obj_t* screen = lv_event_get_target(e);
   options_bag_scroll_value = lv_obj_get_scroll_y(screen);
+}
+
+/**
+ * Clean up screen
+ *
+ * @param lv_event_t* e
+ */
+static void clean_event_handler(lv_event_t* e) {
+  ActionsMenu::getInstance()->toggle();
+  Game* g = Game::getInstance();
+  g->action_clean();
 }
 
 /**

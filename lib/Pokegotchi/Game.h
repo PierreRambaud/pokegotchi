@@ -21,6 +21,7 @@ class Game {
   }
 
   void action_eat(Item* item);
+  void action_clean();
   void action_heal();
   void action_play();
   void action_train();
@@ -28,6 +29,9 @@ class Game {
   void action_wake_up();
 
   void create_poo();
+  void create_pee();
+
+  void abort_actions();
 
  private:
   Game();
@@ -45,6 +49,9 @@ class Game {
   lv_obj_t* _hunger_bar;
   lv_obj_t* _life_bar;
 
+  lv_obj_t* _clean;
+
   int8_t _poos = 0;
+  int8_t _pees = 0;
 };
 #endif

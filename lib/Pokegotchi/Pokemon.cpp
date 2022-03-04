@@ -6,7 +6,7 @@ Pokemon* Pokemon::_instance = nullptr;
 
 Pokemon::Pokemon(int number) {
   _number = number;
-  _last_boredom_time = _last_hunger_time = _last_poo_time = _last_sleep_time = _last_without_sleep_time = _last_simple_check_time = millis();
+  _last_boredom_time = _last_hunger_time = _last_sleep_time = _last_without_sleep_time = _last_simple_check_time = millis();
 };
 
 void Pokemon::loop() {
@@ -26,10 +26,6 @@ void Pokemon::loop() {
     if (check_action_time(_last_without_sleep_time, PERIOD_WITHOUT_SLEEP)) {
       _update_property(PROPERTY_SLEEPINESS, -10);
     }
-  }
-
-  if (check_action_time(_last_poo_time, PERIOD_POO)) {
-    poo();
   }
 
   if (check_action_time(_last_simple_check_time, PERIOD_SIMPLE_CHECK)) {
@@ -56,18 +52,12 @@ void Pokemon::simple_check() {
   }
 }
 
-void Pokemon::poo() {
-  _poos += 1;
-  if (_poos >= 10) {
-    _poos = 10;
-    // @TODO sick
-  }
+void Pokemon::clean_poo() {
+  _update_property(PROPERTY_POOS, -1);
 }
 
-void Pokemon::clean_poo() {
-  if (_poos > 0) {
-    _poos -= 1;
-  }
+void Pokemon::clean_pee() {
+  _update_property(PROPERTY_PEES, -1);
 }
 
 void Pokemon::train() {
@@ -88,6 +78,8 @@ void Pokemon::eat(Item* item) {
   _update_property(PROPERTY_SLEEPINESS, item->specs.sleepiness);
   _update_property(PROPERTY_MOOD, item->specs.mood);
   _update_property(PROPERTY_LIFE, item->specs.life);
+  _update_property(PROPERTY_POOS, item->specs.poo);
+  _update_property(PROPERTY_PEES, item->specs.pee);
 }
 
 void Pokemon::heal(int8_t restore_points) {

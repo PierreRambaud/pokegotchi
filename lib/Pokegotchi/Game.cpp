@@ -8,8 +8,9 @@
 #define ANIMATION_NIGHT 6
 #define ANIMATION_DAY 6
 
+LV_IMG_DECLARE(game_pee);
 LV_IMG_DECLARE(game_poo);
-LV_IMG_DECLARE(game_clean_poo);
+LV_IMG_DECLARE(game_clean);
 // LV_IMG_DECLARE(background_1)
 LV_IMG_DECLARE(background_2)
 // LV_IMG_DECLARE(background_3)
@@ -48,8 +49,8 @@ static const lv_img_dsc_t* anim_day[ANIMATION_DAY] = {
     &background_6,
 };
 
+static void drag_clean_event_handler(lv_event_t * e);
 static void night_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_night[id]); }
-
 static void day_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_day[id]); }
 
 Game* Game::instance = nullptr;
@@ -77,7 +78,9 @@ Game::Game() {
 }
 
 void Game::setup(Pokemon* p) {
-  switch_to_day();
+  if (p->is_sleeping() == false) {
+    switch_to_day();
+  }
 
   _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_GREEN, _("bar.mood"), 10, 25, MAX_MOOD);
   lv_bar_set_value(_mood_bar, 0, LV_ANIM_ON);
@@ -146,12 +149,32 @@ void Game::loop() {
     create_poo();
     _poos += 1;
   }
+
+  if (p->get_pees() != _pees) {
+    create_pee();
+    _pees += 1;
+  }
 }
 
 void Game::create_poo() {
   lv_obj_t* poo = lv_img_create(_screen);
   lv_img_set_src(poo, &game_poo);
-  lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - 15), random(140, LV_VER_RES_MAX - 30));
+  lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - 15), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - 30));
+}
+
+void Game::create_pee() {
+  lv_obj_t* poo = lv_img_create(_screen);
+  lv_img_set_src(poo, &game_pee);
+  lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - 15), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - 30));
+}
+
+void Game::action_clean() {
+  _clean = lv_img_create(_screen);
+  lv_img_set_src(_clean, &game_clean);
+  lv_obj_align(_clean, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_add_flag(_clean, LV_OBJ_FLAG_CLICKABLE);
+  lv_obj_add_flag(_clean, LV_OBJ_FLAG_CLICK_FOCUSABLE);
+  // lv_obj_add_event_cb(_clean, drag_clean_event_handler, LV_EVENT_PRESSING, NULL);
 }
 
 void Game::action_train() {
@@ -188,4 +211,25 @@ void Game::action_wake_up() {
     switch_to_day();
     p->wake_up();
   }
+}
+
+void Game::abort_actions() {
+  if (lv_obj_is_valid(_clean)) {
+    lv_obj_del(_clean);
+  }
+}
+
+static void drag_clean_event_handler(lv_event_t * e) {
+  lv_obj_t * obj = lv_event_get_target(e);
+
+  lv_indev_t * indev = lv_indev_get_act();
+  if(indev == NULL) return;
+
+  lv_point_t vect;
+  lv_indev_get_vect(indev, &vect);
+
+  lv_coord_t x = lv_obj_get_x(obj) + vect.x;
+  lv_coord_t y = lv_obj_get_y(obj) + vect.y;
+
+  lv_obj_set_pos(obj, x, y);
 }

@@ -16,8 +16,6 @@ const unsigned long PERIOD_MOOD = 5 * 1000UL;           // 5*60*1000UL;
 const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
 const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
 const unsigned long PERIOD_SIMPLE_CHECK = 5 * 1000UL;   // 1*60*1000UL;
-const unsigned long PERIOD_POO = 5 * 1000UL;        // 10*60*1000UL;
-
 
 #include <lvgl.h>
 #include <ArduinoJson.h>
@@ -28,11 +26,15 @@ const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;
 const int8_t MAX_MOOD = 10;
 const int8_t MAX_HUNGER = 20;
+const int8_t MAX_POOS = 10;
+const int8_t MAX_PEES = 10;
 
 const int8_t PROPERTY_SLEEPINESS = 1;
 const int8_t PROPERTY_LIFE = 2;
 const int8_t PROPERTY_MOOD = 3;
 const int8_t PROPERTY_HUNGER = 4;
+const int8_t PROPERTY_POOS = 5;
+const int8_t PROPERTY_PEES = 6;
 
 class Pokemon {
  public:
@@ -44,6 +46,7 @@ class Pokemon {
   static Pokemon* getInstance() { return _instance; }
 
   int8_t get_poos() { return _poos; }
+  int8_t get_pees() { return _pees; }
   int8_t get_level() { return _level; }
   int8_t get_life() { return _life; }
   int8_t get_mood() { return _mood; }
@@ -56,7 +59,6 @@ class Pokemon {
   long unsigned get_last_hunger_time() { return _last_hunger_time; }
   long unsigned get_last_sleep_time() { return _last_sleep_time; }
   long unsigned get_last_without_sleep_time() { return _last_without_sleep_time; }
-  long unsigned get_last_poo_time() { return _last_poo_time; }
 
   bool is_sick() { return _is_sick; }
   bool is_sleeping() { return _is_sleeping; }
@@ -70,6 +72,7 @@ class Pokemon {
   void wake_up();
   void poo();
   void clean_poo();
+  void clean_pee();
   void simple_check();
 
   const lv_img_dsc_t* get_image() {
@@ -207,6 +210,7 @@ class Pokemon {
   int _number = POKEMON_PICHU;
 
   int8_t _poos = 0;
+  int8_t _pees = 0;
   int8_t _level = 1;
   int8_t _sleepiness = MAX_SLEEPINESS;
   int8_t _life = MAX_LIFE;
@@ -229,6 +233,12 @@ class Pokemon {
     } else if (what == PROPERTY_SLEEPINESS) {
       max_value = MAX_SLEEPINESS;
       property = &_sleepiness;
+    } else if (what == PROPERTY_POOS) {
+      max_value = MAX_POOS;
+      property = &_poos;
+    } else if (what == PROPERTY_PEES) {
+      max_value = MAX_PEES;
+      property = &_pees;
     } else {
       Serial.printf("Property %d not found\r\n", what);
       return;
@@ -252,6 +262,5 @@ class Pokemon {
   long unsigned _last_sleep_time;
   long unsigned _last_without_sleep_time;
   long unsigned _last_simple_check_time;
-  long unsigned _last_poo_time;
 };
 #endif

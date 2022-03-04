@@ -53,6 +53,7 @@ void Pokegotchi::loop() {
     ActionsMenu::getInstance()->toggle();
   } else if (M5.BtnB.wasPressed()) {
     Serial.println("Button B pressed");
+    Game::getInstance()->abort_actions();
   } else if (M5.BtnC.wasPressed()) {
     Serial.println("Button C pressed");
     ActionsMenu::getInstance()->close();
