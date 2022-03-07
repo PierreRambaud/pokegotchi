@@ -49,7 +49,8 @@ static const lv_img_dsc_t* anim_day[ANIMATION_DAY] = {
     &background_6,
 };
 
-static void drag_clean_event_handler(lv_event_t * e);
+static void drag_clean_event_handler(lv_event_t* e);
+static bool check_object_intersect(lv_obj_t* a, lv_obj_t* b);
 static void night_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_night[id]); }
 static void day_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_day[id]); }
 
@@ -145,14 +146,12 @@ void Game::loop() {
   lv_bar_set_value(_hunger_bar, p->get_hunger(), LV_ANIM_ON);
   lv_label_set_text_fmt(_level_indic, "%d", p->get_level());
 
-  if (p->get_poos() != _poos) {
+  if (p->get_poos() != _poos.size()) {
     create_poo();
-    _poos += 1;
   }
 
-  if (p->get_pees() != _pees) {
+  if (p->get_pees() != _pees.size()) {
     create_pee();
-    _pees += 1;
   }
 }
 
@@ -160,21 +159,63 @@ void Game::create_poo() {
   lv_obj_t* poo = lv_img_create(_screen);
   lv_img_set_src(poo, &game_poo);
   lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - 15), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - 30));
+  _poos.push_back(poo);
 }
 
 void Game::create_pee() {
-  lv_obj_t* poo = lv_img_create(_screen);
-  lv_img_set_src(poo, &game_pee);
-  lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - 15), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - 30));
+  lv_obj_t* pee = lv_img_create(_screen);
+  lv_img_set_src(pee, &game_pee);
+  lv_obj_set_pos(pee, random(1, LV_HOR_RES_MAX - 15), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - 30));
+  _pees.push_back(pee);
+}
+
+void Game::try_to_clean() {
+  for (int8_t i; i < _poos.size(); i++) {
+    lv_obj_t* poo = _poos[i];
+    if (check_object_intersect(_clean, poo)) {
+      lv_obj_del(poo);
+      Pokemon::getInstance()->clean_poo();
+      _poos.erase(_poos.begin() + i);
+    }
+  }
+
+  for (int8_t i; i < _pees.size(); i++) {
+    lv_obj_t* pee = _pees[i];
+    if (check_object_intersect(_clean, pee)) {
+      lv_obj_del(pee);
+      Pokemon::getInstance()->clean_pee();
+      _pees.erase(_pees.begin() + i);
+    }
+  }
+}
+
+static bool check_object_intersect(lv_obj_t* a, lv_obj_t* b) {
+  lv_coord_t x = lv_obj_get_x(a);
+  lv_coord_t y = lv_obj_get_y(a);
+
+  lv_coord_t d1x = lv_obj_get_x(b) - (x + lv_obj_get_height(a));
+  lv_coord_t d1y = lv_obj_get_y(b) - (y + lv_obj_get_width(a));
+  lv_coord_t d2x = x - (lv_obj_get_x(b) + lv_obj_get_width(b));
+  lv_coord_t d2y = y - (lv_obj_get_y(b) + lv_obj_get_height(b));
+
+  if (d1x < 0 && d1y < 0 && d2x < 0 && d2y < 0) {
+    return true;
+  }
+
+  return false;
 }
 
 void Game::action_clean() {
+  if (lv_obj_is_valid(_clean)) {
+    return;
+  }
+
   _clean = lv_img_create(_screen);
   lv_img_set_src(_clean, &game_clean);
-  lv_obj_align(_clean, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_set_pos(_clean, LV_HOR_RES_MAX / 2, LV_VER_RES_MAX / 2);
   lv_obj_add_flag(_clean, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_flag(_clean, LV_OBJ_FLAG_CLICK_FOCUSABLE);
-  // lv_obj_add_event_cb(_clean, drag_clean_event_handler, LV_EVENT_PRESSING, NULL);
+  lv_obj_add_event_cb(_clean, drag_clean_event_handler, LV_EVENT_PRESSING, NULL);
 }
 
 void Game::action_train() {
@@ -219,11 +260,16 @@ void Game::abort_actions() {
   }
 }
 
-static void drag_clean_event_handler(lv_event_t * e) {
-  lv_obj_t * obj = lv_event_get_target(e);
+/**
+ * Drag event for clean up action
+ *
+ * @param lv_event_t* e
+ */
+static void drag_clean_event_handler(lv_event_t* e) {
+  lv_obj_t* obj = lv_event_get_target(e);
 
-  lv_indev_t * indev = lv_indev_get_act();
-  if(indev == NULL) return;
+  lv_indev_t* indev = lv_indev_get_act();
+  if (indev == NULL) return;
 
   lv_point_t vect;
   lv_indev_get_vect(indev, &vect);
@@ -231,5 +277,23 @@ static void drag_clean_event_handler(lv_event_t * e) {
   lv_coord_t x = lv_obj_get_x(obj) + vect.x;
   lv_coord_t y = lv_obj_get_y(obj) + vect.y;
 
+  lv_coord_t obj_width = lv_obj_get_width(obj);
+  lv_coord_t obj_height = lv_obj_get_height(obj);
+
+  // Make sure the object could not go outside the screen
+  if ((x + obj_width) > LV_HOR_RES_MAX) {
+    x = LV_HOR_RES_MAX - obj_width;
+  } else if (x < 0) {
+    x = 0;
+  }
+
+  if ((y + obj_height) > LV_VER_RES_MAX) {
+    y = LV_VER_RES_MAX - obj_height;
+  } else if (y < 0) {
+    y = 0;
+  }
+
   lv_obj_set_pos(obj, x, y);
+
+  Game::getInstance()->try_to_clean();
 }

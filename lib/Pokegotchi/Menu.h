@@ -24,7 +24,7 @@ struct bag_item {
   const lv_img_dsc_t* image;
   const char* name;
   const char* description;
-  ItemSpecifications specs;
+  ItemSpecifications* specs;
 };
 
 typedef struct bag_item Item;
@@ -61,7 +61,7 @@ class Menu {
         battery_image = "L:/menu/battery/low.bin";
       }
 
-      Serial.printf("Battery status: %f\r\n", battery_level);
+      Serial.printf("Battery status: %f\n", battery_level);
     }
 
     if (_previous_battery_image != battery_image) {
@@ -132,7 +132,7 @@ class ActionsMenu : public Menu {
 
   static ActionsMenu* instance;
 
-  Item _items[BAG_ITEMS_SIZE];
+  Item* _items[BAG_ITEMS_SIZE];
 
  private:
   lv_obj_t* _bag_button;

@@ -94,19 +94,18 @@ void Home::loop() {
 static void start_button_event_handler(lv_event_t* e) {
   lv_obj_t* choice_box = display_alert(_("home.start.choice"), "");
 
+  static int pichu_value = POKEMON_PICHU;
   lv_obj_t* pichu_btn = lv_img_create(choice_box);
   lv_img_set_src(pichu_btn, "L:/home/pichu.bin");
   lv_obj_add_flag(pichu_btn, LV_OBJ_FLAG_CLICKABLE);
-  static int8_t pichu_value = POKEMON_PICHU;
-  lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
   lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
   lv_obj_add_event_cb(pichu_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
   lv_obj_set_pos(pichu_btn, 25, 25);
 
+  static int eevee_value = POKEMON_EEVEE;
   lv_obj_t* eevee_btn = lv_img_create(choice_box);
   lv_img_set_src(eevee_btn, "L:/home/eevee.bin");
   lv_obj_add_flag(eevee_btn, LV_OBJ_FLAG_CLICKABLE);
-  static int8_t eevee_value = POKEMON_EEVEE;
   lv_obj_add_event_cb(eevee_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &eevee_value);
   lv_obj_add_event_cb(eevee_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
   lv_obj_set_pos(eevee_btn, 155, 25);
@@ -119,8 +118,8 @@ static void start_button_event_handler(lv_event_t* e) {
  */
 static void start_new_game_event_handler(lv_event_t* e) {
   int pokemon_number = *((int*)lv_event_get_user_data(e));
+  Serial.printf("New game start with pokemon number: %d\n", pokemon_number);
 
-  Serial.printf("New game start with %d as pokemon", pokemon_number);
   Home* h = Home::getInstance();
   h->close();
 

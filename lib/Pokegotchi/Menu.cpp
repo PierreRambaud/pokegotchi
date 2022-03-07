@@ -128,18 +128,19 @@ void Menu::display_pokemon() {
 
   lv_obj_t* img = lv_img_create(_sub_menu_screen);
   lv_img_set_src(img, p->get_avatar());
-  lv_obj_set_pos(img, 25, 25);
+  lv_obj_set_pos(img, 10, 20);
 
   lv_obj_t* name = lv_label_create(_sub_menu_screen);
-  lv_obj_set_pos(name, 175, 25);
+  lv_obj_set_pos(name, 155, 20);
   lv_label_set_text(name, p->get_name());
   lv_obj_add_style(name, &style_default_title, 0);
 
   lv_obj_t* description = lv_label_create(_sub_menu_screen);
-  lv_obj_set_pos(description, 175, 50);
-  lv_obj_set_width(description, 125);
+  lv_obj_set_pos(description, 155, 45);
+  lv_obj_set_width(description, 155);
   lv_label_set_text(description, p->get_description());
   lv_obj_add_style(description, &style_default_text, 0);
+  lv_obj_set_style_text_font(description, &pokemon_font_10, 0);
 }
 
 void Menu::display_options() {
@@ -221,6 +222,8 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon["hunger"] = p->get_hunger();
   pokemon["sleepiness"] = p->get_sleepiness();
   pokemon["is_sleeping"] = p->is_sleeping();
+  pokemon["poos"] = p->get_poos();
+  pokemon["pees"] = p->get_pees();
 
   JsonObject pokemon_time = pokemon.createNestedObject("time");
   pokemon_time["simple_check"] = p->get_last_simple_check_time();
@@ -270,21 +273,21 @@ static void open_pokemon_event_handler(lv_event_t* e) { Menu::getInstance()->dis
 static void trainercard_event_handler(lv_event_t* e) {}
 
 ActionsMenu::ActionsMenu() {
-  _items[0] = Item{&object_apple, _("bag.apple.name"), _("bag.apple.description"), ItemSpecifications{5, 3, 0, 0, 1, 1}};
-  _items[1] = Item{&object_beans, _("bag.beans.name"), _("bag.beans.description"), ItemSpecifications{2, 5, 0, 0, 1, 0}};
-  _items[2] = Item{&object_berry, _("bag.berry.name"), _("bag.berry.description"), ItemSpecifications{5, 3, 0, 0, 1, 0}};
-  _items[3] = Item{&object_candy_box, _("bag.candy.name"), _("bag.candy.description"), ItemSpecifications{20, -5, 0, 0, 1, 0}};
-  _items[4] = Item{&object_cheese, _("bag.cheese.name"), _("bag.cheese.description"), ItemSpecifications{10, 5, 0, -2, 1, 0}};
-  _items[5] = Item{&object_chicken, _("bag.chicken.name"), _("bag.chicken.description"), ItemSpecifications{7, 10, 0, -5, 1, 0}};
-  _items[6] = Item{&object_coconut_milk, _("bag.coconut_milk.name"), _("bag.coconut_milk.description"), ItemSpecifications{0, 5, 0, 0, 1, 3}};
-  _items[7] = Item{&object_frozen_carrots, _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description"), ItemSpecifications{3, 4, 0, 0, 1, 0}};
-  _items[8] = Item{&object_haricots, _("bag.haricots.name"), _("bag.haricots.description"), ItemSpecifications{3, 5, 0, -3, 0, 0}};
-  _items[9] = Item{&object_honey, _("bag.honey.name"), _("bag.honey.description"), ItemSpecifications{10, 1, 0, 0, 0, 1}};
-  _items[10] = Item{&object_milk, _("bag.milk.name"), _("bag.milk.description"), ItemSpecifications{15, 3, 0, 0, 0, 3}};
-  _items[11] = Item{&object_noodles, _("bag.noodles.name"), _("bag.noodles.description"), ItemSpecifications{10, 10, 0, -10, 1, 2}};
-  _items[12] = Item{&object_spices, _("bag.spices.name"), _("bag.spices.description"), ItemSpecifications{5, 5, 0, -5, 0, 0}};
-  _items[13] = Item{&object_sugar_star, _("bag.sugar_star.name"), _("bag.sugar_star.description"), ItemSpecifications{2, 2, 0, -2, 1, 0}};
-  _items[14] = Item{&object_water, _("bag.water.name"), _("bag.water.description"), ItemSpecifications{15, 0, 0, 0, 0, 4}};
+  _items[0] = new Item{&object_apple, _("bag.apple.name"), _("bag.apple.description"), new ItemSpecifications{5, 3, 0, 0, 1, 1}};
+  _items[1] = new Item{&object_beans, _("bag.beans.name"), _("bag.beans.description"), new ItemSpecifications{2, 5, 0, 0, 1, 0}};
+  _items[2] = new Item{&object_berry, _("bag.berry.name"), _("bag.berry.description"), new ItemSpecifications{5, 3, 0, 0, 1, 0}};
+  _items[3] = new Item{&object_candy_box, _("bag.candy.name"), _("bag.candy.description"), new ItemSpecifications{20, -5, 0, 0, 1, 0}};
+  _items[4] = new Item{&object_cheese, _("bag.cheese.name"), _("bag.cheese.description"), new ItemSpecifications{10, 5, 0, -2, 1, 0}};
+  _items[5] = new Item{&object_chicken, _("bag.chicken.name"), _("bag.chicken.description"), new ItemSpecifications{7, 10, 0, -5, 1, 0}};
+  _items[6] = new Item{&object_coconut_milk, _("bag.coconut_milk.name"), _("bag.coconut_milk.description"), new ItemSpecifications{0, 5, 0, 0, 1, 3}};
+  _items[7] = new Item{&object_frozen_carrots, _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description"), new ItemSpecifications{3, 4, 0, 0, 1, 0}};
+  _items[8] = new Item{&object_haricots, _("bag.haricots.name"), _("bag.haricots.description"), new ItemSpecifications{3, 5, 0, -3, 0, 0}};
+  _items[9] = new Item{&object_honey, _("bag.honey.name"), _("bag.honey.description"), new ItemSpecifications{10, 1, 0, 0, 0, 1}};
+  _items[10] = new Item{&object_milk, _("bag.milk.name"), _("bag.milk.description"), new ItemSpecifications{15, 3, 0, 0, 0, 3}};
+  _items[11] = new Item{&object_noodles, _("bag.noodles.name"), _("bag.noodles.description"), new ItemSpecifications{10, 10, 0, -10, 1, 2}};
+  _items[12] = new Item{&object_spices, _("bag.spices.name"), _("bag.spices.description"), new ItemSpecifications{5, 5, 0, -5, 0, 0}};
+  _items[13] = new Item{&object_sugar_star, _("bag.sugar_star.name"), _("bag.sugar_star.description"), new ItemSpecifications{2, 2, 0, -2, 1, 0}};
+  _items[14] = new Item{&object_water, _("bag.water.name"), _("bag.water.description"), new ItemSpecifications{15, 0, 0, 0, 0, 4}};
 }
 
 void ActionsMenu::setup(lv_obj_t* screen) {
@@ -306,7 +309,7 @@ void ActionsMenu::setup(lv_obj_t* screen) {
   lv_imgbtn_set_src(_play_button, LV_IMGBTN_STATE_DISABLED, NULL, &play_disabled, NULL);
   lv_obj_add_event_cb(_play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
 
-  _clean_button = lv_menu_button_create(_menu_screen, &clean, &clean_pressed, _("actions.menu.bag"));
+  _clean_button = lv_menu_button_create(_menu_screen, &clean, &clean_pressed, _("actions.menu.clean"));
   lv_obj_add_event_cb(_clean_button, clean_event_handler, LV_EVENT_CLICKED, NULL);
 
   Serial.println("Buttons for actions menu created");
@@ -346,8 +349,8 @@ void ActionsMenu::display_bag() {
   lv_obj_add_flag(_sub_menu_screen, LV_OBJ_FLAG_SCROLL_ONE);
   lv_obj_add_event_cb(_sub_menu_screen, options_bag_scroll_value_event_cb, LV_EVENT_SCROLL, NULL);
 
-  for (Item item : _items) {
-    create_row_item(_sub_menu_screen, &item);
+  for (Item* item : _items) {
+    create_row_item(_sub_menu_screen, item);
   }
 
   lv_obj_scroll_to_y(_sub_menu_screen, options_bag_scroll_value, LV_ANIM_OFF);
@@ -477,7 +480,7 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item) {
   lv_obj_t* btn_label = lv_label_create(btn);
   lv_label_set_text(btn_label, _("actions.menu.use"));
 
-  Serial.printf("Create bag item: %s\r\n", item->name);
+  Serial.printf("Create bag item: %s\n", item->name);
 
   return cont;
 }

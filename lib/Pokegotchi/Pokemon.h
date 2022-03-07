@@ -10,17 +10,17 @@
 #define POKEMON_JOLTEON 135
 #define POKEMON_FLAREON 136
 
-const unsigned long PERIOD_BOREDOM = 5 * 1000UL;        // 30*60*1000UL;
-const unsigned long PERIOD_HUNGER = 5 * 1000UL;         // 10*60*1000UL;
-const unsigned long PERIOD_MOOD = 5 * 1000UL;           // 5*60*1000UL;
-const unsigned long PERIOD_SLEEP = 5 * 1000UL;          // 30*60*1000UL;
-const unsigned long PERIOD_WITHOUT_SLEEP = 5 * 1000UL;  // 5*60*1000UL;
-const unsigned long PERIOD_SIMPLE_CHECK = 5 * 1000UL;   // 1*60*1000UL;
-
 #include <lvgl.h>
 #include <ArduinoJson.h>
 #include "lv_i18n.h"
 #include "Menu.h"
+
+const unsigned long PERIOD_BOREDOM = 1 * 60 * 1000UL;
+const unsigned long PERIOD_HUNGER = 10 * 60 * 1000UL;
+const unsigned long PERIOD_MOOD = 5 * 60 * 1000UL;
+const unsigned long PERIOD_SLEEP = 1 * 60 * 1000UL;
+const unsigned long PERIOD_WITHOUT_SLEEP = 1 * 60 * 1000UL;
+const unsigned long PERIOD_SIMPLE_CHECK = 1 * 60 * 1000UL;
 
 const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;
@@ -169,6 +169,8 @@ class Pokemon {
     _hunger = pokemon["hunger"];
     _sleepiness = pokemon["sleepiness"];
     _is_sleeping = pokemon["is_sleeping"];
+    _poos = pokemon["poos"];
+    _pees = pokemon["pees"];
 
     JsonObject pokemon_time = pokemon["time"];
     _last_simple_check_time = pokemon_time["simple_check"];
@@ -240,7 +242,7 @@ class Pokemon {
       max_value = MAX_PEES;
       property = &_pees;
     } else {
-      Serial.printf("Property %d not found\r\n", what);
+      Serial.printf("Property %d not found\n", what);
       return;
     }
 
@@ -248,6 +250,7 @@ class Pokemon {
     if (*property > max_value) {
       *property = max_value;
     }
+
     if (*property < 0) {
       *property = 0;
     }

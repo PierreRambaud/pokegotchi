@@ -80,4 +80,5 @@ en:
   pokemon.vaporeon.name: Vaporeon
   pokemon.jolteon.name: Jolteon
   pokemon.flareon.name: Flareon
-  home.start.choice: "Choose wisely"
+  home.start.choice: Choose wisely
+  actions.menu.clean: Clean

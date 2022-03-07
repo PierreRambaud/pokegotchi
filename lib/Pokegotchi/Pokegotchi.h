@@ -1,7 +1,7 @@
 #ifndef POKEGOTCHI_POKEGOTCHI
 #define POKEGOTCHI_POKEGOTCHI
 
-const unsigned long PERIOD_REFRESH = 5 * 1000UL;
+const unsigned long PERIOD_REFRESH = 20 * 1000UL;
 
 class Pokegotchi {
  public:

@@ -52,13 +52,9 @@ void Pokemon::simple_check() {
   }
 }
 
-void Pokemon::clean_poo() {
-  _update_property(PROPERTY_POOS, -1);
-}
+void Pokemon::clean_poo() { _update_property(PROPERTY_POOS, -1); }
 
-void Pokemon::clean_pee() {
-  _update_property(PROPERTY_PEES, -1);
-}
+void Pokemon::clean_pee() { _update_property(PROPERTY_PEES, -1); }
 
 void Pokemon::train() {
   if (_level < 100) {
@@ -69,22 +65,18 @@ void Pokemon::train() {
   _update_property(PROPERTY_SLEEPINESS, -10);
 }
 
-void Pokemon::play() {
-  _update_property(PROPERTY_MOOD, 2);
-}
+void Pokemon::play() { _update_property(PROPERTY_MOOD, 2); }
 
 void Pokemon::eat(Item* item) {
-  _update_property(PROPERTY_HUNGER, item->specs.hunger);
-  _update_property(PROPERTY_SLEEPINESS, item->specs.sleepiness);
-  _update_property(PROPERTY_MOOD, item->specs.mood);
-  _update_property(PROPERTY_LIFE, item->specs.life);
-  _update_property(PROPERTY_POOS, item->specs.poo);
-  _update_property(PROPERTY_PEES, item->specs.pee);
+  _update_property(PROPERTY_MOOD, item->specs->mood);
+  _update_property(PROPERTY_HUNGER, item->specs->hunger);
+  _update_property(PROPERTY_LIFE, item->specs->life);
+  _update_property(PROPERTY_SLEEPINESS, item->specs->sleepiness);
+  _update_property(PROPERTY_POOS, item->specs->poo);
+  _update_property(PROPERTY_PEES, item->specs->pee);
 }
 
-void Pokemon::heal(int8_t restore_points) {
-  _update_property(PROPERTY_LIFE, restore_points);
-}
+void Pokemon::heal(int8_t restore_points) { _update_property(PROPERTY_LIFE, restore_points); }
 
 void Pokemon::sleep() {
   _is_sleeping = true;

@@ -86,6 +86,7 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"pokemon.jolteon.name", "Jolteon"},
     {"pokemon.flareon.name", "Flareon"},
     {"home.start.choice", "Choose wisely"},
+    {"actions.menu.clean", "Clean"},
     {NULL, NULL} // End mark
 };
 
@@ -177,6 +178,7 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"pokemon.jolteon.name", "Voltali"},
     {"pokemon.flareon.name", "Pyroli"},
     {"home.start.choice", "Choisissez judicieusement"},
+    {"actions.menu.clean", "Nettoyer"},
     {NULL, NULL} // End mark
 };
 
@@ -192,10 +194,10 @@ static uint8_t fr_plural_fn(int32_t num)
 }
 
 static const lv_i18n_lang_t fr_lang = {
-    "fr",
-    fr_singulars,
-    {},
-    fr_plural_fn
+    .locale_name = "fr",
+    .singulars = fr_singulars,
+
+    .locale_plural_fn = fr_plural_fn
 };
 
 const lv_i18n_language_pack_t lv_i18n_language_pack[] = {

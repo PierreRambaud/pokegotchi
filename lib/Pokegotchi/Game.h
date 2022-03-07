@@ -1,6 +1,7 @@
 #ifndef POKEGOTCHI_GAME
 #define POKEGOTCHI_GAME
 
+#include <vector>
 #include <lvgl.h>
 #include "Menu.h"
 #include "Pokemon.h"
@@ -32,6 +33,7 @@ class Game {
   void create_pee();
 
   void abort_actions();
+  void try_to_clean();
 
  private:
   Game();
@@ -51,7 +53,7 @@ class Game {
 
   lv_obj_t* _clean;
 
-  int8_t _poos = 0;
-  int8_t _pees = 0;
+  std::vector<lv_obj_t*> _poos;
+  std::vector<lv_obj_t*> _pees;
 };
 #endif
