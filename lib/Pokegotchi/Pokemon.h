@@ -15,12 +15,12 @@
 #include "lv_i18n.h"
 #include "Menu.h"
 
-const unsigned long PERIOD_BOREDOM = 1 * 60 * 1000UL;
-const unsigned long PERIOD_HUNGER = 10 * 60 * 1000UL;
-const unsigned long PERIOD_MOOD = 5 * 60 * 1000UL;
-const unsigned long PERIOD_SLEEP = 1 * 60 * 1000UL;
-const unsigned long PERIOD_WITHOUT_SLEEP = 1 * 60 * 1000UL;
-const unsigned long PERIOD_SIMPLE_CHECK = 1 * 60 * 1000UL;
+const unsigned long PERIOD_BOREDOM = 30 * 1000UL;
+const unsigned long PERIOD_HUNGER = 30 * 1000UL;
+const unsigned long PERIOD_MOOD = 45 * 1000UL;
+const unsigned long PERIOD_SLEEP = 15 * 1000UL;
+const unsigned long PERIOD_WITHOUT_SLEEP = 30 * 1000UL;
+const unsigned long PERIOD_SIMPLE_CHECK = 30 * 1000UL;
 
 const int8_t MAX_LIFE = 100;
 const int8_t MAX_SLEEPINESS = 100;
