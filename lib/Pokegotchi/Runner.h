@@ -10,12 +10,11 @@ namespace Pokegotchi {
   class Runner {
   public:
     Runner();
-    void setup();
     void loop();
 
   private:
     long unsigned _last_refresh_time = 0;
-    Home* _home;
+    Home* _home = nullptr;
   };
 }
 #endif

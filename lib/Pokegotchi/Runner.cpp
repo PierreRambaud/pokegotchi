@@ -9,39 +9,29 @@
 
 using namespace Pokegotchi;
 
-Runner::Runner() {
-  _home = Home::getInstance();
-}
+void prepare_sd_card_directory();
 
-void Runner::setup() {
+Runner::Runner() {
+  prepare_sd_card_directory();
+
   lv_i18n_init(lv_i18n_language_pack);
   lv_i18n_set_locale("fr");
 
-  if (sd_begin()) {
-    Serial.println("SD card available!");
-    File entry = SD.open(global_config->sd_directory_path);
-    if (entry && !entry.isDirectory()) {
-      entry.close();
-      SD.remove(global_config->sd_directory_path);
-    }
+  lv_obj_t* screen = create_window();
+  lv_scr_load(screen);
 
-    entry = SD.open(global_config->sd_directory_path);
-    if (!entry) {
-      SD.mkdir(global_config->sd_directory_path);
-      Serial.printf("Directory %s created\n", global_config->sd_directory_path);
-    } else {
-      Serial.printf("Directory %s already exists\n", global_config->sd_directory_path);
-    }
-
-    SD.end();
-  }
+  _home = Home::getInstance();
 }
 
 void Runner::loop() {
-  if (_home->isClosed() == false) {
-    _home->loop();
+  if (_home != nullptr) {
+    if (_home->isClosed() == false) {
+      _home->loop();
 
-    return;
+      return;
+    }
+
+    _home = nullptr;
   }
 
   Game::getInstance()->loop();
@@ -61,4 +51,25 @@ void Runner::loop() {
     ActionsMenu::getInstance()->close();
     Menu::getInstance()->toggle();
   }
+}
+
+void prepare_sd_card_directory() {
+  if (sd_begin() == false) {
+    return;
+  }
+
+  Serial.println("SD card available!");
+  File entry = SD.open(global_config->sd_directory_path);
+  if (entry && !entry.isDirectory()) {
+    entry.close();
+    SD.remove(global_config->sd_directory_path);
+  }
+
+  entry = SD.open(global_config->sd_directory_path);
+  if (!entry) {
+    SD.mkdir(global_config->sd_directory_path);
+    Serial.printf("Directory %s created\n", global_config->sd_directory_path);
+  }
+
+  SD.end();
 }

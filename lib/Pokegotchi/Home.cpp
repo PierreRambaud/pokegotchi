@@ -52,7 +52,9 @@ Home::Home() {
   lv_anim_start(&anim);
 }
 
-Home::~Home() { lv_obj_del(_screen); }
+Home::~Home() {
+  lv_obj_del(_screen);
+}
 
 void Home::close() {
   lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
@@ -179,11 +181,12 @@ static void load_button_event_handler(lv_event_t* e) {
   Home* h = Home::getInstance();
   h->close();
 
-  Game* g = Game::getInstance();
-
   JsonObject data = doc["options"];
   Options* options = new Options{data["brightness"]};
-  delete h;
 
+  Serial.printf("Home Brightness value: %d\n", options->brightness);
+  global_options = options;
+
+  Game* g = Game::getInstance();
   g->setup(p, options);
 }

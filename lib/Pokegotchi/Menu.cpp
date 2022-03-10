@@ -49,20 +49,20 @@ LV_IMG_DECLARE(trainercard_pressed)
 
 static int options_bag_scroll_value = 0;
 
-static lv_obj_t* create_row_item(lv_obj_t* parent, Item* item);
+static lv_obj_t* create_row_item(lv_obj_t*, Item*);
 
-static void clean_event_handler(lv_event_t* e);
-static void display_bag_items_event_handler(lv_event_t* e);
-static void open_options_event_handler(lv_event_t* e);
-static void open_pokemon_event_handler(lv_event_t* e);
-static void options_bag_scroll_value_event_cb(lv_event_t* e);
-static void play_event_handler(lv_event_t* e);
-static void save_game_event_handler(lv_event_t* e);
-static void slider_set_brightness_event_cb(lv_event_t* e);
-static void toggle_sleep_event_handler(lv_event_t* e);
-static void train_event_handler(lv_event_t* e);
-static void trainercard_event_handler(lv_event_t* e);
-static void use_item_event_handler(lv_event_t* e);
+static void clean_event_handler(lv_event_t*);
+static void display_bag_items_event_handler(lv_event_t*);
+static void open_options_event_handler(lv_event_t*);
+static void open_pokemon_event_handler(lv_event_t*);
+static void options_bag_scroll_value_event_cb(lv_event_t*);
+static void play_event_handler(lv_event_t*);
+static void save_game_event_handler(lv_event_t*);
+static void slider_set_brightness_event_cb(lv_event_t*);
+static void toggle_sleep_event_handler(lv_event_t*);
+static void train_event_handler(lv_event_t*);
+static void trainercard_event_handler(lv_event_t*);
+static void use_item_event_handler(lv_event_t*);
 
 ActionsMenu* ActionsMenu::instance = nullptr;
 Menu* Menu::instance = nullptr;

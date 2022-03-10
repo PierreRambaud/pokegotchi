@@ -2,8 +2,6 @@
 #define ANALOG_PIN 35
 #endif
 
-#define REFRESH_MS 50
-
 #include <Arduino.h>
 #include "lv_port_fs_littlefs.h"
 #include <M5Core2.h>
@@ -97,14 +95,11 @@ void setup() {
   lv_log_register_print_cb(custom_log_cb);
 
   runner = new Pokegotchi::Runner();
-  runner->setup();
 }
 
 void loop() {
   M5.update();
-
   lv_task_handler();
 
   runner->loop();
-  delay(REFRESH_MS);
 }
