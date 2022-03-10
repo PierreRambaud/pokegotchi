@@ -1,21 +1,18 @@
+#pragma once
 #ifndef POKEGOTCHI_CONFIG
 #define POKEGOTCHI_CONFIG
 
-class Config {
- public:
-  static Config* getInstance() {
-    if (instance == nullptr) {
-      instance = new Config();
-    }
+#include <stdint.h>
 
-    return instance;
-  }
+namespace Pokegotchi {
 
-  const char* sd_directory_path;
-  const char* save_file_path;
+  struct config_struct {
+    const char* sd_directory_path;
+    const char* save_file_path;
+  };
 
- private:
-  Config();
-  static Config* instance;
-};
+  typedef struct config_struct Config;
+
+  static Config* global_config = new Config{"/.pokegotchi", "/.pokegotchi/pokegotchi.json"};
+}
 #endif

@@ -8,12 +8,11 @@
 #include "lv_port_fs_littlefs.h"
 #include <M5Core2.h>
 #include <lvgl.h>
-#include "Pokegotchi.h"
-#include "Config.h"
+#include "Runner.h"
 #include "Utils.h"
 
 static lv_disp_draw_buf_t draw_buf;
-Pokegotchi *pokegotchi;
+Pokegotchi::Runner *runner;
 M5Display *tft;
 
 void tft_lv_initialization() {
@@ -97,9 +96,8 @@ void setup() {
 
   lv_log_register_print_cb(custom_log_cb);
 
-  // Setup Pokegotchi
-  pokegotchi = new Pokegotchi();
-  pokegotchi->setup();
+  runner = new Pokegotchi::Runner();
+  runner->setup();
 }
 
 void loop() {
@@ -107,6 +105,6 @@ void loop() {
 
   lv_task_handler();
 
-  pokegotchi->loop();
+  runner->loop();
   delay(REFRESH_MS);
 }

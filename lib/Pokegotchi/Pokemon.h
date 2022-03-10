@@ -1,3 +1,4 @@
+#pragma once
 #ifndef POKEGOTCHI_POKEMON
 #define POKEGOTCHI_POKEMON
 
@@ -15,95 +16,97 @@
 #include "lv_i18n.h"
 #include "Menu.h"
 
-const unsigned long PERIOD_BOREDOM = 30 * 1000UL;
-const unsigned long PERIOD_HUNGER = 30 * 1000UL;
-const unsigned long PERIOD_MOOD = 45 * 1000UL;
-const unsigned long PERIOD_SLEEP = 15 * 1000UL;
-const unsigned long PERIOD_WITHOUT_SLEEP = 30 * 1000UL;
-const unsigned long PERIOD_SIMPLE_CHECK = 30 * 1000UL;
+LV_IMG_DECLARE(pokemon_133);
+LV_IMG_DECLARE(pokemon_134);
+LV_IMG_DECLARE(pokemon_135);
+LV_IMG_DECLARE(pokemon_136);
+LV_IMG_DECLARE(pokemon_25);
+LV_IMG_DECLARE(pokemon_26);
+LV_IMG_DECLARE(pokemon_172);
 
-const int8_t MAX_LIFE = 100;
-const int8_t MAX_SLEEPINESS = 100;
-const int8_t MAX_MOOD = 10;
-const int8_t MAX_HUNGER = 20;
-const int8_t MAX_POOS = 10;
-const int8_t MAX_PEES = 10;
+namespace Pokegotchi {
+  const unsigned long PERIOD_BOREDOM = 30 * 1000UL;
+  const unsigned long PERIOD_HUNGER = 30 * 1000UL;
+  const unsigned long PERIOD_MOOD = 45 * 1000UL;
+  const unsigned long PERIOD_SLEEP = 15 * 1000UL;
+  const unsigned long PERIOD_WITHOUT_SLEEP = 30 * 1000UL;
+  const unsigned long PERIOD_SIMPLE_CHECK = 30 * 1000UL;
 
-const int8_t PROPERTY_SLEEPINESS = 1;
-const int8_t PROPERTY_LIFE = 2;
-const int8_t PROPERTY_MOOD = 3;
-const int8_t PROPERTY_HUNGER = 4;
-const int8_t PROPERTY_POOS = 5;
-const int8_t PROPERTY_PEES = 6;
+  const int8_t MAX_LIFE = 100;
+  const int8_t MAX_SLEEPINESS = 100;
+  const int8_t MAX_MOOD = 10;
+  const int8_t MAX_HUNGER = 20;
+  const int8_t MAX_POOS = 10;
+  const int8_t MAX_PEES = 10;
 
-class Pokemon {
- public:
-  Pokemon(int number);
-  void loop();
-  void animate();
+  const int8_t PROPERTY_SLEEPINESS = 1;
+  const int8_t PROPERTY_LIFE = 2;
+  const int8_t PROPERTY_MOOD = 3;
+  const int8_t PROPERTY_HUNGER = 4;
+  const int8_t PROPERTY_POOS = 5;
+  const int8_t PROPERTY_PEES = 6;
 
-  static void setInstance(Pokemon* instance) { _instance = instance; }
-  static Pokemon* getInstance() { return _instance; }
+  class Pokemon {
+  public:
+    Pokemon(int number);
+    void loop();
+    void animate();
 
-  int8_t get_poos() { return _poos; }
-  int8_t get_pees() { return _pees; }
-  int8_t get_level() { return _level; }
-  int8_t get_life() { return _life; }
-  int8_t get_mood() { return _mood; }
-  int8_t get_hunger() { return _hunger; }
-  int8_t get_sleepiness() { return _sleepiness; }
-  int get_number() { return _number; }
+    static void setInstance(Pokemon* instance) { _instance = instance; }
+    static Pokemon* getInstance() { return _instance; }
 
-  long unsigned get_last_simple_check_time() { return _last_simple_check_time; }
-  long unsigned get_last_boredom_time() { return _last_boredom_time; }
-  long unsigned get_last_hunger_time() { return _last_hunger_time; }
-  long unsigned get_last_sleep_time() { return _last_sleep_time; }
-  long unsigned get_last_without_sleep_time() { return _last_without_sleep_time; }
+    int8_t get_poos() { return _poos; }
+    int8_t get_pees() { return _pees; }
+    int8_t get_level() { return _level; }
+    int8_t get_life() { return _life; }
+    int8_t get_mood() { return _mood; }
+    int8_t get_hunger() { return _hunger; }
+    int8_t get_sleepiness() { return _sleepiness; }
+    int get_number() { return _number; }
 
-  bool is_sick() { return _is_sick; }
-  bool is_sleeping() { return _is_sleeping; }
-  bool is_ko() { return _is_ko; }
+    long unsigned get_last_simple_check_time() { return _last_simple_check_time; }
+    long unsigned get_last_boredom_time() { return _last_boredom_time; }
+    long unsigned get_last_hunger_time() { return _last_hunger_time; }
+    long unsigned get_last_sleep_time() { return _last_sleep_time; }
+    long unsigned get_last_without_sleep_time() { return _last_without_sleep_time; }
 
-  void eat(Item* item);
-  void heal(int8_t number);
-  void train();
-  void play();
-  void sleep();
-  void wake_up();
-  void poo();
-  void clean_poo();
-  void clean_pee();
-  void simple_check();
+    bool is_sick() { return _is_sick; }
+    bool is_sleeping() { return _is_sleeping; }
+    bool is_ko() { return _is_ko; }
 
-  const lv_img_dsc_t* get_image() {
-    switch (_number) {
+    void eat(Item* item);
+    void heal(int8_t number);
+    void train();
+    void play();
+    void sleep();
+    void wake_up();
+    void poo();
+    void clean_poo();
+    void clean_pee();
+    void simple_check();
+
+    const lv_img_dsc_t* get_image() {
+      switch (_number) {
       case POKEMON_EEVEE:
-        LV_IMG_DECLARE(pokemon_133);
         return &pokemon_133;
       case POKEMON_VAPOREON:
-        LV_IMG_DECLARE(pokemon_134);
         return &pokemon_134;
       case POKEMON_JOLTEON:
-        LV_IMG_DECLARE(pokemon_135);
         return &pokemon_135;
       case POKEMON_FLAREON:
-        LV_IMG_DECLARE(pokemon_136);
         return &pokemon_136;
       case POKEMON_PIKACHU:
-        LV_IMG_DECLARE(pokemon_25);
         return &pokemon_25;
       case POKEMON_RAICHU:
-        LV_IMG_DECLARE(pokemon_26);
         return &pokemon_26;
       case POKEMON_PICHU:
       default:
-        LV_IMG_DECLARE(pokemon_172);
         return &pokemon_172;
+      }
     }
-  }
 
-  const char* get_avatar() {
-    switch (_number) {
+    const char* get_avatar() {
+      switch (_number) {
       case POKEMON_EEVEE:
         return "L:/pokemon/face/133.bin";
       case POKEMON_VAPOREON:
@@ -119,11 +122,11 @@ class Pokemon {
       case POKEMON_PICHU:
       default:
         return "L:/pokemon/face/172.bin";
+      }
     }
-  }
 
-  const char* get_description() {
-    switch (_number) {
+    const char* get_description() {
+      switch (_number) {
       case POKEMON_EEVEE:
         return _("pokemon.eevee.description");
       case POKEMON_VAPOREON:
@@ -139,11 +142,11 @@ class Pokemon {
       case POKEMON_PICHU:
       default:
         return _("pokemon.pichu.description");
+      }
     }
-  }
 
-  const char* get_name() {
-    switch (_number) {
+    const char* get_name() {
+      switch (_number) {
       case POKEMON_EEVEE:
         return _("pokemon.eevee.name");
       case POKEMON_VAPOREON:
@@ -159,111 +162,112 @@ class Pokemon {
       case POKEMON_PICHU:
       default:
         return _("pokemon.pichu.name");
-    }
-  }
-
-  void load(JsonObject pokemon) {
-    _level = pokemon["level"];
-    _life = pokemon["life"];
-    _mood = pokemon["mood"];
-    _hunger = pokemon["hunger"];
-    _sleepiness = pokemon["sleepiness"];
-    _is_sleeping = pokemon["is_sleeping"];
-    _poos = pokemon["poos"];
-    _pees = pokemon["pees"];
-
-    JsonObject pokemon_time = pokemon["time"];
-    _last_simple_check_time = pokemon_time["simple_check"];
-    _last_boredom_time = pokemon_time["boredom"];
-    _last_hunger_time = pokemon_time["hunger"];
-    _last_sleep_time = pokemon_time["sleep"];
-    _last_without_sleep_time = pokemon_time["without_sleep"];
-  }
-
-  bool try_to_evolve() {
-    if (_level == 3) {
-      if (_number == POKEMON_PICHU) {
-        _number = POKEMON_PIKACHU;
-      } else if (_number == POKEMON_EEVEE) {
-        _number = POKEMON_FLAREON;
       }
-    } else if (_level == 5) {
-      if (_number == POKEMON_PIKACHU) {
-        _number = POKEMON_RAICHU;
-      } else if (_number == POKEMON_FLAREON) {
-        _number = POKEMON_VAPOREON;
+    }
+
+    void load(JsonObject pokemon) {
+      _level = pokemon["level"];
+      _life = pokemon["life"];
+      _mood = pokemon["mood"];
+      _hunger = pokemon["hunger"];
+      _sleepiness = pokemon["sleepiness"];
+      _is_sleeping = pokemon["is_sleeping"];
+      _poos = pokemon["poos"];
+      _pees = pokemon["pees"];
+
+      JsonObject pokemon_time = pokemon["time"];
+      _last_simple_check_time = pokemon_time["simple_check"];
+      _last_boredom_time = pokemon_time["boredom"];
+      _last_hunger_time = pokemon_time["hunger"];
+      _last_sleep_time = pokemon_time["sleep"];
+      _last_without_sleep_time = pokemon_time["without_sleep"];
+    }
+
+    bool try_to_evolve() {
+      if (_level == 3) {
+        if (_number == POKEMON_PICHU) {
+          _number = POKEMON_PIKACHU;
+        } else if (_number == POKEMON_EEVEE) {
+          _number = POKEMON_FLAREON;
+        }
+      } else if (_level == 5) {
+        if (_number == POKEMON_PIKACHU) {
+          _number = POKEMON_RAICHU;
+        } else if (_number == POKEMON_FLAREON) {
+          _number = POKEMON_VAPOREON;
+        }
+      } else if (_level == 10) {
+        if (_number == POKEMON_VAPOREON) {
+          _number = POKEMON_JOLTEON;
+        }
+      } else {
+        return false;
       }
-    } else if (_level == 10) {
-      if (_number == POKEMON_VAPOREON) {
-        _number = POKEMON_JOLTEON;
+
+      return true;
+    }
+
+  private:
+    static Pokemon* _instance;
+
+    const char* _name;
+
+    int _number = POKEMON_PICHU;
+
+    int8_t _poos = 0;
+    int8_t _pees = 0;
+    int8_t _level = 1;
+    int8_t _sleepiness = MAX_SLEEPINESS;
+    int8_t _life = MAX_LIFE;
+    int8_t _mood = MAX_MOOD;
+    int8_t _hunger = MAX_HUNGER;
+
+    void _update_property(int8_t what, int8_t value) {
+      int8_t max_value;
+      int8_t* property;
+
+      if (what == PROPERTY_HUNGER) {
+        max_value = MAX_HUNGER;
+        property = &_hunger;
+      } else if (what == PROPERTY_LIFE) {
+        max_value = MAX_LIFE;
+        property = &_life;
+      } else if (what == PROPERTY_MOOD) {
+        max_value = MAX_MOOD;
+        property = &_mood;
+      } else if (what == PROPERTY_SLEEPINESS) {
+        max_value = MAX_SLEEPINESS;
+        property = &_sleepiness;
+      } else if (what == PROPERTY_POOS) {
+        max_value = MAX_POOS;
+        property = &_poos;
+      } else if (what == PROPERTY_PEES) {
+        max_value = MAX_PEES;
+        property = &_pees;
+      } else {
+        Serial.printf("Property %d not found\n", what);
+        return;
       }
-    } else {
-      return false;
+
+      *property += value;
+      if (*property > max_value) {
+        *property = max_value;
+      }
+
+      if (*property < 0) {
+        *property = 0;
+      }
     }
 
-    return true;
-  }
+    bool _is_sleeping = false;
+    bool _is_sick = false;
+    bool _is_ko = false;
 
- private:
-  static Pokemon* _instance;
-
-  const char* _name;
-
-  int _number = POKEMON_PICHU;
-
-  int8_t _poos = 0;
-  int8_t _pees = 0;
-  int8_t _level = 1;
-  int8_t _sleepiness = MAX_SLEEPINESS;
-  int8_t _life = MAX_LIFE;
-  int8_t _mood = MAX_MOOD;
-  int8_t _hunger = MAX_HUNGER;
-
-  void _update_property(int8_t what, int8_t value) {
-    int8_t max_value;
-    int8_t* property;
-
-    if (what == PROPERTY_HUNGER) {
-      max_value = MAX_HUNGER;
-      property = &_hunger;
-    } else if (what == PROPERTY_LIFE) {
-      max_value = MAX_LIFE;
-      property = &_life;
-    } else if (what == PROPERTY_MOOD) {
-      max_value = MAX_MOOD;
-      property = &_mood;
-    } else if (what == PROPERTY_SLEEPINESS) {
-      max_value = MAX_SLEEPINESS;
-      property = &_sleepiness;
-    } else if (what == PROPERTY_POOS) {
-      max_value = MAX_POOS;
-      property = &_poos;
-    } else if (what == PROPERTY_PEES) {
-      max_value = MAX_PEES;
-      property = &_pees;
-    } else {
-      Serial.printf("Property %d not found\n", what);
-      return;
-    }
-
-    *property += value;
-    if (*property > max_value) {
-      *property = max_value;
-    }
-
-    if (*property < 0) {
-      *property = 0;
-    }
-  }
-
-  bool _is_sleeping = false;
-  bool _is_sick = false;
-  bool _is_ko = false;
-
-  long unsigned _last_boredom_time;
-  long unsigned _last_hunger_time;
-  long unsigned _last_sleep_time;
-  long unsigned _last_without_sleep_time;
-  long unsigned _last_simple_check_time;
-};
+    long unsigned _last_boredom_time;
+    long unsigned _last_hunger_time;
+    long unsigned _last_sleep_time;
+    long unsigned _last_without_sleep_time;
+    long unsigned _last_simple_check_time;
+  };
+}
 #endif

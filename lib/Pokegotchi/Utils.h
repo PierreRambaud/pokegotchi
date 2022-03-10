@@ -1,9 +1,12 @@
+#pragma once
 #ifndef POKEGOTCHI_UTILS
 #define POKEGOTCHI_UTILS
 
 #include <M5Core2.h>
 #include <lvgl.h>
 #include "Options.h"
+
+using namespace Pokegotchi;
 
 static lv_style_t style_default_title;
 static lv_style_t style_default_text;
@@ -115,6 +118,13 @@ static inline bool check_action_time(unsigned long& last_millis, unsigned long w
  */
 static inline bool sd_begin() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
 
+/**
+ * Display an alert message
+ *
+ * @param const char* title
+ * @param const char* message
+ * @return lv_obj_t*
+ **/
 static inline lv_obj_t* display_alert(const char* title, const char* message) {
   static const char* btns[] = {""};
 
@@ -127,8 +137,15 @@ static inline lv_obj_t* display_alert(const char* title, const char* message) {
   return msg_box;
 }
 
-static inline void set_lcd_brightness(int value) {
-  Options::getInstance()->set_brightness(value);
+/**
+ * Change the brightness value of the screen
+ */
+static inline void set_lcd_brightness(int32_t value) {
+  Serial.printf("Brightness new value: %d, %d\n", value, &value);
+  global_options->brightness = value;
   M5.Axp.SetLcdVoltage(2500 + ((value * 800) / 100));
+
+  Serial.printf("Brightness value: %d, %d\n", global_options->brightness, &global_options->brightness);
 }
+
 #endif

@@ -1,43 +1,45 @@
 #include <M5Core2.h>
 #include "lv_i18n.h"
-#include "Pokegotchi.h"
+#include "Runner.h"
 #include "Config.h"
 #include "Game.h"
 #include "Menu.h"
 #include "Home.h"
 #include "Utils.h"
 
-Pokegotchi::Pokegotchi() {}
+using namespace Pokegotchi;
 
-void Pokegotchi::setup() {
+Runner::Runner() {
+  _home = Home::getInstance();
+}
+
+void Runner::setup() {
   lv_i18n_init(lv_i18n_language_pack);
   lv_i18n_set_locale("fr");
 
   if (sd_begin()) {
-    Config* c = Config::getInstance();
-
     Serial.println("SD card available!");
-    File entry = SD.open(c->sd_directory_path);
+    File entry = SD.open(global_config->sd_directory_path);
     if (entry && !entry.isDirectory()) {
       entry.close();
-      SD.remove(c->sd_directory_path);
+      SD.remove(global_config->sd_directory_path);
     }
 
-    entry = SD.open(c->sd_directory_path);
+    entry = SD.open(global_config->sd_directory_path);
     if (!entry) {
-      SD.mkdir(c->sd_directory_path);
-      Serial.printf("Directory %s created\n", c->sd_directory_path);
+      SD.mkdir(global_config->sd_directory_path);
+      Serial.printf("Directory %s created\n", global_config->sd_directory_path);
     } else {
-      Serial.printf("Directory %s already exists\n", c->sd_directory_path);
+      Serial.printf("Directory %s already exists\n", global_config->sd_directory_path);
     }
 
     SD.end();
   }
 }
 
-void Pokegotchi::loop() {
-  if (Home::getInstance()->isClosed() == false) {
-    Home::getInstance()->loop();
+void Runner::loop() {
+  if (_home->isClosed() == false) {
+    _home->loop();
 
     return;
   }

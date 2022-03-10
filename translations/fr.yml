@@ -65,17 +65,17 @@ fr:
   game.save.failed: Impossible de sauvegarder
   game.save.success: Sauvegarde effectuée
   pokemon.eevee.description: >-
-    Il a la capacité de changer la composition de son corps pour s’adapter à son
+    Il a la capacité de changer la composition de son corps pour s'adapter à son
     environnement.
   pokemon.vaporeon.description: >-
-    Quand ses nageoires se mettent à vibrer, c’est le signe qu’il va pleuvoir
+    Quand ses nageoires se mettent à vibrer, c'est le signe qu'il va pleuvoir
     dans les heures qui suivent.
   pokemon.jolteon.description: >-
-    S’il est irrité ou surpris, toute la fourrure de son corps se dresse comme
+    S'il est irrité ou surpris, toute la fourrure de son corps se dresse comme
     des aiguilles pour percer ses ennemis.
   pokemon.flareon.description: >-
     Après avoir emmagasiné suffisamment de chaleur, sa température corporelle
-    peut monter jusqu’à 900 °C.
+    peut monter jusqu'à 900 °C.
   pokemon.eevee.name: Evoli
   pokemon.vaporeon.name: Aquali
   pokemon.jolteon.name: Voltali

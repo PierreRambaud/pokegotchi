@@ -8,6 +8,8 @@
 #define ANIMATION_NIGHT 6
 #define ANIMATION_DAY 6
 
+using namespace Pokegotchi;
+
 LV_IMG_DECLARE(game_pee);
 LV_IMG_DECLARE(game_poo);
 LV_IMG_DECLARE(game_clean);
@@ -120,6 +122,12 @@ void Game::setup(Pokemon* p) {
   lv_anim_set_exec_cb(&anim, anim_y_callback);
 
   lv_anim_start(&anim);
+}
+
+void Game::setup(Pokemon* p, Options* o) {
+  global_options = o;
+  set_lcd_brightness((int32_t)o->brightness);
+  setup(p);
 }
 
 void Game::switch_to_day() {

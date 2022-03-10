@@ -1,26 +1,16 @@
+#pragma once
 #ifndef POKEGOTCHI_OPTIONS
 #define POKEGOTCHI_OPTIONS
 
-class Options {
- public:
-  static Options* getInstance() {
-    if (instance == nullptr) {
-      instance = new Options();
-    }
+#include <stdint.h>
 
-    return instance;
-  }
+namespace Pokegotchi {
+  struct options_struct {
+    int32_t brightness;
+  };
 
-  void set_brightness(int value) { _brightness = value; }
-  int get_brightness() { return _brightness; }
+  typedef struct options_struct Options;
 
- protected:
-  Options();
-
-  static Options* instance;
-
- private:
-  int _brightness = ((300 * 100) / 800);
-};
-
+  static Options* global_options = new Options{37};
+}
 #endif

@@ -2,6 +2,8 @@
 #include "Utils.h"
 #include "Pokemon.h"
 
+using namespace Pokegotchi;
+
 Pokemon* Pokemon::_instance = nullptr;
 
 Pokemon::Pokemon(int number) {

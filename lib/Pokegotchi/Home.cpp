@@ -7,6 +7,11 @@
 #include "Pokemon.h"
 #include "Utils.h"
 
+using namespace Pokegotchi;
+
+LV_IMG_DECLARE(pokegotchi_title)
+LV_IMG_DECLARE(background_16)
+
 static void close_msg_box_event_handler(lv_event_t* e);
 static void load_button_event_handler(lv_event_t* e);
 static void start_button_event_handler(lv_event_t* e);
@@ -16,7 +21,7 @@ Home* Home::instance = nullptr;
 
 Home::Home() {
   if (sd_begin()) {
-    if (SD.exists(Config::getInstance()->save_file_path)) {
+    if (SD.exists(global_config->save_file_path)) {
       _has_save_file = true;
     }
 
@@ -27,12 +32,10 @@ Home::Home() {
   lv_scr_load(_screen);
 
   lv_obj_t* background_image = lv_img_create(_screen);
-  LV_IMG_DECLARE(background_16)
   lv_img_set_src(background_image, &background_16);
   lv_obj_set_pos(background_image, 0, 0);
 
   _title = lv_img_create(_screen);
-  LV_IMG_DECLARE(pokegotchi_title)
   lv_img_set_src(_title, &pokegotchi_title);
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
 
@@ -150,7 +153,7 @@ static void load_button_event_handler(lv_event_t* e) {
     return;
   }
 
-  File file = SD.open(Config::getInstance()->save_file_path);
+  File file = SD.open(global_config->save_file_path);
   if (!file) {
     display_alert("", _("game.load.error"));
     return;
@@ -167,7 +170,6 @@ static void load_button_event_handler(lv_event_t* e) {
     return;
   }
 
-  set_lcd_brightness(doc["options"]["brightness"]);
 
   JsonObject pokemon_data = doc["pokemon"];
   Pokemon* p = new Pokemon((int)pokemon_data["number"]);
@@ -178,7 +180,10 @@ static void load_button_event_handler(lv_event_t* e) {
   h->close();
 
   Game* g = Game::getInstance();
+
+  JsonObject data = doc["options"];
+  Options* options = new Options{data["brightness"]};
   delete h;
 
-  g->setup(p);
+  g->setup(p, options);
 }
