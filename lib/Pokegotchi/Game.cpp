@@ -1,8 +1,7 @@
 #include <lvgl.h>
 #include "lv_i18n.h"
 #include "Game.h"
-#include "Menu.h"
-#include "Pokemon.h"
+#include "GameMenu.h"
 #include "Utils.h"
 
 #define ANIMATION_NIGHT 6
@@ -13,42 +12,22 @@ using namespace Pokegotchi;
 LV_IMG_DECLARE(game_pee);
 LV_IMG_DECLARE(game_poo);
 LV_IMG_DECLARE(game_clean);
-// LV_IMG_DECLARE(background_1)
 LV_IMG_DECLARE(background_2)
-// LV_IMG_DECLARE(background_3)
 LV_IMG_DECLARE(background_4)
-// LV_IMG_DECLARE(background_5)
 LV_IMG_DECLARE(background_6)
-// LV_IMG_DECLARE(background_7)
 LV_IMG_DECLARE(background_8)
-// LV_IMG_DECLARE(background_9)
 LV_IMG_DECLARE(background_10)
-// LV_IMG_DECLARE(background_11)
 LV_IMG_DECLARE(background_12)
-// LV_IMG_DECLARE(background_13)
 LV_IMG_DECLARE(background_14)
-// LV_IMG_DECLARE(background_15)
 LV_IMG_DECLARE(background_16)
-// LV_IMG_DECLARE(background_17)
 LV_IMG_DECLARE(background_18)
-// LV_IMG_DECLARE(background_19)
 LV_IMG_DECLARE(background_20)
 
 static const lv_img_dsc_t* anim_night[ANIMATION_NIGHT] = {
-    &background_6,   // &background_7,
-    &background_8,   // &background_9,
-    &background_10,  // &background_11,
-    &background_12,  // &background_13,
-    &background_14,  // &background_15,
-    &background_16,
+    &background_6, &background_8, &background_10, &background_12, &background_14, &background_16,
 };
 static const lv_img_dsc_t* anim_day[ANIMATION_DAY] = {
-    &background_16,  // &background_17,
-    &background_18,  // &background_19,
-    &background_20,  // &background_1,
-    &background_2,   // &background_3,
-    &background_4,   // &background_5,
-    &background_6,
+    &background_16, &background_18, &background_20, &background_2, &background_4, &background_6,
 };
 
 static void drag_clean_event_handler(lv_event_t* e);
@@ -56,17 +35,17 @@ static bool check_object_intersect(lv_obj_t* a, lv_obj_t* b);
 static void night_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_night[id]); }
 static void day_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_day[id]); }
 
-Game* Game::instance = nullptr;
+Game* Game::_instance = nullptr;
 
-Game::Game() {
-  _screen = create_window();
-  lv_scr_load(_screen);
+Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p, poke_options_t* game_options) : Game::Game(global_config, main_screen, p) {
+  _options = game_options;
+  set_lcd_brightness((int32_t)_options->brightness);
+}
 
-  Menu* menu = Menu::getInstance();
-  menu->setup(_screen);
-
-  ActionsMenu* actions_menu = ActionsMenu::getInstance();
-  actions_menu->setup(_screen);
+Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
+  _config = global_config;
+  _main_screen = main_screen;
+  _screen = create_screen(_main_screen);
 
   lv_obj_t* background_image = lv_img_create(_screen);
   lv_img_set_src(background_image, anim_day[0]);
@@ -78,9 +57,7 @@ Game::Game() {
   lv_anim_set_path_cb(&_anim, lv_anim_path_linear);
   lv_anim_set_time(&_anim, 600);
   lv_anim_set_repeat_count(&_anim, 0);
-}
 
-void Game::setup(Pokemon* p) {
   if (p->is_sleeping() == false) {
     switch_to_day();
   }
@@ -122,12 +99,12 @@ void Game::setup(Pokemon* p) {
   lv_anim_set_exec_cb(&anim, anim_y_callback);
 
   lv_anim_start(&anim);
-}
 
-void Game::setup(Pokemon* p, Options* o) {
-  global_options = o;
-  set_lcd_brightness((int32_t)o->brightness);
-  setup(p);
+  ActionsMenu* actions_menu = new ActionsMenu(new Menu(_main_screen));
+  ActionsMenu::setInstance(actions_menu);
+
+  GameMenu* game_menu = new GameMenu(new Menu(_main_screen));
+  GameMenu::setInstance(game_menu);
 }
 
 void Game::switch_to_day() {
@@ -239,7 +216,7 @@ void Game::action_play() {
   p->play();
 }
 
-void Game::action_eat(Item* item) {
+void Game::action_eat(BagItem* item) {
   Pokemon* p = Pokemon::getInstance();
   p->eat(item);
 }

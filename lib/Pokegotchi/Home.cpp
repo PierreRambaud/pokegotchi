@@ -1,15 +1,16 @@
-#include <lvgl.h>
 #include <ArduinoJson.h>
+#include <lvgl.h>
+#include "M5Core2.h"
 #include "lv_i18n.h"
-#include "Config.h"
+#include "Options.h"
 #include "Home.h"
 #include "Game.h"
-#include "Pokemon.h"
 #include "Utils.h"
+#include "Pokemon.h"
 
 using namespace Pokegotchi;
 
-LV_IMG_DECLARE(pokegotchi_title)
+LV_IMG_DECLARE(home_title)
 LV_IMG_DECLARE(background_16)
 
 static void close_msg_box_event_handler(lv_event_t* e);
@@ -17,26 +18,27 @@ static void load_button_event_handler(lv_event_t* e);
 static void start_button_event_handler(lv_event_t* e);
 static void start_new_game_event_handler(lv_event_t* e);
 
-Home* Home::instance = nullptr;
+Home* Home::_instance = nullptr;
 
-Home::Home() {
+Home::Home(poke_config_t* global_config, lv_obj_t* main_screen) {
+  _config = global_config;
+  _main_screen = main_screen;
   if (sd_begin()) {
-    if (SD.exists(global_config->save_file_path)) {
+    if (SD.exists(_config->save_file_path)) {
       _has_save_file = true;
     }
 
     SD.end();
   }
 
-  _screen = create_window();
-  lv_scr_load(_screen);
+  _screen = create_screen(_main_screen);
 
   lv_obj_t* background_image = lv_img_create(_screen);
   lv_img_set_src(background_image, &background_16);
   lv_obj_set_pos(background_image, 0, 0);
 
   _title = lv_img_create(_screen);
-  lv_img_set_src(_title, &pokegotchi_title);
+  lv_img_set_src(_title, &home_title);
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
 
   lv_anim_t anim;
@@ -52,16 +54,14 @@ Home::Home() {
   lv_anim_start(&anim);
 }
 
-Home::~Home() {
-  lv_obj_del(_screen);
-}
+Home::~Home() { lv_obj_del(_screen); }
 
 void Home::close() {
   lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
   _closed = true;
 }
 
-void Home::loop() {
+void Home::load_buttons() {
   if (_loaded == true) {
     return;
   }
@@ -126,15 +126,15 @@ static void start_new_game_event_handler(lv_event_t* e) {
   Serial.printf("New game start with pokemon number: %d\n", pokemon_number);
 
   Home* h = Home::getInstance();
-  h->close();
-
   Pokemon* p = new Pokemon(pokemon_number);
   Pokemon::setInstance(p);
 
-  Game* g = Game::getInstance();
-  delete h;
+  poke_config_t* global_config = h->get_config();
+  lv_obj_t* main_screen = h->get_main_screen();
+  Home::releaseInstance();
 
-  g->setup(p);
+  Game* g = new Game(global_config, main_screen, p);
+  Game::setInstance(g);
 }
 
 static void close_msg_box_event_handler(lv_event_t* e) {
@@ -154,7 +154,8 @@ static void load_button_event_handler(lv_event_t* e) {
     display_alert("", _("sd.card.not_found"));
     return;
   }
-
+  Home* h = Home::getInstance();
+  poke_config_t* global_config = h->get_config();
   File file = SD.open(global_config->save_file_path);
   if (!file) {
     display_alert("", _("game.load.error"));
@@ -172,21 +173,20 @@ static void load_button_event_handler(lv_event_t* e) {
     return;
   }
 
-
   JsonObject pokemon_data = doc["pokemon"];
+
   Pokemon* p = new Pokemon((int)pokemon_data["number"]);
   Pokemon::setInstance(p);
   p->load(pokemon_data);
 
-  Home* h = Home::getInstance();
-  h->close();
-
   JsonObject data = doc["options"];
-  Options* options = new Options{data["brightness"]};
+  poke_options_t* game_options = new poke_options_t{data["brightness"]};
 
-  Serial.printf("Home Brightness value: %d\n", options->brightness);
-  global_options = options;
+  Serial.printf("Home Brightness value: %d\n", game_options->brightness);
 
-  Game* g = Game::getInstance();
-  g->setup(p, options);
+  lv_obj_t* main_screen = h->get_main_screen();
+  Home::releaseInstance();
+
+  Game* g = new Game(global_config, main_screen, p, game_options);
+  Game::setInstance(g);
 }

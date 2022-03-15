@@ -6,13 +6,12 @@
 
 namespace Pokegotchi {
 
-  struct config_struct {
+  struct game_config_struct {
     const char* sd_directory_path;
     const char* save_file_path;
   };
 
-  typedef struct config_struct Config;
+  typedef struct game_config_struct poke_config_t;
 
-  static Config* global_config = new Config{"/.pokegotchi", "/.pokegotchi/pokegotchi.json"};
-}
+}  // namespace Pokegotchi
 #endif

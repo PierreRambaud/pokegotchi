@@ -1,32 +1,34 @@
 #include <M5Core2.h>
 #include "lv_i18n.h"
 #include "Runner.h"
-#include "Config.h"
 #include "Game.h"
-#include "Menu.h"
-#include "Home.h"
+#include "ActionsMenu.h"
+#include "GameMenu.h"
 #include "Utils.h"
 
 using namespace Pokegotchi;
 
-void prepare_sd_card_directory();
+void prepare_sd_card_directory(poke_config_t*);
 
 Runner::Runner() {
-  prepare_sd_card_directory();
+  _config = new poke_config_t{"/.pokegotchi", "/.pokegotchi/pokegotchi.json"};
 
+  prepare_sd_card_directory(_config);
   lv_i18n_init(lv_i18n_language_pack);
   lv_i18n_set_locale("fr");
 
-  lv_obj_t* screen = create_window();
-  lv_scr_load(screen);
+  lv_obj_t* main_screen = create_screen();
+  lv_scr_load(main_screen);
 
-  _home = Home::getInstance();
+  Home* home = new Home(_config, main_screen);
+  Home::setInstance(home);
+  _home = home;
 }
 
 void Runner::loop() {
   if (_home != nullptr) {
     if (_home->isClosed() == false) {
-      _home->loop();
+      _home->load_buttons();
 
       return;
     }
@@ -35,25 +37,25 @@ void Runner::loop() {
   }
 
   Game::getInstance()->loop();
-  if (check_action_time(_last_refresh_time, PERIOD_REFRESH)) {
-    Menu::getInstance()->refresh_battery_status();
-  }
+  // if (check_action_time(_last_refresh_time, PERIOD_REFRESH)) {
+  //   Menu::getInstance()->refresh_battery_status();
+  // }
 
   if (M5.BtnA.wasPressed()) {
     Serial.println("Button A pressed");
-    Menu::getInstance()->close();
     ActionsMenu::getInstance()->toggle();
+    GameMenu::getInstance()->close();
   } else if (M5.BtnB.wasPressed()) {
     Serial.println("Button B pressed");
     Game::getInstance()->abort_actions();
   } else if (M5.BtnC.wasPressed()) {
     Serial.println("Button C pressed");
     ActionsMenu::getInstance()->close();
-    Menu::getInstance()->toggle();
+    GameMenu::getInstance()->toggle();
   }
 }
 
-void prepare_sd_card_directory() {
+void prepare_sd_card_directory(poke_config_t* global_config) {
   if (sd_begin() == false) {
     return;
   }

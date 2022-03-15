@@ -2,11 +2,8 @@
 #ifndef POKEGOTCHI_UTILS
 #define POKEGOTCHI_UTILS
 
-#include <M5Core2.h>
 #include <lvgl.h>
-#include "Options.h"
-
-using namespace Pokegotchi;
+#include "M5Core2.h"
 
 static lv_style_t style_default_title;
 static lv_style_t style_default_text;
@@ -14,11 +11,13 @@ static lv_style_t style_game_bar_bg;
 static lv_style_t style_game_bar_indic;
 static lv_style_t style_game_label;
 
-static inline lv_obj_t* create_window(lv_obj_t*);
-static inline lv_obj_t* create_sub_window(lv_obj_t*);
-static inline void anim_y_callback(void*, int32_t);
-
-static inline lv_obj_t* create_window(lv_obj_t* parent = NULL) {
+/**
+ * Create a new screen
+ *
+ * @param lv_obj_t* parent
+ * @return lv_obj_t*
+ */
+static inline lv_obj_t* create_screen(lv_obj_t* parent = NULL) {
   lv_obj_t* obj = lv_obj_create(parent);
   lv_obj_remove_style_all(obj);
   lv_obj_set_size(obj, LV_HOR_RES_MAX, LV_VER_RES_MAX);
@@ -28,7 +27,13 @@ static inline lv_obj_t* create_window(lv_obj_t* parent = NULL) {
   return obj;
 }
 
-static inline lv_obj_t* create_sub_window(lv_obj_t* parent) {
+/**
+ * Create a child screen with padding
+ *
+ * @param lv_obj_t* parent
+ * @return lv_obj_t*
+ */
+static inline lv_obj_t* create_child_screen(lv_obj_t* parent) {
   lv_obj_t* obj = lv_obj_create(parent);
   lv_obj_remove_style_all(obj);
   lv_obj_set_size(obj, LV_HOR_RES_MAX, LV_VER_RES_MAX - 40);
@@ -40,9 +45,60 @@ static inline lv_obj_t* create_sub_window(lv_obj_t* parent) {
 }
 
 static inline void anim_y_callback(void* obj, int32_t value) { lv_obj_set_y((lv_obj_t*)obj, value); }
-
 static inline void anim_x_callback(void* obj, int32_t value) { lv_obj_set_x((lv_obj_t*)obj, value); }
 
+/**
+ * Start SD card
+ * @return bool
+ */
+static inline bool sd_begin() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
+
+/**
+ * Display an alert message
+ *
+ * @param const char* title
+ * @param const char* message
+ * @return lv_obj_t*
+ **/
+static inline lv_obj_t* display_alert(const char* title, const char* message) {
+  static const char* btns[] = {""};
+
+  lv_obj_t* msg_box = lv_msgbox_create(NULL, title, message, btns, true);
+  lv_obj_center(msg_box);
+  lv_obj_t* close_button = lv_msgbox_get_close_btn(msg_box);
+  lv_obj_t* close_label = lv_obj_get_child(close_button, -1);
+  lv_label_set_text(close_label, "X");
+
+  return msg_box;
+}
+
+/**
+ * Check if an action should be executed
+ *
+ * @param unsigned long& last_millis
+ * @param unsigned long wait
+ *
+ * return bool
+ */
+static inline bool check_action_time(unsigned long& last_millis, unsigned long wait) {
+  if (millis() - last_millis >= wait) {
+    last_millis = millis();
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Create menu button
+ *
+ * @param lv_obj_t* parent
+ * @param lv_img_dsc_t* img_src
+ * @param lv_img_dsc_t* img_pressed_src
+ * @param const char* title
+ *
+ * return lv_obj_t*
+ */
 static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_img_dsc_t* img_src, const lv_img_dsc_t* img_pressed_src, const char* title) {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
@@ -61,6 +117,18 @@ static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_img_dsc
   return button;
 }
 
+/**
+ * Create game bar indicator
+ *
+ * @param lv_obj_t* parent
+ * @param lv_palette_t color
+ * @param const char* title
+ * @param int16_t x
+ * @param int16_t y
+ * @param int16_t max_range
+ *
+ * return lv_obj_t*
+ */
 static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t color, const char* title, const int16_t x, const int16_t y, const int16_t max_range) {
   lv_style_init(&style_game_label);
   lv_style_set_text_color(&style_game_label, lv_color_black());
@@ -97,55 +165,11 @@ static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t 
 }
 
 /**
- * Check if an action should be executed
- *
- * @param unsigned long& last_millis
- * @param unsigned long wait
- *
- * return bool
- */
-static inline bool check_action_time(unsigned long& last_millis, unsigned long wait) {
-  if (millis() - last_millis >= wait) {
-    last_millis = millis();
-    return true;
-  }
-
-  return false;
-}
-
-/**
- * Start SD card
- */
-static inline bool sd_begin() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
-
-/**
- * Display an alert message
- *
- * @param const char* title
- * @param const char* message
- * @return lv_obj_t*
- **/
-static inline lv_obj_t* display_alert(const char* title, const char* message) {
-  static const char* btns[] = {""};
-
-  lv_obj_t* msg_box = lv_msgbox_create(NULL, title, message, btns, true);
-  lv_obj_center(msg_box);
-  lv_obj_t* close_button = lv_msgbox_get_close_btn(msg_box);
-  lv_obj_t* close_label = lv_obj_get_child(close_button, -1);
-  lv_label_set_text(close_label, "X");
-
-  return msg_box;
-}
-
-/**
  * Change the brightness value of the screen
  */
 static inline void set_lcd_brightness(int32_t value) {
-  Serial.printf("Brightness new value: %d, %d\n", value, &value);
-  global_options->brightness = value;
+  Serial.printf("Brightness new value: %d\n", value);
   M5.Axp.SetLcdVoltage(2500 + ((value * 800) / 100));
-
-  Serial.printf("Brightness value: %d, %d\n", global_options->brightness, &global_options->brightness);
 }
 
 #endif

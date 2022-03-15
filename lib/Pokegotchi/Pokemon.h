@@ -14,7 +14,7 @@
 #include <lvgl.h>
 #include <ArduinoJson.h>
 #include "lv_i18n.h"
-#include "Menu.h"
+#include "ActionsMenu.h"
 
 LV_IMG_DECLARE(pokemon_133);
 LV_IMG_DECLARE(pokemon_134);
@@ -47,7 +47,7 @@ namespace Pokegotchi {
   const int8_t PROPERTY_PEES = 6;
 
   class Pokemon {
-  public:
+   public:
     Pokemon(int number);
     void loop();
     void animate();
@@ -74,7 +74,7 @@ namespace Pokegotchi {
     bool is_sleeping() { return _is_sleeping; }
     bool is_ko() { return _is_ko; }
 
-    void eat(Item* item);
+    void eat(BagItem* item);
     void heal(int8_t number);
     void train();
     void play();
@@ -87,81 +87,81 @@ namespace Pokegotchi {
 
     const lv_img_dsc_t* get_image() {
       switch (_number) {
-      case POKEMON_EEVEE:
-        return &pokemon_133;
-      case POKEMON_VAPOREON:
-        return &pokemon_134;
-      case POKEMON_JOLTEON:
-        return &pokemon_135;
-      case POKEMON_FLAREON:
-        return &pokemon_136;
-      case POKEMON_PIKACHU:
-        return &pokemon_25;
-      case POKEMON_RAICHU:
-        return &pokemon_26;
-      case POKEMON_PICHU:
-      default:
-        return &pokemon_172;
+        case POKEMON_EEVEE:
+          return &pokemon_133;
+        case POKEMON_VAPOREON:
+          return &pokemon_134;
+        case POKEMON_JOLTEON:
+          return &pokemon_135;
+        case POKEMON_FLAREON:
+          return &pokemon_136;
+        case POKEMON_PIKACHU:
+          return &pokemon_25;
+        case POKEMON_RAICHU:
+          return &pokemon_26;
+        case POKEMON_PICHU:
+        default:
+          return &pokemon_172;
       }
     }
 
     const char* get_avatar() {
       switch (_number) {
-      case POKEMON_EEVEE:
-        return "L:/pokemon/face/133.bin";
-      case POKEMON_VAPOREON:
-        return "L:/pokemon/face/134.bin";
-      case POKEMON_JOLTEON:
-        return "L:/pokemon/face/135.bin";
-      case POKEMON_FLAREON:
-        return "L:/pokemon/face/136.bin";
-      case POKEMON_PIKACHU:
-        return "L:/pokemon/face/25.bin";
-      case POKEMON_RAICHU:
-        return "L:/pokemon/face/26.bin";
-      case POKEMON_PICHU:
-      default:
-        return "L:/pokemon/face/172.bin";
+        case POKEMON_EEVEE:
+          return "L:/pokemon/face/133.bin";
+        case POKEMON_VAPOREON:
+          return "L:/pokemon/face/134.bin";
+        case POKEMON_JOLTEON:
+          return "L:/pokemon/face/135.bin";
+        case POKEMON_FLAREON:
+          return "L:/pokemon/face/136.bin";
+        case POKEMON_PIKACHU:
+          return "L:/pokemon/face/25.bin";
+        case POKEMON_RAICHU:
+          return "L:/pokemon/face/26.bin";
+        case POKEMON_PICHU:
+        default:
+          return "L:/pokemon/face/172.bin";
       }
     }
 
     const char* get_description() {
       switch (_number) {
-      case POKEMON_EEVEE:
-        return _("pokemon.eevee.description");
-      case POKEMON_VAPOREON:
-        return _("pokemon.vaporeon.description");
-      case POKEMON_JOLTEON:
-        return _("pokemon.jolteon.description");
-      case POKEMON_FLAREON:
-        return _("pokemon.flareon.description");
-      case POKEMON_PIKACHU:
-        return _("pokemon.pikachu.description");
-      case POKEMON_RAICHU:
-        return _("pokemon.raichu.description");
-      case POKEMON_PICHU:
-      default:
-        return _("pokemon.pichu.description");
+        case POKEMON_EEVEE:
+          return _("pokemon.eevee.description");
+        case POKEMON_VAPOREON:
+          return _("pokemon.vaporeon.description");
+        case POKEMON_JOLTEON:
+          return _("pokemon.jolteon.description");
+        case POKEMON_FLAREON:
+          return _("pokemon.flareon.description");
+        case POKEMON_PIKACHU:
+          return _("pokemon.pikachu.description");
+        case POKEMON_RAICHU:
+          return _("pokemon.raichu.description");
+        case POKEMON_PICHU:
+        default:
+          return _("pokemon.pichu.description");
       }
     }
 
     const char* get_name() {
       switch (_number) {
-      case POKEMON_EEVEE:
-        return _("pokemon.eevee.name");
-      case POKEMON_VAPOREON:
-        return _("pokemon.vaporeon.name");
-      case POKEMON_JOLTEON:
-        return _("pokemon.jolteon.name");
-      case POKEMON_FLAREON:
-        return _("pokemon.flareon.name");
-      case POKEMON_PIKACHU:
-        return _("pokemon.pikachu.name");
-      case POKEMON_RAICHU:
-        return _("pokemon.raichu.name");
-      case POKEMON_PICHU:
-      default:
-        return _("pokemon.pichu.name");
+        case POKEMON_EEVEE:
+          return _("pokemon.eevee.name");
+        case POKEMON_VAPOREON:
+          return _("pokemon.vaporeon.name");
+        case POKEMON_JOLTEON:
+          return _("pokemon.jolteon.name");
+        case POKEMON_FLAREON:
+          return _("pokemon.flareon.name");
+        case POKEMON_PIKACHU:
+          return _("pokemon.pikachu.name");
+        case POKEMON_RAICHU:
+          return _("pokemon.raichu.name");
+        case POKEMON_PICHU:
+        default:
+          return _("pokemon.pichu.name");
       }
     }
 
@@ -207,7 +207,7 @@ namespace Pokegotchi {
       return true;
     }
 
-  private:
+   private:
     static Pokemon* _instance;
 
     const char* _name;
@@ -269,5 +269,5 @@ namespace Pokegotchi {
     long unsigned _last_without_sleep_time;
     long unsigned _last_simple_check_time;
   };
-}
+}  // namespace Pokegotchi
 #endif

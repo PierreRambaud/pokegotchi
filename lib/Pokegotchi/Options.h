@@ -4,13 +4,13 @@
 
 #include <stdint.h>
 
+#define OPTIONS_BRIGHTNESS_DEFAULT 37
+
 namespace Pokegotchi {
-  struct options_struct {
+  struct game_options_struct {
     int32_t brightness;
   };
 
-  typedef struct options_struct Options;
-
-  static Options* global_options = new Options{37};
-}
+  typedef struct game_options_struct poke_options_t;
+}  // namespace Pokegotchi
 #endif

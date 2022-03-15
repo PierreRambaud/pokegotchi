@@ -4,28 +4,25 @@
 
 #include <vector>
 #include <lvgl.h>
-#include "Menu.h"
+#include "ActionsMenu.h"
+#include "Config.h"
 #include "Options.h"
 #include "Pokemon.h"
 
 namespace Pokegotchi {
   class Game {
-  public:
-    void setup(Pokemon* p);
-    void setup(Pokemon* p, Options* o);
+   public:
+    Game(poke_config_t*, lv_obj_t*, Pokemon* p);
+    Game(poke_config_t*, lv_obj_t*, Pokemon* p, poke_options_t*);
+
     void loop();
     void switch_to_day();
     void switch_to_night();
 
-    static Game* getInstance() {
-      if (instance == nullptr) {
-        instance = new Game();
-      }
+    static Game* getInstance() { return _instance; }
+    static void setInstance(Game* instance) { _instance = instance; }
 
-      return instance;
-    }
-
-    void action_eat(Item* item);
+    void action_eat(BagItem* item);
     void action_clean();
     void action_heal();
     void action_play();
@@ -39,17 +36,21 @@ namespace Pokegotchi {
     void abort_actions();
     void try_to_clean();
 
-  private:
-    Game();
+    poke_options_t* get_options() { return _options; }
+    poke_config_t* get_config() { return _config; }
 
-    static Game* instance;
+   private:
+    static Game* _instance;
 
-    lv_obj_t* _pokemon_image;
+    poke_config_t* _config;
+    poke_options_t* _options = new poke_options_t{OPTIONS_BRIGHTNESS_DEFAULT};
+
+    lv_obj_t* _main_screen;
     lv_obj_t* _screen;
     lv_anim_t _anim;
 
+    lv_obj_t* _pokemon_image;
     lv_obj_t* _level_indic;
-
     lv_obj_t* _mood_bar;
     lv_obj_t* _sleepiness_bar;
     lv_obj_t* _hunger_bar;
@@ -60,5 +61,5 @@ namespace Pokegotchi {
     std::vector<lv_obj_t*> _poos;
     std::vector<lv_obj_t*> _pees;
   };
-}
+}  // namespace Pokegotchi
 #endif

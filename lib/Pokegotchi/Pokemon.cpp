@@ -69,7 +69,7 @@ void Pokemon::train() {
 
 void Pokemon::play() { _update_property(PROPERTY_MOOD, 2); }
 
-void Pokemon::eat(Item* item) {
+void Pokemon::eat(BagItem* item) {
   _update_property(PROPERTY_MOOD, item->specs->mood);
   _update_property(PROPERTY_HUNGER, item->specs->hunger);
   _update_property(PROPERTY_LIFE, item->specs->life);
