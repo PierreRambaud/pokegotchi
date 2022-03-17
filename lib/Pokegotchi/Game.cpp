@@ -143,14 +143,14 @@ void Game::loop() {
 void Game::create_poo() {
   lv_obj_t* poo = lv_img_create(_screen);
   lv_img_set_src(poo, &game_poo);
-  lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - 15), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - 30));
+  lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - game_poo.header.w), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - game_poo.header.h));
   _poos.push_back(poo);
 }
 
 void Game::create_pee() {
   lv_obj_t* pee = lv_img_create(_screen);
   lv_img_set_src(pee, &game_pee);
-  lv_obj_set_pos(pee, random(1, LV_HOR_RES_MAX - 15), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - 30));
+  lv_obj_set_pos(pee, random(1, LV_HOR_RES_MAX - game_pee.header.w), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - game_pee.header.h));
   _pees.push_back(pee);
 }
 
