@@ -80,7 +80,7 @@ static inline lv_obj_t* display_alert(const char* title, const char* message) {
  *
  * return bool
  */
-static inline bool check_action_time(unsigned long& last_millis, unsigned long wait) {
+static inline bool check_action_time(long& last_millis, unsigned long wait) {
   if (millis() - last_millis >= wait) {
     last_millis = millis();
     return true;

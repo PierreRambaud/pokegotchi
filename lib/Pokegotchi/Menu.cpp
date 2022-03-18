@@ -27,11 +27,43 @@ Menu::Menu(lv_obj_t* main_screen) {
 }
 
 void Menu::close() {
+  _is_open = false;
   lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
   lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
 }
+
 void Menu::open() {
+  _is_open = true;
   refresh_battery_status();
+
   lv_obj_clear_flag(_screen, LV_OBJ_FLAG_HIDDEN);
   lv_obj_clear_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
+}
+
+void Menu::refresh_battery_status() {
+  if (_is_open == false) {
+    return;
+  }
+
+  const char* battery_image = "";
+  if (M5.Axp.isCharging() == true) {
+    Serial.println("Battery is charging");
+    battery_image = "L:/menu/battery/charging.bin";
+  } else {
+    float battery_level = M5.Axp.GetBatteryLevel();
+    if (battery_level >= 80) {
+      battery_image = "L:/menu/battery/full.bin";
+    } else if (battery_level >= 40) {
+      battery_image = "L:/menu/battery/middle.bin";
+    } else {
+      battery_image = "L:/menu/battery/low.bin";
+    }
+
+    Serial.printf("Battery status: %f\n", battery_level);
+  }
+
+  if (_previous_battery_image != battery_image) {
+    lv_img_set_src(_battery_level_icon, battery_image);
+    _previous_battery_image = battery_image;
+  }
 }

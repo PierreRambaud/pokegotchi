@@ -158,12 +158,13 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon["poos"] = p->get_poos();
   pokemon["pees"] = p->get_pees();
 
+  unsigned long current_time = millis();
   JsonObject pokemon_time = pokemon.createNestedObject("time");
-  pokemon_time["simple_check"] = p->get_last_simple_check_time();
-  pokemon_time["boredom"] = p->get_last_boredom_time();
-  pokemon_time["hunger"] = p->get_last_hunger_time();
-  pokemon_time["sleep"] = p->get_last_sleep_time();
-  pokemon_time["without_sleep"] = p->get_last_without_sleep_time();
+  pokemon_time["simple_check"] = p->get_last_simple_check_time() - current_time;
+  pokemon_time["boredom"] = p->get_last_boredom_time() - current_time;
+  pokemon_time["hunger"] = p->get_last_hunger_time() - current_time;
+  pokemon_time["sleep"] = p->get_last_sleep_time() - current_time;
+  pokemon_time["without_sleep"] = p->get_last_without_sleep_time() - current_time;
 
   if (sd_begin() == false) {
     display_alert("", _("sd.card.not_found"));

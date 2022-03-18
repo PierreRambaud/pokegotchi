@@ -25,12 +25,12 @@ LV_IMG_DECLARE(pokemon_26);
 LV_IMG_DECLARE(pokemon_172);
 
 namespace Pokegotchi {
-  const unsigned long PERIOD_BOREDOM = 30 * 1000UL;
-  const unsigned long PERIOD_HUNGER = 30 * 1000UL;
-  const unsigned long PERIOD_MOOD = 45 * 1000UL;
-  const unsigned long PERIOD_SLEEP = 15 * 1000UL;
-  const unsigned long PERIOD_WITHOUT_SLEEP = 30 * 1000UL;
-  const unsigned long PERIOD_SIMPLE_CHECK = 30 * 1000UL;
+  const unsigned long PERIOD_BOREDOM = 15 * 1000UL;
+  const unsigned long PERIOD_HUNGER = 15 * 1000UL;
+  const unsigned long PERIOD_MOOD = 25 * 1000UL;
+  const unsigned long PERIOD_SLEEP = 5 * 1000UL;
+  const unsigned long PERIOD_WITHOUT_SLEEP = 15 * 1000UL;
+  const unsigned long PERIOD_SIMPLE_CHECK = 15 * 1000UL;
 
   const int8_t MAX_LIFE = 100;
   const int8_t MAX_SLEEPINESS = 100;
@@ -64,11 +64,11 @@ namespace Pokegotchi {
     int8_t get_sleepiness() { return _sleepiness; }
     int get_number() { return _number; }
 
-    long unsigned get_last_simple_check_time() { return _last_simple_check_time; }
-    long unsigned get_last_boredom_time() { return _last_boredom_time; }
-    long unsigned get_last_hunger_time() { return _last_hunger_time; }
-    long unsigned get_last_sleep_time() { return _last_sleep_time; }
-    long unsigned get_last_without_sleep_time() { return _last_without_sleep_time; }
+    long get_last_simple_check_time() { return _last_simple_check_time; }
+    long get_last_boredom_time() { return _last_boredom_time; }
+    long get_last_hunger_time() { return _last_hunger_time; }
+    long get_last_sleep_time() { return _last_sleep_time; }
+    long get_last_without_sleep_time() { return _last_without_sleep_time; }
 
     bool is_sick() { return _is_sick; }
     bool is_sleeping() { return _is_sleeping; }
@@ -263,11 +263,11 @@ namespace Pokegotchi {
     bool _is_sick = false;
     bool _is_ko = false;
 
-    long unsigned _last_boredom_time;
-    long unsigned _last_hunger_time;
-    long unsigned _last_sleep_time;
-    long unsigned _last_without_sleep_time;
-    long unsigned _last_simple_check_time;
+    long _last_boredom_time;
+    long _last_hunger_time;
+    long _last_sleep_time;
+    long _last_without_sleep_time;
+    long _last_simple_check_time;
   };
 }  // namespace Pokegotchi
 #endif

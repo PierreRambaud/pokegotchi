@@ -37,9 +37,10 @@ void Runner::loop() {
   }
 
   Game::getInstance()->loop();
-  // if (check_action_time(_last_refresh_time, PERIOD_REFRESH)) {
-  //   Menu::getInstance()->refresh_battery_status();
-  // }
+  if (check_action_time(_last_refresh_time, PERIOD_REFRESH)) {
+    ActionsMenu::getInstance()->get_menu()->refresh_battery_status();
+    GameMenu::getInstance()->get_menu()->refresh_battery_status();
+  }
 
   if (M5.BtnA.wasPressed()) {
     Serial.println("Button A pressed");
