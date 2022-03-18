@@ -48,14 +48,6 @@ void Pokemon::simple_check() {
     _life -= 4;
   }
 
-  if (_poos > 0) {
-    _life -= _poos * 2;
-  }
-
-  if (_pees > 0) {
-    _life -= _pees * 2;
-  }
-
   if (_life <= 0) {
     _life = 0;
     _is_ko = true;
