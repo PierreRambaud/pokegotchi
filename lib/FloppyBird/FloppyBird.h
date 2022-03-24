@@ -26,7 +26,7 @@
 #define BIRDH2 8  // half height
 // pipe size
 #define PIPEW 24      // pipe width
-#define GAPHEIGHT 42  // pipe gap height
+#define GAPHEIGHT 72  // pipe gap height
 // floor size
 #define FLOORH 30  // floor height (from bottom of the screen)
 // grass size
