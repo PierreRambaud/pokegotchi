@@ -10,7 +10,7 @@
 namespace Pokegotchi {
   class Menu {
    public:
-    Menu(lv_obj_t*);
+    explicit Menu(lv_obj_t* main_screen);
     void open();
     void close();
 

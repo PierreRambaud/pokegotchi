@@ -6,11 +6,10 @@
 #include "lv_port_fs_littlefs.h"
 #include <M5Core2.h>
 #include <lvgl.h>
-#include "Runner.h"
 #include "Utils.h"
+#include "GameSwitcher.h"
 
 static lv_disp_draw_buf_t draw_buf;
-Pokegotchi::Runner *runner;
 M5Display *tft;
 
 void tft_lv_initialization() {
@@ -94,12 +93,11 @@ void setup() {
 
   lv_log_register_print_cb(custom_log_cb);
 
-  runner = new Pokegotchi::Runner();
+  GameSwitcher::Runner::setInstance(new GameSwitcher::Runner());
 }
 
 void loop() {
   M5.update();
   lv_task_handler();
-
-  runner->loop();
+  GameSwitcher::Runner::getInstance()->loop();
 }

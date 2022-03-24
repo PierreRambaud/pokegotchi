@@ -1,5 +1,5 @@
 #include <lvgl.h>
-#include "lv_i18n.h"
+#include <lv_i18n.h>
 #include "Game.h"
 #include "GameMenu.h"
 #include "Utils.h"
@@ -155,7 +155,8 @@ void Game::create_pee() {
 }
 
 void Game::try_to_clean() {
-  for (int8_t i; i < _poos.size(); i++) {
+  int8_t i;
+  for (i = 0; i < _poos.size(); i++) {
     lv_obj_t* poo = _poos[i];
     if (check_object_intersect(_clean, poo)) {
       lv_obj_del(poo);
@@ -164,7 +165,7 @@ void Game::try_to_clean() {
     }
   }
 
-  for (int8_t i; i < _pees.size(); i++) {
+  for (i = 0; i < _pees.size(); i++) {
     lv_obj_t* pee = _pees[i];
     if (check_object_intersect(_clean, pee)) {
       lv_obj_del(pee);

@@ -7,7 +7,7 @@
 namespace Pokegotchi {
   class Home {
    public:
-    Home(poke_config_t*, lv_obj_t*);
+    explicit Home(poke_config_t*, lv_obj_t*);
     ~Home();
     void load_buttons();
     void close();

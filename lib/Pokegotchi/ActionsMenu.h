@@ -31,7 +31,7 @@ namespace Pokegotchi {
 
   class ActionsMenu {
    public:
-    ActionsMenu(Menu*);
+    explicit ActionsMenu(Menu* menu);
     void display_bag();
     void open();
     void close() {

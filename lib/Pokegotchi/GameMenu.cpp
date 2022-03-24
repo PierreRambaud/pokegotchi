@@ -1,6 +1,7 @@
 #include <lvgl.h>
 #include <ArduinoJson.h>
-#include "lv_i18n.h"
+#include <lv_i18n.h>
+#include <GameSwitcher.h>
 #include "Game.h"
 #include "GameMenu.h"
 
@@ -15,10 +16,16 @@ LV_IMG_DECLARE(menu_options_pressed)
 LV_IMG_DECLARE(menu_trainercard)
 LV_IMG_DECLARE(menu_trainercard_pressed)
 
+LV_IMG_DECLARE(menu_game_draw)
+LV_IMG_DECLARE(menu_game_draw_pressed)
+LV_IMG_DECLARE(menu_game_bird)
+LV_IMG_DECLARE(menu_game_bird_pressed)
+
 static void save_game_event_handler(lv_event_t*);
 static void open_options_event_handler(lv_event_t*);
 static void open_pokemon_event_handler(lv_event_t*);
 static void trainercard_event_handler(lv_event_t*);
+static void run_game_event_handler(lv_event_t*);
 static void slider_set_brightness_event_cb(lv_event_t*);
 
 GameMenu* GameMenu::_instance = nullptr;
@@ -122,6 +129,26 @@ void GameMenu::display_options() {
   lv_obj_add_event_cb(brightness_slider, slider_set_brightness_event_cb, LV_EVENT_VALUE_CHANGED, brightness_slider_label);
 }
 
+void GameMenu::display_games() {
+  lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
+
+  _menu_child_screen = create_child_screen(_menu->get_screen());
+  static lv_style_t flex_style;
+  lv_style_set_flex_flow(&flex_style, LV_FLEX_FLOW_ROW_WRAP);
+  lv_style_set_flex_main_place(&flex_style, LV_FLEX_ALIGN_SPACE_AROUND);
+  lv_style_set_layout(&flex_style, LV_LAYOUT_FLEX);
+
+  lv_obj_add_style(_menu_child_screen, &flex_style, 0);
+
+  static int8_t game_drawingboard = GAME_DRAWING_BOARD;
+  lv_obj_t* draw_button = lv_menu_button_create(_menu_child_screen, &menu_game_draw, &menu_game_draw_pressed, _("menu.game.draw"));
+  lv_obj_add_event_cb(draw_button, run_game_event_handler, LV_EVENT_CLICKED, &game_drawingboard);
+
+  static int8_t game_floppybird = GAME_FLOPPYBIRD;
+  lv_obj_t* bird_button = lv_menu_button_create(_menu_child_screen, &menu_game_bird, &menu_game_bird_pressed, _("menu.game.bird"));
+  lv_obj_add_event_cb(bird_button, run_game_event_handler, LV_EVENT_CLICKED, &game_floppybird);
+}
+
 static void slider_set_brightness_event_cb(lv_event_t* e) {
   lv_obj_t* slider = lv_event_get_target(e);
   char buf[8];
@@ -204,4 +231,16 @@ static void open_pokemon_event_handler(lv_event_t* e) { GameMenu::getInstance()-
  *
  * @param lv_event_t* e
  */
-static void trainercard_event_handler(lv_event_t* e) {}
+static void trainercard_event_handler(lv_event_t* e) { GameMenu::getInstance()->display_games(); }
+
+/**
+ * Switch game
+ *
+ * @param lv_event_t* e
+ */
+static void run_game_event_handler(lv_event_t* e) {
+  int8_t game_number = *((int8_t*)lv_event_get_user_data(e));
+  Serial.printf("%d\n", game_number);
+
+  GameSwitcher::Runner::getInstance()->switch_game(game_number);
+}

@@ -82,3 +82,14 @@ fr:
   pokemon.flareon.name: Pyroli
   home.start.choice: Choisissez judicieusement
   actions.menu.clean: Nettoyer
+  game.draw.color: "Couleur"
+  game.draw.size: "Taille %d"
+  game.draw.clear: "Effacer"
+  game.bird.start: "Appuyer sur le bouton B"
+  game.bird.highscore: "MEILLEUR SCORE"
+  game.bird.gameover: "FIN DE PARTIE"
+  game.bird.score: "Score:"
+  game.bird.restart: "Appuyer sur le bouton B"
+  game.bird.maxscore: "Score max:"
+  menu.game.draw: "Dessin"
+  menu.game.bird: "Floppy Bird"

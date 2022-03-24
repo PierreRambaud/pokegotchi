@@ -2,8 +2,6 @@
 #ifndef POKEGOTCHI_CONFIG
 #define POKEGOTCHI_CONFIG
 
-#include <stdint.h>
-
 namespace Pokegotchi {
 
   struct game_config_struct {

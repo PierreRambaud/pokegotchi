@@ -13,7 +13,7 @@
 
 #include <lvgl.h>
 #include <ArduinoJson.h>
-#include "lv_i18n.h"
+#include <lv_i18n.h>
 #include "ActionsMenu.h"
 
 LV_IMG_DECLARE(pokemon_133);
@@ -48,7 +48,7 @@ namespace Pokegotchi {
 
   class Pokemon {
    public:
-    Pokemon(int number);
+    explicit Pokemon(int number);
     void loop();
     void animate();
 

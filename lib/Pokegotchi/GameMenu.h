@@ -11,9 +11,10 @@
 namespace Pokegotchi {
   class GameMenu {
    public:
-    GameMenu(Menu*);
+    explicit GameMenu(Menu*);
     void display_pokemon();
     void display_options();
+    void display_games();
 
     void close() {
       if (lv_obj_is_valid(_menu_child_screen)) {

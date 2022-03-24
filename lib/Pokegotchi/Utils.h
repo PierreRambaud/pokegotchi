@@ -3,7 +3,7 @@
 #define POKEGOTCHI_UTILS
 
 #include <lvgl.h>
-#include "M5Core2.h"
+#include <M5Core2.h>
 
 static lv_style_t style_default_title;
 static lv_style_t style_default_text;

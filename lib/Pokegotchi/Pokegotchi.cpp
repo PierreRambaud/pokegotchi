@@ -1,6 +1,5 @@
 #include <M5Core2.h>
-#include "lv_i18n.h"
-#include "Runner.h"
+#include "Pokegotchi.h"
 #include "Game.h"
 #include "ActionsMenu.h"
 #include "GameMenu.h"
@@ -14,8 +13,6 @@ Runner::Runner() {
   _config = new poke_config_t{"/.pokegotchi", "/.pokegotchi/pokegotchi.json"};
 
   prepare_sd_card_directory(_config);
-  lv_i18n_init(lv_i18n_language_pack);
-  lv_i18n_set_locale("fr");
 
   lv_obj_t* main_screen = create_screen();
   lv_scr_load(main_screen);

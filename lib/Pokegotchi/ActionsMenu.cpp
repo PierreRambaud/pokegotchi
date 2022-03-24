@@ -1,6 +1,6 @@
 #include <lvgl.h>
 #include <ArduinoJson.h>
-#include "lv_i18n.h"
+#include <lv_i18n.h>
 #include "Config.h"
 #include "ActionsMenu.h"
 #include "Utils.h"

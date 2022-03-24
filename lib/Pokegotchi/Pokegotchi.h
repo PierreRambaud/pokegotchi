@@ -2,15 +2,16 @@
 #ifndef POKEGOTCHI_RUNNER
 #define POKEGOTCHI_RUNNER
 
+#include <GameInterface.h>
 #include "Home.h"
 #include "Config.h"
 
 namespace Pokegotchi {
   const unsigned long PERIOD_REFRESH = 5 * 1000UL;
 
-  class Runner {
+  class Runner : public GameSwitcher::GameInterface {
    public:
-    Runner();
+    explicit Runner();
     void loop();
 
    private:
