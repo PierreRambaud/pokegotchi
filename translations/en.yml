@@ -82,14 +82,24 @@ en:
   pokemon.flareon.name: Flareon
   home.start.choice: Choose wisely
   actions.menu.clean: Clean
-  game.draw.color: "Color"
-  game.draw.size: "Size %d"
-  game.draw.clear: "Clear"
-  game.bird.start: "Press Button B to start"
-  game.bird.highscore: "HIGHSCORE"
-  game.bird.gameover: "GAME OVER"
-  game.bird.score: "Score:"
-  game.bird.restart: "Press Button B"
-  game.bird.maxscore: "Max Score:"
-  menu.game.draw: "Drawing"
-  menu.game.bird: "Floppy Bird"
+  game.draw.color: Color
+  game.draw.size: Size %d
+  game.draw.clear: Clear
+  game.bird.start: Press Button B to start
+  game.bird.highscore: HIGHSCORE
+  game.bird.gameover: GAME OVER
+  game.bird.score: 'Score:'
+  game.bird.restart: Press Button B
+  game.bird.maxscore: 'Max Score:'
+  menu.game.draw: Drawing
+  menu.game.bird: Floppy Bird
+  ball.poke: Poké Ball
+  ball.super: Super Ball
+  ball.hyper: Hyper Ball
+  ball.master: Master Ball
+  ball.love: Love ball
+  ball.fast: Fast ball
+  ball.memory: Memory Ball
+  ball.moon: Moon Ball
+  ball.dream: Dream Ball
+  menu.options.ball: Ball choice

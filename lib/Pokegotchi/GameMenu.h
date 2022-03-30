@@ -15,6 +15,7 @@ namespace Pokegotchi {
     void display_pokemon();
     void display_options();
     void display_games();
+    void change_ball(uint16_t);
 
     void close() {
       if (lv_obj_is_valid(_menu_child_screen)) {
@@ -46,6 +47,8 @@ namespace Pokegotchi {
 
     lv_obj_t* _menu_screen;
     lv_obj_t* _menu_child_screen;
+
+    lv_obj_t* _ball_image;
   };
 }  // namespace Pokegotchi
 #endif

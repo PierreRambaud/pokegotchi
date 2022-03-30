@@ -13,18 +13,18 @@ namespace DrawingBoard {
     void loop();
 
    protected:
-    int8_t _size;
-    int8_t _color;
-    int8_t _clear_color;
+    uint8_t _size;
+    uint8_t _color;
+    uint8_t _clear_color;
 
     lv_obj_t* _color_label;
     lv_obj_t* _size_label;
     lv_obj_t* _clear_label;
 
-    int32_t getColor(int8_t);
+    uint32_t getColor(uint8_t);
     void changeColor();
     void changeSize();
-    void drawPoint(int32_t x, int32_t y);
+    void drawPoint(uint32_t x, uint32_t y);
 
     void drawPoints();
     void drawPoint();

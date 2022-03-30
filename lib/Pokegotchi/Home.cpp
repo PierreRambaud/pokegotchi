@@ -180,7 +180,7 @@ static void load_button_event_handler(lv_event_t* e) {
   p->load(pokemon_data);
 
   JsonObject data = doc["options"];
-  poke_options_t* game_options = new poke_options_t{data["brightness"]};
+  poke_options_t* game_options = new poke_options_t{data["brightness"], data["ball"]};
 
   Serial.printf("Home Brightness value: %d\n", game_options->brightness);
 

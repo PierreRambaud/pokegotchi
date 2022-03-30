@@ -48,7 +48,7 @@ Runner::Runner() {
   clear();
 }
 
-int32_t Runner::getColor(int8_t color) {
+uint32_t Runner::getColor(uint8_t color) {
   switch (color) {
     case 0:
       return BLACK;
@@ -71,7 +71,7 @@ int32_t Runner::getColor(int8_t color) {
   }
 }
 
-void Runner::drawPoint(int32_t x, int32_t y) {
+void Runner::drawPoint(uint32_t x, uint32_t y) {
   M5.Lcd.drawCircle(x, y, _size, getColor(_color));
   M5.Lcd.fillCircle(x, y, _size, getColor(_color));
 

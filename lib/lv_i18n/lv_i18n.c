@@ -98,6 +98,16 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"game.bird.maxscore", "Max Score:"},
     {"menu.game.draw", "Drawing"},
     {"menu.game.bird", "Floppy Bird"},
+    {"ball.poke", "Poké Ball"},
+    {"ball.super", "Super Ball"},
+    {"ball.hyper", "Hyper Ball"},
+    {"ball.master", "Master Ball"},
+    {"ball.love", "Love ball"},
+    {"ball.fast", "Fast ball"},
+    {"ball.memory", "Memory Ball"},
+    {"ball.moon", "Moon Ball"},
+    {"ball.dream", "Dream Ball"},
+    {"menu.options.ball", "Ball choice"},
     {NULL, NULL} // End mark
 };
 
@@ -201,6 +211,16 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"game.bird.maxscore", "Score max:"},
     {"menu.game.draw", "Dessin"},
     {"menu.game.bird", "Floppy Bird"},
+    {"ball.poke", "Poké Ball"},
+    {"ball.super", "Super Ball"},
+    {"ball.hyper", "Hyper Ball"},
+    {"ball.master", "Master Ball"},
+    {"ball.love", "Love ball"},
+    {"ball.fast", "Rapide ball"},
+    {"ball.memory", "Mémoire Ball"},
+    {"ball.moon", "Lune Ball"},
+    {"ball.dream", "Rêve Ball"},
+    {"menu.options.ball", "Choix de la Ball"},
     {NULL, NULL} // End mark
 };
 

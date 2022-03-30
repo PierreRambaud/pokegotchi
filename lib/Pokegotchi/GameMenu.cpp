@@ -21,12 +21,27 @@ LV_IMG_DECLARE(menu_game_draw_pressed)
 LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 
+LV_IMG_DECLARE(ball_dream)
+LV_IMG_DECLARE(ball_fast)
+LV_IMG_DECLARE(ball_hyper)
+LV_IMG_DECLARE(ball_love)
+LV_IMG_DECLARE(ball_master)
+LV_IMG_DECLARE(ball_memory)
+LV_IMG_DECLARE(ball_moon)
+LV_IMG_DECLARE(ball_poke)
+LV_IMG_DECLARE(ball_super)
+
 static void save_game_event_handler(lv_event_t*);
 static void open_options_event_handler(lv_event_t*);
 static void open_pokemon_event_handler(lv_event_t*);
 static void trainercard_event_handler(lv_event_t*);
 static void run_game_event_handler(lv_event_t*);
 static void slider_set_brightness_event_cb(lv_event_t*);
+static void choice_ball_event_cb(lv_event_t*);
+
+const lv_img_dsc_t* balls_choice_images[9] = {
+    &ball_poke, &ball_super, &ball_hyper, &ball_master, &ball_love, &ball_fast, &ball_memory, &ball_moon, &ball_dream,
+};
 
 GameMenu* GameMenu::_instance = nullptr;
 
@@ -92,41 +107,56 @@ void GameMenu::display_options() {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
-  static lv_coord_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 10, LV_GRID_TEMPLATE_LAST};
-  static lv_coord_t options_grid_row_dsc[] = {LV_GRID_CONTENT, /*Title*/
-                                              5,               /*Separator*/
-                                              LV_GRID_CONTENT, /*Box title*/
-                                              30,              /*Boxes*/
-                                              5,               /*Separator*/
-                                              LV_GRID_CONTENT, /*Box title*/
-                                              30,              /*Boxes*/
-                                              LV_GRID_TEMPLATE_LAST};
+  static lv_coord_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 30, LV_GRID_TEMPLATE_LAST};
+  static lv_coord_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, LV_GRID_TEMPLATE_LAST};
 
   lv_obj_set_grid_dsc_array(_menu_child_screen, options_grid_col_dsc, options_grid_row_dsc);
 
   lv_obj_t* options_title = lv_label_create(_menu_child_screen);
   lv_label_set_text(options_title, _("menu.options.title"));
   lv_obj_add_style(options_title, &style_default_title, 0);
-  lv_obj_set_grid_cell(options_title, LV_GRID_ALIGN_START, 1, 2, LV_GRID_ALIGN_CENTER, 0, 1);
-
-  lv_obj_t* brightness_slider_label = lv_label_create(_menu_child_screen);
-  lv_obj_t* brightness_slider = lv_slider_create(_menu_child_screen);
-  lv_obj_set_width(brightness_slider, LV_PCT(95));
-  lv_slider_set_value(brightness_slider, Game::getInstance()->get_options()->brightness, LV_ANIM_OFF);
-  lv_obj_set_grid_cell(brightness_slider, LV_GRID_ALIGN_CENTER, 1, 2, LV_GRID_ALIGN_CENTER, 3, 1);
+  lv_obj_set_grid_cell(options_title, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_CENTER, 0, 1);
 
   lv_obj_t* brightness_label = lv_label_create(_menu_child_screen);
   lv_label_set_text(brightness_label, _("menu.options.brightness"));
-  lv_obj_set_grid_cell(brightness_label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 2, 1);
+  lv_obj_set_grid_cell(brightness_label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 1, 1);
   lv_obj_add_style(brightness_label, &style_default_text, 0);
+
+  lv_obj_t* brightness_slider_label = lv_label_create(_menu_child_screen);
+  lv_obj_t* brightness_slider = lv_slider_create(_menu_child_screen);
+  lv_obj_set_width(brightness_slider, LV_PCT(90));
+  lv_slider_set_value(brightness_slider, Game::getInstance()->get_options()->brightness, LV_ANIM_OFF);
+  lv_obj_set_grid_cell(brightness_slider, LV_GRID_ALIGN_CENTER, 1, 2, LV_GRID_ALIGN_CENTER, 2, 1);
 
   char buf[8];
   lv_snprintf(buf, sizeof(buf), "%d%%", Game::getInstance()->get_options()->brightness);
   lv_label_set_text(brightness_slider_label, buf);
   lv_obj_add_style(brightness_slider_label, &style_default_text, 0);
   lv_obj_align_to(brightness_slider_label, brightness_slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
-  lv_obj_set_grid_cell(brightness_slider_label, LV_GRID_ALIGN_CENTER, 1, 2, LV_GRID_ALIGN_CENTER, 4, 1);
+  lv_obj_set_grid_cell(brightness_slider_label, LV_GRID_ALIGN_CENTER, 1, 2, LV_GRID_ALIGN_CENTER, 3, 1);
   lv_obj_add_event_cb(brightness_slider, slider_set_brightness_event_cb, LV_EVENT_VALUE_CHANGED, brightness_slider_label);
+
+  lv_obj_t* ball_label = lv_label_create(_menu_child_screen);
+  lv_label_set_text(ball_label, _("menu.options.ball"));
+  lv_obj_set_grid_cell(ball_label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 4, 1);
+  lv_obj_add_style(ball_label, &style_default_text, 0);
+
+  lv_obj_t* ball_choice_dropdown = lv_dropdown_create(_menu_child_screen);
+  lv_dropdown_clear_options(ball_choice_dropdown);
+
+  const char* balls_choice[9] = {_("ball.poke"), _("ball.super"), _("ball.hyper"), _("ball.master"), _("ball.love"), _("ball.fast"), _("ball.memory"), _("ball.moon"), _("ball.dream")};
+
+  for (int8_t i = 0; i <= 7; i++) {
+    lv_dropdown_add_option(ball_choice_dropdown, balls_choice[i], i);
+  }
+
+  lv_dropdown_set_selected(ball_choice_dropdown, Game::getInstance()->get_options()->ball);
+  lv_obj_set_grid_cell(ball_choice_dropdown, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 5, 1);
+  lv_obj_add_event_cb(ball_choice_dropdown, choice_ball_event_cb, LV_EVENT_ALL, NULL);
+
+  _ball_image = lv_img_create(_menu_child_screen);
+  lv_img_set_src(_ball_image, balls_choice_images[Game::getInstance()->get_options()->ball]);
+  lv_obj_set_grid_cell(_ball_image, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_START, 5, 1);
 }
 
 void GameMenu::display_games() {
@@ -149,18 +179,31 @@ void GameMenu::display_games() {
   lv_obj_add_event_cb(bird_button, run_game_event_handler, LV_EVENT_CLICKED, &game_floppybird);
 }
 
+void GameMenu::change_ball(uint16_t index) {
+  lv_img_set_src(_ball_image, balls_choice_images[index]);
+  Game::getInstance()->get_options()->ball = index;
+}
+
 static void slider_set_brightness_event_cb(lv_event_t* e) {
   lv_obj_t* slider = lv_event_get_target(e);
   char buf[8];
-  lv_snprintf(buf, sizeof(buf), "%d%%", (int32_t)lv_slider_get_value(slider));
+  lv_snprintf(buf, sizeof(buf), "%d%%", (uint32_t)lv_slider_get_value(slider));
 
   lv_obj_t* brightness_slider_label = (lv_obj_t*)lv_event_get_user_data(e);
   lv_label_set_text(brightness_slider_label, buf);
   lv_obj_report_style_change(&style_game_label);
 
-  set_lcd_brightness((int32_t)lv_slider_get_value(slider));
+  set_lcd_brightness((uint32_t)lv_slider_get_value(slider));
 
-  Game::getInstance()->get_options()->brightness = (int32_t)lv_slider_get_value(slider);
+  Game::getInstance()->get_options()->brightness = (uint32_t)lv_slider_get_value(slider);
+}
+
+static void choice_ball_event_cb(lv_event_t* e) {
+  lv_event_code_t code = lv_event_get_code(e);
+  lv_obj_t* obj = lv_event_get_target(e);
+  if (code == LV_EVENT_VALUE_CHANGED) {
+    GameMenu::getInstance()->change_ball(lv_dropdown_get_selected(obj));
+  }
 }
 
 /**
@@ -173,6 +216,7 @@ static void save_game_event_handler(lv_event_t* e) {
 
   StaticJsonDocument<900> doc;
   doc["options"]["brightness"] = Game::getInstance()->get_options()->brightness;
+  doc["options"]["ball"] = Game::getInstance()->get_options()->ball;
 
   JsonObject pokemon = doc.createNestedObject("pokemon");
   pokemon["number"] = p->get_number();
