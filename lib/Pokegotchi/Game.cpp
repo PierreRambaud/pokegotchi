@@ -88,6 +88,11 @@ Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
   lv_gif_set_src(_pokemon_image, p->get_image());
   lv_obj_align(_pokemon_image, LV_ALIGN_CENTER, 0, 160);
 
+  _pokemon_ball = lv_img_create(_screen);
+  lv_img_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
+  lv_obj_align(_pokemon_ball, LV_ALIGN_CENTER, 0, 90);
+  lv_obj_add_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
+
   lv_anim_t anim;
 
   lv_anim_init(&anim);
@@ -112,6 +117,12 @@ void Game::switch_to_day() {
   lv_anim_start(&_anim);
   lv_style_set_text_color(&style_game_label, lv_color_black());
   lv_obj_report_style_change(&style_game_label);
+
+  if (lv_obj_has_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN)) {
+    lv_obj_clear_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN);
+  }
+
+  lv_obj_add_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
 }
 
 void Game::switch_to_night() {
@@ -119,6 +130,11 @@ void Game::switch_to_night() {
   lv_anim_start(&_anim);
   lv_style_set_text_color(&style_game_label, lv_color_white());
   lv_obj_report_style_change(&style_game_label);
+
+  lv_obj_add_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN);
+
+  lv_img_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
+  lv_obj_clear_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
 }
 
 void Game::loop() {

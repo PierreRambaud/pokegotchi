@@ -50,6 +50,7 @@ namespace Pokegotchi {
     lv_anim_t _anim;
 
     lv_obj_t* _pokemon_image;
+    lv_obj_t* _pokemon_ball;
     lv_obj_t* _level_indic;
     lv_obj_t* _mood_bar;
     lv_obj_t* _sleepiness_bar;

@@ -8,6 +8,20 @@
 
 #define BAG_ITEMS_SIZE 15
 
+LV_IMG_DECLARE(ball_dream)
+LV_IMG_DECLARE(ball_fast)
+LV_IMG_DECLARE(ball_hyper)
+LV_IMG_DECLARE(ball_love)
+LV_IMG_DECLARE(ball_master)
+LV_IMG_DECLARE(ball_memory)
+LV_IMG_DECLARE(ball_moon)
+LV_IMG_DECLARE(ball_poke)
+LV_IMG_DECLARE(ball_super)
+
+static const lv_img_dsc_t* balls_choice_images[9] = {
+    &ball_poke, &ball_super, &ball_hyper, &ball_master, &ball_love, &ball_fast, &ball_memory, &ball_moon, &ball_dream,
+};
+
 namespace Pokegotchi {
   class GameMenu {
    public:

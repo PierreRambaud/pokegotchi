@@ -21,16 +21,6 @@ LV_IMG_DECLARE(menu_game_draw_pressed)
 LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 
-LV_IMG_DECLARE(ball_dream)
-LV_IMG_DECLARE(ball_fast)
-LV_IMG_DECLARE(ball_hyper)
-LV_IMG_DECLARE(ball_love)
-LV_IMG_DECLARE(ball_master)
-LV_IMG_DECLARE(ball_memory)
-LV_IMG_DECLARE(ball_moon)
-LV_IMG_DECLARE(ball_poke)
-LV_IMG_DECLARE(ball_super)
-
 static void save_game_event_handler(lv_event_t*);
 static void open_options_event_handler(lv_event_t*);
 static void open_pokemon_event_handler(lv_event_t*);
@@ -38,10 +28,6 @@ static void trainercard_event_handler(lv_event_t*);
 static void run_game_event_handler(lv_event_t*);
 static void slider_set_brightness_event_cb(lv_event_t*);
 static void choice_ball_event_cb(lv_event_t*);
-
-const lv_img_dsc_t* balls_choice_images[9] = {
-    &ball_poke, &ball_super, &ball_hyper, &ball_master, &ball_love, &ball_fast, &ball_memory, &ball_moon, &ball_dream,
-};
 
 GameMenu* GameMenu::_instance = nullptr;
 
