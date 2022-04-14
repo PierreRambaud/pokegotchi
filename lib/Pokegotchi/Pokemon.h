@@ -184,19 +184,19 @@ namespace Pokegotchi {
     }
 
     bool try_to_evolve() {
-      if (_level == 3) {
+      if (_level == 16) {
         if (_number == POKEMON_PICHU) {
           _number = POKEMON_PIKACHU;
         } else if (_number == POKEMON_EEVEE) {
           _number = POKEMON_FLAREON;
         }
-      } else if (_level == 16) {
+      } else if (_level == 34) {
         if (_number == POKEMON_PIKACHU) {
           _number = POKEMON_RAICHU;
         } else if (_number == POKEMON_FLAREON) {
           _number = POKEMON_VAPOREON;
         }
-      } else if (_level == 34) {
+      } else if (_level == 50) {
         if (_number == POKEMON_VAPOREON) {
           _number = POKEMON_JOLTEON;
         }
