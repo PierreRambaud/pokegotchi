@@ -30,6 +30,7 @@ static const lv_img_dsc_t* anim_day[ANIMATION_DAY] = {
     &background_16, &background_18, &background_20, &background_2, &background_4, &background_6,
 };
 
+static void end_game_msg_box_event_handler(lv_event_t* e);
 static void drag_clean_event_handler(lv_event_t* e);
 static bool check_object_intersect(lv_obj_t* a, lv_obj_t* b);
 static void night_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_night[id]); }
@@ -57,10 +58,6 @@ Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
   lv_anim_set_path_cb(&_anim, lv_anim_path_linear);
   lv_anim_set_time(&_anim, 600);
   lv_anim_set_repeat_count(&_anim, 0);
-
-  if (p->is_sleeping() == false) {
-    switch_to_day();
-  }
 
   _mood_bar = lv_game_bar_create(_screen, LV_PALETTE_GREEN, _("bar.mood"), 10, 25, MAX_MOOD);
   lv_bar_set_value(_mood_bar, 0, LV_ANIM_ON);
@@ -105,6 +102,12 @@ Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
 
   lv_anim_start(&anim);
 
+  if (p->is_sleeping() == false) {
+    switch_to_day();
+  } else {
+    put_in_pokeball();
+  }
+
   ActionsMenu* actions_menu = new ActionsMenu(new Menu(_main_screen));
   ActionsMenu::setInstance(actions_menu);
 
@@ -118,11 +121,18 @@ void Game::switch_to_day() {
   lv_style_set_text_color(&style_game_label, lv_color_black());
   lv_obj_report_style_change(&style_game_label);
 
-  if (lv_obj_has_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN)) {
+  if (lv_obj_is_valid(_pokemon_image) && lv_obj_has_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN)) {
     lv_obj_clear_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN);
   }
 
   lv_obj_add_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
+}
+
+void Game::put_in_pokeball() {
+  lv_obj_add_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN);
+
+  lv_img_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
+  lv_obj_clear_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
 }
 
 void Game::switch_to_night() {
@@ -131,14 +141,25 @@ void Game::switch_to_night() {
   lv_style_set_text_color(&style_game_label, lv_color_white());
   lv_obj_report_style_change(&style_game_label);
 
-  lv_obj_add_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN);
-
-  lv_img_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
-  lv_obj_clear_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
+  put_in_pokeball();
 }
 
 void Game::loop() {
+  if (game_over) {
+    return;
+  }
+
   Pokemon* p = Pokemon::getInstance();
+  if (p->is_ko()) {
+    Serial.println("Pokemon is ok!");
+    lv_obj_t* msg_box = display_alert(_("pokemon.ko.title"), _("pokemon.ko.title"));
+    lv_obj_t* close_btn = lv_msgbox_get_close_btn(msg_box);
+    lv_obj_add_event_cb(close_btn, end_game_msg_box_event_handler, LV_EVENT_PRESSED, NULL);
+
+    game_over = true;
+    return;
+  }
+
   p->loop();
 
   lv_bar_set_value(_mood_bar, p->get_mood(), LV_ANIM_ON);
@@ -154,6 +175,7 @@ void Game::loop() {
   if (p->get_pees() != _pees.size()) {
     create_pee();
   }
+
 }
 
 void Game::create_poo() {
@@ -298,4 +320,9 @@ static void drag_clean_event_handler(lv_event_t* e) {
   lv_obj_set_pos(obj, x, y);
 
   Game::getInstance()->try_to_clean();
+}
+
+static void end_game_msg_box_event_handler(lv_event_t* e) {
+  Serial.println("Restart game");
+  ESP.restart();
 }

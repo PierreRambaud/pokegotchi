@@ -83,6 +83,10 @@ void Pokemon::heal(int8_t restore_points) { _update_property(PROPERTY_LIFE, rest
 void Pokemon::sleep() {
   _is_sleeping = true;
   _update_property(PROPERTY_SLEEPINESS, 5);
+  _last_sleep_time = millis();
 }
 
-void Pokemon::wake_up() { _is_sleeping = false; }
+void Pokemon::wake_up() {
+  _is_sleeping = false;
+  _last_without_sleep_time = millis();
+}

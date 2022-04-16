@@ -35,6 +35,7 @@ namespace Pokegotchi {
 
     void abort_actions();
     void try_to_clean();
+    void put_in_pokeball();
 
     poke_options_t* get_options() { return _options; }
     poke_config_t* get_config() { return _config; }
@@ -58,6 +59,8 @@ namespace Pokegotchi {
     lv_obj_t* _life_bar;
 
     lv_obj_t* _clean;
+
+    bool game_over = false;
 
     std::vector<lv_obj_t*> _poos;
     std::vector<lv_obj_t*> _pees;
