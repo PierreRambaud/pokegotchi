@@ -108,6 +108,8 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"ball.moon", "Moon Ball"},
     {"ball.dream", "Dream Ball"},
     {"menu.options.ball", "Ball choice"},
+    {"pokemon.ko.title", "Pokémon K.O"},
+    {"pokemon.ko.message", "The game is over !"},
     {NULL, NULL} // End mark
 };
 
@@ -221,6 +223,8 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"ball.moon", "Lune Ball"},
     {"ball.dream", "Rêve Ball"},
     {"menu.options.ball", "Choix de la Ball"},
+    {"pokemon.ko.title", "Pokémon K.O"},
+    {"pokemon.ko.message", "La partie est terminée !"},
     {NULL, NULL} // End mark
 };
 
