@@ -126,7 +126,7 @@ void ActionsMenu::open() {
     lv_obj_clear_state(_play_button, LV_STATE_DISABLED);
   }
 
-  if (p->get_potions() == 0) {
+  if (p->get_potions() == 0 or p->is_sleeping()) {
     lv_imgbtn_set_state(_heal_button, LV_IMGBTN_STATE_DISABLED);
   } else {
     lv_obj_clear_state(_heal_button, LV_STATE_DISABLED);
