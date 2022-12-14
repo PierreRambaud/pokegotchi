@@ -66,6 +66,7 @@ namespace Pokegotchi {
 
     lv_obj_t* _bag_button;
     lv_obj_t* _clean_button;
+    lv_obj_t* _heal_button;
     lv_obj_t* _play_button;
     lv_obj_t* _sleep_button;
     lv_obj_t* _train_button;

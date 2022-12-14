@@ -260,7 +260,10 @@ void Game::action_eat(BagItem* item) {
   p->eat(item);
 }
 
-void Game::action_heal() {}
+void Game::action_heal() {
+  Pokemon* p = Pokemon::getInstance();
+  p->heal();
+}
 
 void Game::action_sleep() {
   Pokemon* p = Pokemon::getInstance();

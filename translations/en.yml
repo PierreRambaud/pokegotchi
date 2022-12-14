@@ -1,6 +1,7 @@
 en:
   actions.menu.bag: Bag
   actions.menu.sleep: Sleep
+  actions.menu.heal: Heal
   actions.menu.use: Use
   actions.menu.wake_up: Wake up
   bag.apple.description: Beautiful fruit

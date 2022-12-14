@@ -20,6 +20,7 @@ static inline uint32_t op_t(uint32_t val) { UNUSED(val); return 0; }
 static lv_i18n_phrase_t en_singulars[] = {
     {"actions.menu.bag", "Bag"},
     {"actions.menu.sleep", "Sleep"},
+    {"actions.menu.heal", "Heal"},
     {"actions.menu.use", "Use"},
     {"actions.menu.wake_up", "Wake up"},
     {"bag.apple.description", "Beautiful fruit"},
@@ -135,6 +136,7 @@ static const lv_i18n_lang_t en_lang = {
 static lv_i18n_phrase_t fr_singulars[] = {
     {"actions.menu.bag", "Sac"},
     {"actions.menu.sleep", "Dormir"},
+    {"actions.menu.heal", "Soigner"},
     {"actions.menu.use", "Utiliser"},
     {"actions.menu.wake_up", "Se réveiller"},
     {"bag.apple.description", "Quelle belle pomme"},

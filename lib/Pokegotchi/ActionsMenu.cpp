@@ -32,6 +32,9 @@ LV_IMG_DECLARE(menu_clean)
 LV_IMG_DECLARE(menu_clean_pressed)
 LV_IMG_DECLARE(menu_flute)
 LV_IMG_DECLARE(menu_flute_pressed)
+LV_IMG_DECLARE(menu_heal)
+LV_IMG_DECLARE(menu_heal_disabled)
+LV_IMG_DECLARE(menu_heal_pressed)
 LV_IMG_DECLARE(menu_play)
 LV_IMG_DECLARE(menu_play_disabled)
 LV_IMG_DECLARE(menu_play_pressed)
@@ -46,6 +49,7 @@ static int options_bag_scroll_value = 0;
 static lv_obj_t* create_row_item(lv_obj_t*, BagItem*);
 
 static void clean_event_handler(lv_event_t*);
+static void heal_event_handler(lv_event_t*);
 static void display_bag_items_event_handler(lv_event_t*);
 static void options_bag_scroll_value_event_cb(lv_event_t*);
 static void play_event_handler(lv_event_t*);
@@ -54,6 +58,10 @@ static void train_event_handler(lv_event_t*);
 static void use_item_event_handler(lv_event_t*);
 
 ActionsMenu* ActionsMenu::_instance = nullptr;
+
+void set_heal_menu_text(lv_obj_t* heal_label) {
+  lv_label_set_text_fmt(heal_label, "%s (%d)", _("actions.menu.heal"), Pokemon::getInstance()->get_potions());
+}
 
 ActionsMenu::ActionsMenu(Menu* menu) {
   _menu = menu;
@@ -93,6 +101,11 @@ ActionsMenu::ActionsMenu(Menu* menu) {
   _clean_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_clean, &menu_clean_pressed, _("actions.menu.clean"));
   lv_obj_add_event_cb(_clean_button, clean_event_handler, LV_EVENT_CLICKED, NULL);
 
+  _heal_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_heal, &menu_heal_pressed, _("actions.menu.heal"));
+  set_heal_menu_text(lv_obj_get_child(_heal_button, -1));
+  lv_imgbtn_set_src(_heal_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_heal_disabled, NULL);
+  lv_obj_add_event_cb(_heal_button, heal_event_handler, LV_EVENT_CLICKED, NULL);
+
   Serial.println("Buttons for actions menu created");
 
   toggle();
@@ -112,6 +125,14 @@ void ActionsMenu::open() {
     lv_obj_clear_state(_train_button, LV_STATE_DISABLED);
     lv_obj_clear_state(_play_button, LV_STATE_DISABLED);
   }
+
+  if (p->get_potions() == 0) {
+    lv_imgbtn_set_state(_heal_button, LV_IMGBTN_STATE_DISABLED);
+  } else {
+    lv_obj_clear_state(_heal_button, LV_STATE_DISABLED);
+  }
+
+  set_heal_menu_text(lv_obj_get_child(_heal_button, -1));
 
   _menu->open();
 }
@@ -150,6 +171,17 @@ static void clean_event_handler(lv_event_t* e) {
   ActionsMenu::getInstance()->toggle();
   Game* g = Game::getInstance();
   g->action_clean();
+}
+
+/**
+ * Clean up screen
+ *
+ * @param lv_event_t* e
+ */
+static void heal_event_handler(lv_event_t* e) {
+  ActionsMenu::getInstance()->toggle();
+  Game* g = Game::getInstance();
+  g->action_heal();
 }
 
 /**

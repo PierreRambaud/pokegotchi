@@ -31,6 +31,7 @@ namespace Pokegotchi {
   const unsigned long PERIOD_SLEEP = 5 * 1000UL;
   const unsigned long PERIOD_WITHOUT_SLEEP = 15 * 1000UL;
   const unsigned long PERIOD_SIMPLE_CHECK = 15 * 1000UL;
+  const unsigned long PERIOD_POTION = 60 * 1000UL;
 
   const int8_t MAX_LIFE = 100;
   const int8_t MAX_SLEEPINESS = 100;
@@ -38,6 +39,7 @@ namespace Pokegotchi {
   const int8_t MAX_HUNGER = 20;
   const int8_t MAX_POOS = 10;
   const int8_t MAX_PEES = 10;
+  const int8_t MAX_POTIONS = 3;
 
   const int8_t PROPERTY_SLEEPINESS = 1;
   const int8_t PROPERTY_LIFE = 2;
@@ -45,6 +47,7 @@ namespace Pokegotchi {
   const int8_t PROPERTY_HUNGER = 4;
   const int8_t PROPERTY_POOS = 5;
   const int8_t PROPERTY_PEES = 6;
+  const int8_t PROPERTY_POTIONS = 7;
 
   class Pokemon {
    public:
@@ -55,6 +58,7 @@ namespace Pokegotchi {
     static void setInstance(Pokemon* instance) { _instance = instance; }
     static Pokemon* getInstance() { return _instance; }
 
+    int8_t get_potions() { return _potions; }
     int8_t get_poos() { return _poos; }
     int8_t get_pees() { return _pees; }
     int8_t get_level() { return _level; }
@@ -69,13 +73,14 @@ namespace Pokegotchi {
     long get_last_hunger_time() { return _last_hunger_time; }
     long get_last_sleep_time() { return _last_sleep_time; }
     long get_last_without_sleep_time() { return _last_without_sleep_time; }
+    long get_last_potion_time() { return _last_potion_time; }
 
     bool is_sick() { return _is_sick; }
     bool is_sleeping() { return _is_sleeping; }
     bool is_ko() { return _is_ko; }
 
     void eat(BagItem* item);
-    void heal(int8_t number);
+    void heal();
     void train();
     void play();
     void sleep();
@@ -172,6 +177,7 @@ namespace Pokegotchi {
       _hunger = pokemon["hunger"];
       _sleepiness = pokemon["sleepiness"];
       _is_sleeping = pokemon["is_sleeping"];
+      _potions = pokemon["potions"];
       _poos = pokemon["poos"];
       _pees = pokemon["pees"];
 
@@ -181,6 +187,7 @@ namespace Pokegotchi {
       _last_hunger_time = pokemon_time["hunger"];
       _last_sleep_time = pokemon_time["sleep"];
       _last_without_sleep_time = pokemon_time["without_sleep"];
+      _last_potion_time = pokemon_time["potion"];
     }
 
     bool try_to_evolve() {
@@ -214,6 +221,7 @@ namespace Pokegotchi {
 
     int _number = POKEMON_PICHU;
 
+    int8_t _potions = 0;
     int8_t _poos = 0;
     int8_t _pees = 0;
     int8_t _level = 1;
@@ -241,6 +249,9 @@ namespace Pokegotchi {
       } else if (what == PROPERTY_POOS) {
         max_value = MAX_POOS;
         property = &_poos;
+      } else if (what == PROPERTY_POTIONS) {
+        max_value = MAX_POTIONS;
+        property = &_potions;
       } else if (what == PROPERTY_PEES) {
         max_value = MAX_PEES;
         property = &_pees;
@@ -268,6 +279,7 @@ namespace Pokegotchi {
     long _last_sleep_time;
     long _last_without_sleep_time;
     long _last_simple_check_time;
+    long _last_potion_time;
   };
 }  // namespace Pokegotchi
 #endif

@@ -20,6 +20,10 @@ void Pokemon::loop() {
     _update_property(PROPERTY_MOOD, -1);
   }
 
+  if (check_action_time(_last_potion_time, PERIOD_POTION)) {
+    _update_property(PROPERTY_POTIONS, 1);
+  }
+
   if (is_sleeping() == true) {
     if (check_action_time(_last_sleep_time, PERIOD_SLEEP)) {
       sleep();
@@ -78,7 +82,10 @@ void Pokemon::eat(BagItem* item) {
   _update_property(PROPERTY_PEES, item->specs->pee);
 }
 
-void Pokemon::heal(int8_t restore_points) { _update_property(PROPERTY_LIFE, restore_points); }
+void Pokemon::heal() {
+  _update_property(PROPERTY_LIFE, 25);
+  _update_property(PROPERTY_POTIONS, -1);
+}
 
 void Pokemon::sleep() {
   _is_sleeping = true;

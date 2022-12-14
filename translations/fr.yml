@@ -1,6 +1,7 @@
 fr:
   actions.menu.bag: Sac
   actions.menu.sleep: Dormir
+  actions.menu.heal: Soigner
   actions.menu.use: Utiliser
   actions.menu.wake_up: Se réveiller
   bag.apple.description: Quelle belle pomme

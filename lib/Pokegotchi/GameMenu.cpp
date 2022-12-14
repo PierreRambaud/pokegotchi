@@ -212,6 +212,7 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon["hunger"] = p->get_hunger();
   pokemon["sleepiness"] = p->get_sleepiness();
   pokemon["is_sleeping"] = p->is_sleeping();
+  pokemon["potions"] = p->get_potions();
   pokemon["poos"] = p->get_poos();
   pokemon["pees"] = p->get_pees();
 
@@ -222,6 +223,7 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon_time["hunger"] = p->get_last_hunger_time() - current_time;
   pokemon_time["sleep"] = p->get_last_sleep_time() - current_time;
   pokemon_time["without_sleep"] = p->get_last_without_sleep_time() - current_time;
+  pokemon_time["potion"] = p->get_last_potion_time() - current_time;
 
   if (sd_begin() == false) {
     display_alert("", _("sd.card.not_found"));
