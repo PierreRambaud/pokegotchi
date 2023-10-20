@@ -1,3 +1,12 @@
+build:
+	pio run
+
+upload:
+	pio run -t upload
+
+uploadfs:
+	pio run -t uploadfs
+
 install:
 	npm i lv_i18n -g
 
