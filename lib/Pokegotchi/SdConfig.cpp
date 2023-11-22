@@ -5,9 +5,7 @@
 
 using namespace Pokegotchi;
 
-SdConfig::SdConfig(poke_config_t* global_config) {
-  _config = global_config;
-}
+SdConfig::SdConfig(poke_config_t* global_config) { _config = global_config; }
 
 char* extract_file_name_without_extension(const char* filename) {
   char* result = strdup(filename);
@@ -31,7 +29,7 @@ void SdConfig::_add_save_file_to_list(poke_save_file_info** list, const char* fi
 
   size_t path_len = strlen(_config->save_files_path);
   size_t name_len = strlen(file_name);
-  (*list)[*count].path = (char*)malloc(path_len + 1 + name_len + 1); // +1 pour le séparateur de répertoire et +1 pour le caractère nul
+  (*list)[*count].path = (char*)malloc(path_len + 1 + name_len + 1);  // +1 pour le séparateur de répertoire et +1 pour le caractère nul
   if ((*list)[*count].path == NULL) {
     display_alert("", "Failed to allocate memory");
     free((*list)[*count].name);

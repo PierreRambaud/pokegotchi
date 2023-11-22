@@ -1,3 +1,14 @@
+SRC_DIRS := lib
+
+# Fichiers source (C++ uniquement)
+SRC_FILES := $(shell find $(SRC_DIRS) -name "*.cpp" -o -name "*.h")
+
+# Exécutable Clang Format
+CLANG_FORMAT := clang-format
+
+format: $(SRC_FILES)
+	$(CLANG_FORMAT) -i -style=file $^
+
 build:
 	pio run
 

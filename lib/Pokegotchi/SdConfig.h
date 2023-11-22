@@ -21,7 +21,7 @@ namespace Pokegotchi {
     void free_list();
 
    private:
-    void _add_save_file_to_list(poke_save_file_info** list, const char* file_name,  int* count);
+    void _add_save_file_to_list(poke_save_file_info** list, const char* file_name, int* count);
 
     poke_config_t* _config;
 

@@ -59,9 +59,7 @@ static void use_item_event_handler(lv_event_t*);
 
 ActionsMenu* ActionsMenu::_instance = nullptr;
 
-void set_heal_menu_text(lv_obj_t* heal_label) {
-  lv_label_set_text_fmt(heal_label, "%s (%d)", _("actions.menu.heal"), Pokemon::getInstance()->get_potions());
-}
+void set_heal_menu_text(lv_obj_t* heal_label) { lv_label_set_text_fmt(heal_label, "%s (%d)", _("actions.menu.heal"), Pokemon::getInstance()->get_potions()); }
 
 ActionsMenu::ActionsMenu(Menu* menu) {
   _menu = menu;
@@ -105,7 +103,6 @@ ActionsMenu::ActionsMenu(Menu* menu) {
   set_heal_menu_text(lv_obj_get_child(_heal_button, -1));
   lv_imgbtn_set_src(_heal_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_heal_disabled, NULL);
   lv_obj_add_event_cb(_heal_button, heal_event_handler, LV_EVENT_CLICKED, NULL);
-
 
   serial_printf("ActionsMenu", "Buttons for actions menu created");
 

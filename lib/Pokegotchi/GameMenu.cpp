@@ -193,9 +193,7 @@ static void choice_ball_event_cb(lv_event_t* e) {
   }
 }
 
-static void click_button_save_game_event_handler(lv_event_t* e) {
-  save_game_event_handler(e);
-}
+static void click_button_save_game_event_handler(lv_event_t* e) { save_game_event_handler(e); }
 
 /**
  * Save game information

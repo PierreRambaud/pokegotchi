@@ -175,7 +175,6 @@ void Game::loop() {
   if (p->get_pees() != _pees.size()) {
     create_pee();
   }
-
 }
 
 void Game::create_poo() {
