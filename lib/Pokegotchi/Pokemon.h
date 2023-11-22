@@ -256,7 +256,7 @@ namespace Pokegotchi {
         max_value = MAX_PEES;
         property = &_pees;
       } else {
-        Serial.printf("Property %d not found\n", what);
+        serial_printf("Pokemon", "Property %d not found", what);
         return;
       }
 

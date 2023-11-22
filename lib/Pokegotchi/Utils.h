@@ -11,6 +11,28 @@ static lv_style_t style_game_bar_bg;
 static lv_style_t style_game_bar_indic;
 static lv_style_t style_game_label;
 
+static const size_t MAX_SERIAL_BUFFER = 256;
+
+/**
+ * Serial printf wrapper to add a context and line break
+ * @param const char* context
+ * @param const char* format
+ * @param ...
+ */
+static inline void serial_printf(const char* context, const char* format, ...) {
+  char buffer[MAX_SERIAL_BUFFER];
+
+  va_list args;
+  va_start(args, format);
+
+  vsnprintf(buffer, sizeof(buffer), format, args);
+
+  va_end(args);
+
+  Serial.printf("[%s] ", context);
+  Serial.println(buffer);
+}
+
 /**
  * Create a new screen
  *
@@ -166,9 +188,10 @@ static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t 
 
 /**
  * Change the brightness value of the screen
+ * @param int32_t value
  */
 static inline void set_lcd_brightness(int32_t value) {
-  Serial.printf("Brightness new value: %d\n", value);
+  serial_printf("Options", "Brightness new value: %d", value);
   M5.Axp.SetLcdVoltage(2500 + ((value * 800) / 100));
 }
 

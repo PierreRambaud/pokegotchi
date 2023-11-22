@@ -106,7 +106,8 @@ ActionsMenu::ActionsMenu(Menu* menu) {
   lv_imgbtn_set_src(_heal_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_heal_disabled, NULL);
   lv_obj_add_event_cb(_heal_button, heal_event_handler, LV_EVENT_CLICKED, NULL);
 
-  Serial.println("Buttons for actions menu created");
+
+  serial_printf("ActionsMenu", "Buttons for actions menu created");
 
   toggle();
 }
@@ -292,7 +293,7 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
   lv_obj_t* btn_label = lv_label_create(btn);
   lv_label_set_text(btn_label, _("actions.menu.use"));
 
-  Serial.printf("Create bag item: %s\n", item->name);
+  serial_printf("ActionsMenu", "Create bag item: %s", item->name);
 
   return cont;
 }

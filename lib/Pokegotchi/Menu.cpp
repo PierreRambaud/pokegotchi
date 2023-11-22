@@ -47,7 +47,7 @@ void Menu::refresh_battery_status() {
 
   const char* battery_image = "";
   if (M5.Axp.isCharging() == true) {
-    Serial.println("Battery is charging");
+    serial_printf("Menu", "Battery is charging");
     battery_image = "L:/menu/battery/charging.bin";
   } else {
     float battery_level = M5.Axp.GetBatteryLevel();
@@ -59,7 +59,7 @@ void Menu::refresh_battery_status() {
       battery_image = "L:/menu/battery/low.bin";
     }
 
-    Serial.printf("Battery status: %f\n", battery_level);
+    serial_printf("Menu", "Battery status: %f", battery_level);
   }
 
   if (_previous_battery_image != battery_image) {

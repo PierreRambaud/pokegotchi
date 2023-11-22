@@ -40,7 +40,7 @@ namespace Pokegotchi {
         lv_obj_del(_menu_child_screen);
       }
 
-      Serial.println("Hide ActionsMenu");
+      serial_printf("ActionsMenu", "Hide ActionsMenu");
       _menu->close();
     }
     void toggle() {

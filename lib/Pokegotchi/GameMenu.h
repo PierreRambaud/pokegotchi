@@ -38,7 +38,7 @@ namespace Pokegotchi {
       }
 
       _menu->close();
-      Serial.println("Hide GameMenu");
+      serial_printf("GameMenu", "Hide GameMenu");
     }
     void toggle() {
       if (lv_obj_has_flag(_menu->get_screen(), LV_OBJ_FLAG_HIDDEN)) {

@@ -1,6 +1,7 @@
 #include <M5Core2.h>
 #include <lv_i18n.h>
 #include "DrawingBoard.h"
+#include "Utils.h"
 
 using namespace DrawingBoard;
 
@@ -75,7 +76,7 @@ void Runner::drawPoint(uint32_t x, uint32_t y) {
   M5.Lcd.drawCircle(x, y, _size, getColor(_color));
   M5.Lcd.fillCircle(x, y, _size, getColor(_color));
 
-  Serial.printf("Draw point: %d, %d\r\n", x, y);
+  serial_printf("DrawingBoard", "Draw point: %d, %d\r\n", x, y);
 }
 
 void Runner::changeColor() {
@@ -87,7 +88,7 @@ void Runner::changeColor() {
   lv_style_set_text_color(&style_color_label, lv_color_hex3(getColor(_color)));
   lv_obj_report_style_change(&style_color_label);
 
-  Serial.printf("Color changed: %d\r\n", _color);
+  serial_printf("DrawingBoard", "Color changed: %d\r\n", _color);
 }
 
 void Runner::changeSize() {
@@ -97,7 +98,7 @@ void Runner::changeSize() {
   }
 
   lv_label_set_text_fmt(_size_label, _("game.draw.size"), _size);
-  Serial.printf("Size changed: %d\r\n", _size);
+  serial_printf("DrawingBoard", "Size changed: %d\r\n", _size);
 }
 
 void Runner::drawPoints() {

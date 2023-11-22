@@ -2,6 +2,7 @@
 #define POKEGOTCHI_HOME
 
 #include <lvgl.h>
+#include "SdConfig.h"
 #include "Config.h"
 
 namespace Pokegotchi {
@@ -30,9 +31,9 @@ namespace Pokegotchi {
    private:
     static Home* _instance;
 
+    SdConfig* _sd_config;
     poke_config_t* _config;
 
-    bool _has_save_file = false;
     bool _loaded = false;
     bool _closed = false;
 

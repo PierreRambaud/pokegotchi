@@ -21,6 +21,7 @@ LV_IMG_DECLARE(menu_game_draw_pressed)
 LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 
+static void click_button_save_game_event_handler(lv_event_t*);
 static void save_game_event_handler(lv_event_t*);
 static void open_options_event_handler(lv_event_t*);
 static void open_pokemon_event_handler(lv_event_t*);
@@ -35,7 +36,7 @@ GameMenu::GameMenu(Menu* menu) {
   _menu = menu;
 
   lv_obj_t* save_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_save, &menu_save_pressed, _("menu.save"));
-  lv_obj_add_event_cb(save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
+  lv_obj_add_event_cb(save_button, click_button_save_game_event_handler, LV_EVENT_CLICKED, NULL);
 
   lv_obj_t* pokemon_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_pokeball, &menu_pokeball_pressed, "Pokémon");
   lv_obj_add_event_cb(pokemon_button, open_pokemon_event_handler, LV_EVENT_CLICKED, NULL);
@@ -46,7 +47,7 @@ GameMenu::GameMenu(Menu* menu) {
   lv_obj_t* trainercard_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_trainercard, &menu_trainercard_pressed, _("menu.games"));
   lv_obj_add_event_cb(trainercard_button, trainercard_event_handler, LV_EVENT_CLICKED, NULL);
 
-  Serial.println("Buttons for menu created");
+  serial_printf("GameMenu", "Buttons for menu created");
 
   toggle();
 }
@@ -192,6 +193,10 @@ static void choice_ball_event_cb(lv_event_t* e) {
   }
 }
 
+static void click_button_save_game_event_handler(lv_event_t* e) {
+  save_game_event_handler(e);
+}
+
 /**
  * Save game information
  *
@@ -230,7 +235,10 @@ static void save_game_event_handler(lv_event_t* e) {
     return;
   }
 
-  File file = SD.open(Game::getInstance()->get_config()->save_file_path, FILE_WRITE);
+  char json_path[50];
+  strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
+  strcat(json_path, "/save.json");
+  File file = SD.open(json_path, FILE_WRITE);
   if (!file) {
     display_alert("", _("game.save.failed"));
   } else {
@@ -272,7 +280,5 @@ static void trainercard_event_handler(lv_event_t* e) { GameMenu::getInstance()->
  */
 static void run_game_event_handler(lv_event_t* e) {
   int8_t game_number = *((int8_t*)lv_event_get_user_data(e));
-  Serial.printf("%d\n", game_number);
-
   GameSwitcher::Runner::getInstance()->switch_game(game_number);
 }

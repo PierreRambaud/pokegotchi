@@ -4,6 +4,7 @@
 #include <lv_i18n.h>
 #include "Options.h"
 #include "Home.h"
+#include "SdConfig.h"
 #include "Game.h"
 #include "Utils.h"
 #include "Pokemon.h"
@@ -15,22 +16,22 @@ LV_IMG_DECLARE(background_16)
 
 static void close_msg_box_event_handler(lv_event_t* e);
 static void load_button_event_handler(lv_event_t* e);
+static void load_file_button_event_handler(lv_event_t* e);
 static void start_button_event_handler(lv_event_t* e);
 static void start_new_game_event_handler(lv_event_t* e);
+
+struct event_load_game_data {
+  SdConfig* sd_config;
+  int index;
+};
 
 Home* Home::_instance = nullptr;
 
 Home::Home(poke_config_t* global_config, lv_obj_t* main_screen) {
   _config = global_config;
+  _sd_config = new SdConfig(global_config);
+  _sd_config->load_save_files();
   _main_screen = main_screen;
-  if (sd_begin()) {
-    if (SD.exists(_config->save_file_path)) {
-      _has_save_file = true;
-    }
-
-    SD.end();
-  }
-
   _screen = create_screen(_main_screen);
 
   lv_obj_t* background_image = lv_img_create(_screen);
@@ -77,10 +78,10 @@ void Home::load_buttons() {
     lv_label_set_text(label, _("home.start"));
     lv_obj_center(label);
 
-    if (_has_save_file == true) {
+    if (_sd_config->has_save_files() == true) {
       lv_obj_t* load_button = lv_btn_create(_screen);
       lv_obj_align(load_button, LV_ALIGN_CENTER, 0, 60);
-      lv_obj_add_event_cb(load_button, load_button_event_handler, LV_EVENT_CLICKED, NULL);
+      lv_obj_add_event_cb(load_button, load_button_event_handler, LV_EVENT_CLICKED, _sd_config);
 
       label = lv_label_create(load_button);
       lv_label_set_text(label, _("home.load"));
@@ -123,7 +124,7 @@ static void start_button_event_handler(lv_event_t* e) {
  */
 static void start_new_game_event_handler(lv_event_t* e) {
   int pokemon_number = *((int*)lv_event_get_user_data(e));
-  Serial.printf("New game start with pokemon number: %d\n", pokemon_number);
+  serial_printf("Home", "New game start with pokemon number: %d", pokemon_number);
 
   Home* h = Home::getInstance();
   Pokemon* p = new Pokemon(pokemon_number);
@@ -142,21 +143,37 @@ static void close_msg_box_event_handler(lv_event_t* e) {
   lv_msgbox_close(choice_box);
 }
 
+static void load_button_event_handler(lv_event_t* e) {
+  lv_obj_t* choice_box = display_alert(_("home.start.choice"), "");
+  lv_obj_t* save_list = lv_list_create(choice_box);
+  lv_obj_set_size(save_list, 180, 100);
+  SdConfig* sd_config = (SdConfig*)lv_event_get_user_data(e);
+
+  poke_save_file_info* save_files = sd_config->get_save_files();
+
+  for (int i = 0; i < sd_config->get_save_count(); i++) {
+    event_load_game_data* event_data = new event_load_game_data;
+    event_data->sd_config = sd_config;
+    event_data->index = i;
+
+    lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
+    lv_obj_add_event_cb(list_btn, load_file_button_event_handler, LV_EVENT_CLICKED, event_data);
+    lv_obj_add_event_cb(list_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
+  }
+}
+
 /**
  * Load game if data exists on SD card
  *
  * @param lv_event_t* e
  */
-static void load_button_event_handler(lv_event_t* e) {
+static void load_file_button_event_handler(lv_event_t* e) {
   StaticJsonDocument<900> doc;
+  event_load_game_data* event_data = (event_load_game_data*)lv_event_get_user_data(e);
+  poke_save_file_info* save_files = event_data->sd_config->get_save_files();
 
-  if (sd_begin() == false) {
-    display_alert("", _("sd.card.not_found"));
-    return;
-  }
-  Home* h = Home::getInstance();
-  poke_config_t* global_config = h->get_config();
-  File file = SD.open(global_config->save_file_path);
+  sd_begin();
+  File file = SD.open(save_files[event_data->index].path);
   if (!file) {
     display_alert("", _("game.load.error"));
     return;
@@ -168,12 +185,16 @@ static void load_button_event_handler(lv_event_t* e) {
 
   if (error) {
     display_alert("", _("game.load.unserialize.error"));
-    Serial.println("deserializeJson() failed: ");
-    Serial.println(error.c_str());
+    serial_printf("Home", "deserializeJson() failed: ");
+    serial_printf("Home", "Error: %s", error.c_str());
     return;
   }
 
+  Home* h = Home::getInstance();
+  poke_config_t* global_config = h->get_config();
   JsonObject pokemon_data = doc["pokemon"];
+
+  serial_printf("Home", "Load pokemon %d", (int)pokemon_data["number"]);
 
   Pokemon* p = new Pokemon((int)pokemon_data["number"]);
   Pokemon::setInstance(p);
@@ -182,10 +203,15 @@ static void load_button_event_handler(lv_event_t* e) {
   JsonObject data = doc["options"];
   poke_options_t* game_options = new poke_options_t{data["brightness"], data["ball"]};
 
-  Serial.printf("Home Brightness value: %d\n", game_options->brightness);
+  serial_printf("Home", "Brightness value: %d", game_options->brightness);
+  serial_printf("Home", "Ball value: %d", game_options->ball);
 
   lv_obj_t* main_screen = h->get_main_screen();
   Home::releaseInstance();
+
+  // Clear memory
+  event_data->sd_config->free_list();
+  delete event_data;
 
   Game* g = new Game(global_config, main_screen, p, game_options);
   Game::setInstance(g);
