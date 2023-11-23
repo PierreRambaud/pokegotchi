@@ -201,10 +201,12 @@ static void load_file_button_event_handler(lv_event_t* e) {
   p->load(pokemon_data);
 
   JsonObject data = doc["options"];
-  poke_options_t* game_options = new poke_options_t{data["brightness"], data["ball"]};
+
+  poke_options_t* game_options = new poke_options_t{data["brightness"], data["ball"], strdup(save_files[event_data->index].path)};
 
   serial_printf("Home", "Brightness value: %d", game_options->brightness);
   serial_printf("Home", "Ball value: %d", game_options->ball);
+  serial_printf("Home", "Save file path: %s", game_options->save_file_path);
 
   lv_obj_t* main_screen = h->get_main_screen();
   Home::releaseInstance();

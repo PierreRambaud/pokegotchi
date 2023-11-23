@@ -11,6 +11,7 @@ namespace Pokegotchi {
   struct game_options_struct {
     uint8_t brightness;
     uint8_t ball;
+    char* save_file_path;
   };
 
   typedef struct game_options_struct poke_options_t;

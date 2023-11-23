@@ -26,9 +26,10 @@ namespace Pokegotchi {
   class GameMenu {
    public:
     explicit GameMenu(Menu*);
-    void display_pokemon();
-    void display_options();
     void display_games();
+    void display_options();
+    void display_pokemon();
+    void display_saves();
     void change_ball(uint16_t);
 
     void close() {

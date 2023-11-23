@@ -38,12 +38,19 @@ static void day_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img
 
 Game* Game::_instance = nullptr;
 
-Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p, poke_options_t* game_options) : Game::Game(global_config, main_screen, p) {
+Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p, poke_options_t* game_options) {
   _options = game_options;
+  _initialize(global_config, main_screen, p);
+
   set_lcd_brightness((int32_t)_options->brightness);
 }
 
 Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
+  _options = new poke_options_t{OPTIONS_BRIGHTNESS_DEFAULT, OPTIONS_BALL_DEFAULT, NULL};
+  _initialize(global_config, main_screen, p);
+}
+
+void Game::_initialize(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
   _config = global_config;
   _main_screen = main_screen;
   _screen = create_screen(_main_screen);
@@ -86,6 +93,7 @@ Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
   lv_obj_align(_pokemon_image, LV_ALIGN_CENTER, 0, 160);
 
   _pokemon_ball = lv_img_create(_screen);
+  serial_printf("Game", "Ball second init %d", _options->ball);
   lv_img_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
   lv_obj_align(_pokemon_ball, LV_ALIGN_CENTER, 0, 90);
   lv_obj_add_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);

@@ -2,6 +2,7 @@
 #include <ArduinoJson.h>
 #include <lv_i18n.h>
 #include <GameSwitcher.h>
+#include "SdConfig.h"
 #include "Game.h"
 #include "GameMenu.h"
 
@@ -21,14 +22,17 @@ LV_IMG_DECLARE(menu_game_draw_pressed)
 LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 
+static void choice_ball_event_cb(lv_event_t*);
 static void click_button_save_game_event_handler(lv_event_t*);
-static void save_game_event_handler(lv_event_t*);
+static void game_new_save_event_handler(lv_event_t*);
+static void create_new_save_event_handler(lv_event_t*);
+static void cancel_new_save_event_handler(lv_event_t*);
 static void open_options_event_handler(lv_event_t*);
 static void open_pokemon_event_handler(lv_event_t*);
-static void trainercard_event_handler(lv_event_t*);
 static void run_game_event_handler(lv_event_t*);
+static void save_game_event_handler(lv_event_t*);
 static void slider_set_brightness_event_cb(lv_event_t*);
-static void choice_ball_event_cb(lv_event_t*);
+static void trainercard_event_handler(lv_event_t*);
 
 GameMenu* GameMenu::_instance = nullptr;
 
@@ -166,9 +170,78 @@ void GameMenu::display_games() {
   lv_obj_add_event_cb(bird_button, run_game_event_handler, LV_EVENT_CLICKED, &game_floppybird);
 }
 
+void GameMenu::display_saves() {
+  lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
+
+  _menu_child_screen = create_child_screen(_menu->get_screen());
+  lv_obj_set_style_bg_opa(_menu_child_screen, LV_STATE_DEFAULT, LV_OPA_TRANSP);
+  lv_obj_t* save_list = lv_list_create(_menu_child_screen);
+  lv_obj_set_pos(save_list, 10, 20);
+
+  SdConfig* sd_config = new SdConfig(Game::getInstance()->get_config());
+  sd_config->load_save_files();
+
+  poke_save_file_info* save_files = sd_config->get_save_files();
+
+  for (int i = 0; i < sd_config->get_save_count(); i++) {
+    lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
+    lv_obj_add_event_cb(list_btn, save_game_event_handler, LV_EVENT_CLICKED, save_files[i].name);
+  }
+
+  lv_obj_t* new_save_button = lv_btn_create(_menu_child_screen);
+  lv_obj_align(new_save_button, LV_ALIGN_CENTER, 0, 25);
+  lv_obj_add_event_cb(new_save_button, game_new_save_event_handler, LV_EVENT_CLICKED, _menu_child_screen);
+
+  lv_obj_t* label = lv_label_create(new_save_button);
+  lv_label_set_text(label, _("game.save.new.button"));
+  lv_obj_center(label);
+}
+
 void GameMenu::change_ball(uint16_t index) {
   lv_img_set_src(_ball_image, balls_choice_images[index]);
   Game::getInstance()->get_options()->ball = index;
+}
+
+static void game_new_save_event_handler(lv_event_t* e) {
+  lv_obj_t* screen = (lv_obj_t*)lv_event_get_user_data(e);
+  lv_obj_clean(screen);
+
+  lv_obj_t* keyboard_textarea = lv_textarea_create(screen);
+  lv_textarea_set_one_line(keyboard_textarea, true);
+  lv_obj_align(keyboard_textarea, LV_ALIGN_TOP_MID, 0, 10);
+  lv_obj_add_state(keyboard_textarea, LV_STATE_FOCUSED);
+  lv_obj_align(keyboard_textarea, LV_ALIGN_TOP_MID, 0, 0);
+
+  lv_obj_t* keyboard = lv_keyboard_create(screen);
+  lv_obj_add_event_cb(keyboard, create_new_save_event_handler, LV_EVENT_READY, keyboard_textarea);
+  lv_obj_add_event_cb(keyboard, cancel_new_save_event_handler, LV_EVENT_CANCEL, NULL);
+
+  static const char* kb_map[] = {"a", "z", "e",  "r", "t", "y", "u", "i", "o", "p",  LV_SYMBOL_BACKSPACE, "\n",         "q", "s", "d", "f", "g", "j", "k",
+                                 "l", "m", "\n", "w", "x", "c", "v", "b", "n", "\n", LV_SYMBOL_CLOSE,     LV_SYMBOL_OK, NULL};
+
+  /*Set the relative width of the buttons and other controls*/
+  static const lv_btnmatrix_ctrl_t kb_ctrl[] = {4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, LV_BTNMATRIX_CTRL_HIDDEN | 10, 2};
+
+  lv_keyboard_set_map(keyboard, LV_KEYBOARD_MODE_USER_1, kb_map, kb_ctrl);
+  lv_keyboard_set_mode(keyboard, LV_KEYBOARD_MODE_USER_1);
+  lv_keyboard_set_textarea(keyboard, keyboard_textarea);
+}
+
+static void cancel_new_save_event_handler(lv_event_t* e) { GameMenu::getInstance()->toggle(); }
+
+static void create_new_save_event_handler(lv_event_t* e) {
+  lv_obj_t* textarea = (lv_obj_t*)lv_event_get_user_data(e);
+  const char* text_content = lv_textarea_get_text(textarea);
+  if (text_content[0] == '\0') {
+    display_alert("", _("game.save.file.invalid"));
+    return;
+  }
+
+  lv_event_t* custom_event = new lv_event_t;
+  custom_event->code = LV_EVENT_CLICKED;
+  custom_event->user_data = (void*)text_content;
+
+  save_game_event_handler(custom_event);
 }
 
 static void slider_set_brightness_event_cb(lv_event_t* e) {
@@ -193,7 +266,7 @@ static void choice_ball_event_cb(lv_event_t* e) {
   }
 }
 
-static void click_button_save_game_event_handler(lv_event_t* e) { save_game_event_handler(e); }
+static void click_button_save_game_event_handler(lv_event_t* e) { GameMenu::getInstance()->display_saves(); }
 
 /**
  * Save game information
@@ -233,10 +306,24 @@ static void save_game_event_handler(lv_event_t* e) {
     return;
   }
 
-  char json_path[50];
-  strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
-  strcat(json_path, "/save.json");
-  File file = SD.open(json_path, FILE_WRITE);
+  char* save_file_name = (char*)lv_event_get_user_data(e);
+  File file;
+  if (save_file_name == NULL and Game::getInstance()->get_options()->save_file_path) {
+    serial_printf("GameMenu", "Save file \"%s\"", Game::getInstance()->get_options()->save_file_path);
+    file = SD.open(Game::getInstance()->get_options()->save_file_path, FILE_WRITE);
+  } else {
+    char json_path[50];
+    strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
+    strcat(json_path, "/");
+    strcat(json_path, save_file_name);
+    strcat(json_path, ".json");
+    file = SD.open(json_path, FILE_WRITE);
+    serial_printf("GameMenu", "Save file \"%s\"", json_path);
+    if (file) {
+      Game::getInstance()->get_options()->save_file_path = json_path;
+    }
+  }
+
   if (!file) {
     display_alert("", _("game.save.failed"));
   } else {
@@ -245,6 +332,7 @@ static void save_game_event_handler(lv_event_t* e) {
     file.close();
 
     display_alert("", _("game.save.success"));
+    GameMenu::getInstance()->toggle();
   }
 
   SD.end();

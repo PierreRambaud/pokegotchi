@@ -42,9 +42,10 @@ namespace Pokegotchi {
 
    private:
     static Game* _instance;
+    void _initialize(poke_config_t*, lv_obj_t*, Pokemon* p);
 
     poke_config_t* _config;
-    poke_options_t* _options = new poke_options_t{OPTIONS_BRIGHTNESS_DEFAULT, OPTIONS_BALL_DEFAULT};
+    poke_options_t* _options;
 
     lv_obj_t* _main_screen;
     lv_obj_t* _screen;
