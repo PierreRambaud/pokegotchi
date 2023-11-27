@@ -21,7 +21,6 @@ char* extract_file_name_without_extension(const char* filename) {
 void SdConfig::_add_save_file_to_list(poke_save_file_info** list, const char* file_name, int* count) {
   *list = (poke_save_file_info*)realloc(*list, (*count + 1) * sizeof(poke_save_file_info));
   if (*list == NULL) {
-    display_alert("", "Failed to allocate memory");
     return;
   }
 
@@ -31,7 +30,6 @@ void SdConfig::_add_save_file_to_list(poke_save_file_info** list, const char* fi
   size_t name_len = strlen(file_name);
   (*list)[*count].path = (char*)malloc(path_len + 1 + name_len + 1);  // +1 pour le séparateur de répertoire et +1 pour le caractère nul
   if ((*list)[*count].path == NULL) {
-    display_alert("", "Failed to allocate memory");
     free((*list)[*count].name);
     return;
   }

@@ -92,6 +92,10 @@ en:
   game.bird.score: 'Score:'
   game.bird.restart: Press Button B
   game.bird.maxscore: 'Max Score:'
+  game.save.create.button: Create
+  game.save.replace.button: Replace
+  game.save.file.invalid: Invalid file name
+  game.error: Error
   menu.game.draw: Drawing
   menu.game.bird: Floppy Bird
   ball.poke: Poké Ball
@@ -105,4 +109,7 @@ en:
   ball.dream: Dream Ball
   menu.options.ball: Ball choice
   pokemon.ko.title: Pokémon K.O
-  pokemon.ko.message: The game is over !
+  pokemon.ko.message: The game is over!
+  game.save.box.delete: Delete
+  game.save.box.choose: What to do?
+  game.save.box.replace: Replace

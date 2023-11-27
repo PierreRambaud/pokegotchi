@@ -146,7 +146,7 @@ static void close_msg_box_event_handler(lv_event_t* e) {
 static void load_button_event_handler(lv_event_t* e) {
   lv_obj_t* choice_box = display_alert(_("home.start.choice"), "");
   lv_obj_t* save_list = lv_list_create(choice_box);
-  lv_obj_set_size(save_list, 180, 100);
+  lv_obj_set_size(save_list, 220, 120);
   SdConfig* sd_config = (SdConfig*)lv_event_get_user_data(e);
 
   poke_save_file_info* save_files = sd_config->get_save_files();
@@ -175,7 +175,7 @@ static void load_file_button_event_handler(lv_event_t* e) {
   sd_begin();
   File file = SD.open(save_files[event_data->index].path);
   if (!file) {
-    display_alert("", _("game.load.error"));
+    display_alert(_("game.error"), _("game.load.error"));
     return;
   }
 
@@ -184,7 +184,7 @@ static void load_file_button_event_handler(lv_event_t* e) {
   SD.end();
 
   if (error) {
-    display_alert("", _("game.load.unserialize.error"));
+    display_alert(_("game.error"), _("game.load.unserialize.error"));
     serial_printf("Home", "deserializeJson() failed: ");
     serial_printf("Home", "Error: %s", error.c_str());
     return;

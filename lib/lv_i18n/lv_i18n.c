@@ -97,6 +97,10 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"game.bird.score", "Score:"},
     {"game.bird.restart", "Press Button B"},
     {"game.bird.maxscore", "Max Score:"},
+    {"game.save.create.button", "Create"},
+    {"game.save.replace.button", "Replace"},
+    {"game.save.file.invalid", "Invalid file name"},
+    {"game.error", "Error"},
     {"menu.game.draw", "Drawing"},
     {"menu.game.bird", "Floppy Bird"},
     {"ball.poke", "Poké Ball"},
@@ -110,7 +114,10 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"ball.dream", "Dream Ball"},
     {"menu.options.ball", "Ball choice"},
     {"pokemon.ko.title", "Pokémon K.O"},
-    {"pokemon.ko.message", "The game is over !"},
+    {"pokemon.ko.message", "The game is over!"},
+    {"game.save.box.delete", "Delete"},
+    {"game.save.box.choose", "What to do?"},
+    {"game.save.box.replace", "Replace"},
     {NULL, NULL} // End mark
 };
 
@@ -213,6 +220,10 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"game.bird.score", "Score:"},
     {"game.bird.restart", "Appuyer sur le bouton B"},
     {"game.bird.maxscore", "Score max:"},
+    {"game.save.create.button", "Créer"},
+    {"game.save.replace.button", "Remplacer"},
+    {"game.save.file.invalid", "Nom de fichier invalide"},
+    {"game.error", "Erreur"},
     {"menu.game.draw", "Dessin"},
     {"menu.game.bird", "Floppy Bird"},
     {"ball.poke", "Poké Ball"},
@@ -227,6 +238,9 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"menu.options.ball", "Choix de la Ball"},
     {"pokemon.ko.title", "Pokémon K.O"},
     {"pokemon.ko.message", "La partie est terminée !"},
+    {"game.save.box.delete", "Supprimer"},
+    {"game.save.box.choose", "Que faire ?"},
+    {"game.save.box.replace", "Remplacer"},
     {NULL, NULL} // End mark
 };
 

@@ -23,6 +23,7 @@ LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 
 static void choice_ball_event_cb(lv_event_t*);
+static void confirm_save_box_event_handler(lv_event_t*);
 static void click_button_save_game_event_handler(lv_event_t*);
 static void game_new_save_event_handler(lv_event_t*);
 static void create_new_save_event_handler(lv_event_t*);
@@ -33,6 +34,12 @@ static void run_game_event_handler(lv_event_t*);
 static void save_game_event_handler(lv_event_t*);
 static void slider_set_brightness_event_cb(lv_event_t*);
 static void trainercard_event_handler(lv_event_t*);
+static void choice_save_game_event_handler(lv_event_t*);
+
+struct event_choice_game_data {
+  lv_obj_t* selected_row;
+  char* file_name;
+};
 
 GameMenu* GameMenu::_instance = nullptr;
 
@@ -174,9 +181,11 @@ void GameMenu::display_saves() {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());
+
   lv_obj_set_style_bg_opa(_menu_child_screen, LV_STATE_DEFAULT, LV_OPA_TRANSP);
   lv_obj_t* save_list = lv_list_create(_menu_child_screen);
-  lv_obj_set_pos(save_list, 10, 20);
+  lv_obj_set_pos(save_list, 10, 10);
+  lv_obj_set_size(save_list, LV_HOR_RES_MAX - 20, LV_VER_RES_MAX - 125);
 
   SdConfig* sd_config = new SdConfig(Game::getInstance()->get_config());
   sd_config->load_save_files();
@@ -185,21 +194,72 @@ void GameMenu::display_saves() {
 
   for (int i = 0; i < sd_config->get_save_count(); i++) {
     lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
-    lv_obj_add_event_cb(list_btn, save_game_event_handler, LV_EVENT_CLICKED, save_files[i].name);
+    lv_obj_add_event_cb(list_btn, choice_save_game_event_handler, LV_EVENT_CLICKED, save_files[i].name);
   }
 
   lv_obj_t* new_save_button = lv_btn_create(_menu_child_screen);
-  lv_obj_align(new_save_button, LV_ALIGN_CENTER, 0, 25);
+  lv_obj_align(new_save_button, LV_ALIGN_BOTTOM_LEFT, 10, -10);
   lv_obj_add_event_cb(new_save_button, game_new_save_event_handler, LV_EVENT_CLICKED, _menu_child_screen);
 
   lv_obj_t* label = lv_label_create(new_save_button);
-  lv_label_set_text(label, _("game.save.new.button"));
+  lv_label_set_text(label, _("game.save.create.button"));
+  lv_obj_center(label);
+
+  lv_obj_t* existing_game_save_button = lv_btn_create(_menu_child_screen);
+  lv_obj_align(existing_game_save_button, LV_ALIGN_BOTTOM_RIGHT, -10, -10);
+  lv_obj_add_event_cb(existing_game_save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
+
+  label = lv_label_create(existing_game_save_button);
+  lv_label_set_text(label, _("game.save.replace.button"));
   lv_obj_center(label);
 }
 
 void GameMenu::change_ball(uint16_t index) {
   lv_img_set_src(_ball_image, balls_choice_images[index]);
   Game::getInstance()->get_options()->ball = index;
+}
+
+static void choice_save_game_event_handler(lv_event_t* e) {
+  static const char * buttons[] = {_("game.save.box.replace"), _("game.save.box.delete"), ""};
+
+  lv_obj_t * save_box = lv_msgbox_create(NULL, _("game.save.box.choose"), "", buttons, true);
+  event_choice_game_data* event_data = new event_choice_game_data;
+  event_data->selected_row = lv_event_get_current_target(e);
+  event_data->file_name = (char*)lv_event_get_user_data(e);
+
+  lv_obj_add_event_cb(save_box, confirm_save_box_event_handler, LV_EVENT_VALUE_CHANGED, event_data);
+  lv_obj_center(save_box);
+}
+
+static void confirm_save_box_event_handler(lv_event_t* e) {
+  lv_obj_t* box = lv_event_get_current_target(e);
+  const char* text_button = lv_msgbox_get_active_btn_text(box);
+  event_choice_game_data* event_data = (event_choice_game_data*)lv_event_get_user_data(e);
+
+  if (text_button == _("game.save.box.replace")) {
+    lv_event_t* custom_event = new lv_event_t;
+    custom_event->code = LV_EVENT_CLICKED;
+    custom_event->user_data = event_data->file_name;
+    save_game_event_handler(custom_event);
+  } else {
+    char json_path[50];
+    strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
+    strcat(json_path, "/");
+    strcat(json_path, event_data->file_name);
+    strcat(json_path, ".json");
+
+    if (sd_begin() == false) {
+      display_alert(_("game.error"), _("sd.card.not_found"));
+      return;
+    }
+
+    serial_printf("GameMenu", "Delete file file \"%s\"", json_path);
+    lv_obj_del(event_data->selected_row);
+    SD.remove(json_path);
+    SD.end();
+  }
+
+  lv_msgbox_close(box);
 }
 
 static void game_new_save_event_handler(lv_event_t* e) {
@@ -233,7 +293,7 @@ static void create_new_save_event_handler(lv_event_t* e) {
   lv_obj_t* textarea = (lv_obj_t*)lv_event_get_user_data(e);
   const char* text_content = lv_textarea_get_text(textarea);
   if (text_content[0] == '\0') {
-    display_alert("", _("game.save.file.invalid"));
+    display_alert(_("game.error"), _("game.save.file.invalid"));
     return;
   }
 
@@ -302,7 +362,7 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon_time["potion"] = p->get_last_potion_time() - current_time;
 
   if (sd_begin() == false) {
-    display_alert("", _("sd.card.not_found"));
+    display_alert(_("game.error"), _("sd.card.not_found"));
     return;
   }
 
@@ -325,7 +385,7 @@ static void save_game_event_handler(lv_event_t* e) {
   }
 
   if (!file) {
-    display_alert("", _("game.save.failed"));
+    display_alert(_("game.error"), _("game.save.failed"));
   } else {
     serializeJson(doc, Serial);
     serializeJson(doc, file);
