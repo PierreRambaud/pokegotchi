@@ -148,6 +148,7 @@ void GameMenu::display_options() {
     lv_dropdown_add_option(ball_choice_dropdown, balls_choice[i], i);
   }
 
+  lv_dropdown_set_symbol(ball_choice_dropdown, LV_SYMBOL_RIGHT);
   lv_dropdown_set_selected(ball_choice_dropdown, Game::getInstance()->get_options()->ball);
   lv_obj_set_grid_cell(ball_choice_dropdown, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 5, 1);
   lv_obj_add_event_cb(ball_choice_dropdown, choice_ball_event_cb, LV_EVENT_ALL, NULL);
@@ -220,9 +221,9 @@ void GameMenu::change_ball(uint16_t index) {
 }
 
 static void choice_save_game_event_handler(lv_event_t* e) {
-  static const char * buttons[] = {_("game.save.box.replace"), _("game.save.box.delete"), ""};
+  static const char* buttons[] = {_("game.save.box.replace"), _("game.save.box.delete"), ""};
 
-  lv_obj_t * save_box = lv_msgbox_create(NULL, _("game.save.box.choose"), "", buttons, true);
+  lv_obj_t* save_box = lv_msgbox_create(NULL, _("game.save.box.choose"), "", buttons, true);
   event_choice_game_data* event_data = new event_choice_game_data;
   event_data->selected_row = lv_event_get_current_target(e);
   event_data->file_name = (char*)lv_event_get_user_data(e);

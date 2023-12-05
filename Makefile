@@ -12,6 +12,9 @@ format: $(SRC_FILES)
 build:
 	pio run
 
+monitor:
+	pio device monitor
+
 upload:
 	pio run -t upload
 
