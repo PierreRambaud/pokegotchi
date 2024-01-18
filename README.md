@@ -4,7 +4,7 @@ Trying to provide a tamagotchi game for my daugther, based on little characters 
 
 Everything is done for the M5Core2 in C with [lvgl 8](https://github.com/lvgl/lvgl).
 
-## Usage
+## Installation
 
 ### Requirements
 
@@ -37,3 +37,30 @@ You have to change `_p` into `_pl` and make sure struct are correctly defined.
  - [M5Core2](https://github.com/m5stack/M5Core2)
  - [PlatformIO](https://platformio.org/)
 
+
+## Usage
+
+Features:
+
+- Save/Load game
+- Start with Evee or Pikachu
+- Choose pokeball
+- Brightness
+- Two additionals games inside
+- Pokemon description
+
+Actions:
+
+- Clean (poos and pees)
+- Eat
+- Train
+- Play
+- Sleep
+
+## Screenshots
+
+
+![Day](doc/day.jpg)
+![Night](doc/night.jpg)
+![Pokemon description](doc/resume.jpg)
+![Actions](doc/actions.jpg)
