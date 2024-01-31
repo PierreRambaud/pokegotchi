@@ -81,7 +81,7 @@ ActionsMenu::ActionsMenu(Menu* menu) {
   _items[14] = new BagItem{&object_water, _("bag.water.name"), _("bag.water.description"), new BagItemSpecifications{15, 0, 0, 0, 0, 4}};
 
   _bag_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_bag, &menu_bag_pressed, _("actions.menu.bag"));
-  lv_imgbtn_set_src(_bag_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_bag_disabled, NULL);
+  lv_imagebutton_set_src(_bag_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_bag_disabled, NULL);
   lv_obj_add_event_cb(_bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
   _sleep_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_flute, &menu_flute_pressed, Pokemon::getInstance()->is_sleeping() ? _("actions.menu.wake_up") : _("actions.menu.sleep"));
@@ -89,11 +89,11 @@ ActionsMenu::ActionsMenu(Menu* menu) {
   lv_obj_add_event_cb(_sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
 
   _train_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_train, &menu_train_pressed, _("menu.train"));
-  lv_imgbtn_set_src(_train_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_train_disabled, NULL);
+  lv_imagebutton_set_src(_train_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_train_disabled, NULL);
   lv_obj_add_event_cb(_train_button, train_event_handler, LV_EVENT_CLICKED, NULL);
 
   _play_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_play, &menu_play_pressed, _("menu.play"));
-  lv_imgbtn_set_src(_play_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_play_disabled, NULL);
+  lv_imagebutton_set_src(_play_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_play_disabled, NULL);
   lv_obj_add_event_cb(_play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
 
   _clean_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_clean, &menu_clean_pressed, _("actions.menu.clean"));
@@ -101,7 +101,7 @@ ActionsMenu::ActionsMenu(Menu* menu) {
 
   _heal_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_heal, &menu_heal_pressed, _("actions.menu.heal"));
   set_heal_menu_text(lv_obj_get_child(_heal_button, -1));
-  lv_imgbtn_set_src(_heal_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_heal_disabled, NULL);
+  lv_imagebutton_set_src(_heal_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_heal_disabled, NULL);
   lv_obj_add_event_cb(_heal_button, heal_event_handler, LV_EVENT_CLICKED, NULL);
 
   serial_printf("ActionsMenu", "Buttons for actions menu created");
@@ -115,9 +115,9 @@ ActionsMenu::ActionsMenu(Menu* menu) {
 void ActionsMenu::open() {
   Pokemon* p = Pokemon::getInstance();
   if (p->is_sleeping()) {
-    lv_imgbtn_set_state(_bag_button, LV_IMGBTN_STATE_DISABLED);
-    lv_imgbtn_set_state(_train_button, LV_IMGBTN_STATE_DISABLED);
-    lv_imgbtn_set_state(_play_button, LV_IMGBTN_STATE_DISABLED);
+    lv_imagebutton_set_state(_bag_button, LV_IMAGEBUTTON_STATE_DISABLED);
+    lv_imagebutton_set_state(_train_button, LV_IMAGEBUTTON_STATE_DISABLED);
+    lv_imagebutton_set_state(_play_button, LV_IMAGEBUTTON_STATE_DISABLED);
   } else {
     lv_obj_clear_state(_bag_button, LV_STATE_DISABLED);
     lv_obj_clear_state(_train_button, LV_STATE_DISABLED);
@@ -125,7 +125,7 @@ void ActionsMenu::open() {
   }
 
   if (p->get_potions() == 0 or p->is_sleeping()) {
-    lv_imgbtn_set_state(_heal_button, LV_IMGBTN_STATE_DISABLED);
+    lv_imagebutton_set_state(_heal_button, LV_IMAGEBUTTON_STATE_DISABLED);
   } else {
     lv_obj_clear_state(_heal_button, LV_STATE_DISABLED);
   }

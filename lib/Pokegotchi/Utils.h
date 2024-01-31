@@ -125,12 +125,12 @@ static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_img_dsc
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
-  lv_obj_t* button = lv_imgbtn_create(parent);
+  lv_obj_t* button = lv_imagebutton_create(parent);
   lv_obj_add_style(button, &style_default_text, 0);
   lv_obj_set_width(button, 150);
 
-  lv_imgbtn_set_src(button, LV_IMGBTN_STATE_RELEASED, NULL, img_src, NULL);
-  lv_imgbtn_set_src(button, LV_IMGBTN_STATE_PRESSED, NULL, img_pressed_src, NULL);
+  lv_imagebutton_set_src(button, LV_IMAGEBUTTON_STATE_RELEASED, NULL, img_src, NULL);
+  lv_imagebutton_set_src(button, LV_IMAGEBUTTON_STATE_PRESSED, NULL, img_pressed_src, NULL);
 
   lv_obj_t* label = lv_label_create(button);
   lv_label_set_text(label, title);
