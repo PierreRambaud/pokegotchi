@@ -161,7 +161,7 @@ void Game::loop() {
   if (p->is_ko()) {
     serial_printf("Game", "Pokemon is ko!");
     lv_obj_t* msg_box = display_alert(_("pokemon.ko.title"), _("pokemon.ko.message"));
-    lv_obj_t* close_btn = lv_msgbox_get_close_btn(msg_box);
+    lv_obj_t* close_btn = lv_obj_get_child(lv_msgbox_get_header(msg_box), -1);
     lv_obj_add_event_cb(close_btn, end_game_msg_box_event_handler, LV_EVENT_PRESSED, NULL);
 
     game_over = true;
@@ -300,7 +300,7 @@ void Game::abort_actions() {
  * @param lv_event_t* e
  */
 static void drag_clean_event_handler(lv_event_t* e) {
-  lv_obj_t* obj = lv_event_get_target(e);
+  lv_obj_t* obj = lv_event_get_target_obj(e);
 
   lv_indev_t* indev = lv_indev_get_act();
   if (indev == NULL) return;
@@ -333,6 +333,8 @@ static void drag_clean_event_handler(lv_event_t* e) {
 }
 
 static void end_game_msg_box_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   serial_printf("Game", "Restart game");
   ESP.restart();
+
 }

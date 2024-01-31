@@ -156,7 +156,7 @@ void ActionsMenu::display_bag() {
 }
 
 static void options_bag_scroll_value_event_cb(lv_event_t* e) {
-  lv_obj_t* screen = lv_event_get_target(e);
+  lv_obj_t* screen = lv_event_get_target_obj(e);
   options_bag_scroll_value = lv_obj_get_scroll_y(screen);
 }
 
@@ -166,6 +166,7 @@ static void options_bag_scroll_value_event_cb(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void clean_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   ActionsMenu::getInstance()->toggle();
   Game* g = Game::getInstance();
   g->action_clean();
@@ -177,6 +178,7 @@ static void clean_event_handler(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void heal_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   ActionsMenu::getInstance()->toggle();
   Game* g = Game::getInstance();
   g->action_heal();
@@ -200,7 +202,10 @@ static void use_item_event_handler(lv_event_t* e) {
  *
  * @param lv_event_t* e
  */
-static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getInstance()->display_bag(); }
+static void display_bag_items_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
+  ActionsMenu::getInstance()->display_bag();
+}
 
 /**
  * Train pokemeon
@@ -208,6 +213,7 @@ static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getIns
  * @param lv_event_t* e
  */
 static void train_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   Game* g = Game::getInstance();
 
   ActionsMenu::getInstance()->toggle();
@@ -220,6 +226,7 @@ static void train_event_handler(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void play_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   Game* g = Game::getInstance();
 
   ActionsMenu::getInstance()->toggle();

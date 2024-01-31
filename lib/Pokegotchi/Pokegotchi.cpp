@@ -15,7 +15,7 @@ Runner::Runner() {
   prepare_sd_card_directory(_config);
 
   lv_obj_t* main_screen = create_screen();
-  lv_scr_load(main_screen);
+  lv_screen_load(main_screen);
 
   Home* home = new Home(_config, main_screen);
   Home::setInstance(home);

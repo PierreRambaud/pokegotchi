@@ -47,7 +47,11 @@ void init_touch_driver() {
   lv_indev_set_display(indev, display);
 }
 
-void custom_log_cb(lv_log_level_t level, const char *buf) { Serial.println(buf); }
+void custom_log_cb(lv_log_level_t level, const char *buf) {
+  LV_UNUSED(level);
+  Serial.println(buf);
+  Serial.flush();
+}
 
 void tft_lv_initialization() {
   M5.begin(true, false);

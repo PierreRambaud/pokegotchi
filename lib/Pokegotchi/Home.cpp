@@ -168,7 +168,7 @@ static void load_button_event_handler(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void load_file_button_event_handler(lv_event_t* e) {
-  StaticJsonDocument<900> doc;
+  JsonDocument doc;
   event_load_game_data* event_data = (event_load_game_data*)lv_event_get_user_data(e);
   poke_save_file_info* save_files = event_data->sd_config->get_save_files();
 
