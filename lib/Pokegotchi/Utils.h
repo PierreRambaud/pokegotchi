@@ -16,6 +16,11 @@ static lv_style_t style_game_label;
 
 static const size_t MAX_SERIAL_BUFFER = 256;
 
+typedef struct {
+  lv_obj_t* box;
+  lv_obj_t* close_button;
+} poke_messagebox_t;
+
 /**
  * Serial printf wrapper to add a context and line break
  * @param const char* context
@@ -79,21 +84,21 @@ static inline void anim_x_callback(void* obj, int32_t value) { lv_obj_set_x((lv_
 static inline bool sd_begin() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
 
 /**
- * Display an alert message
+ * Create message box
  *
  * @param const char* title
  * @param const char* message
  * @return lv_obj_t*
  **/
-static inline lv_obj_t* display_alert(const char* title, const char* message) {
+static inline poke_messagebox_t* create_message_box(const char* title, const char* message) {
   lv_obj_t* msg_box = lv_msgbox_create(NULL);
   lv_msgbox_add_title(msg_box, title);
   lv_msgbox_add_text(msg_box, message);
 
-  lv_msgbox_add_close_button(msg_box);
+  lv_obj_t* close_button = lv_msgbox_add_close_button(msg_box);
   lv_obj_center(msg_box);
 
-  return msg_box;
+  return new poke_messagebox_t{msg_box, close_button};
 }
 
 /**

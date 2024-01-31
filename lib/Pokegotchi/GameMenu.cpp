@@ -222,10 +222,10 @@ void GameMenu::change_ball(uint16_t index) {
 }
 
 static void choice_save_game_event_handler(lv_event_t* e) {
-  lv_obj_t* save_box = display_alert(_("game.save.box.choose"), "");
+  poke_messagebox_t* messagebox = create_message_box(_("game.save.box.choose"), "");
 
-  lv_obj_t* replace_button = lv_msgbox_add_footer_button(save_box, _("game.save.box.replace"));
-  lv_obj_t* delete_button = lv_msgbox_add_footer_button(save_box, _("game.save.box.delete"));
+  lv_obj_t* replace_button = lv_msgbox_add_footer_button(messagebox->box, _("game.save.box.replace"));
+  lv_obj_t* delete_button = lv_msgbox_add_footer_button(messagebox->box, _("game.save.box.delete"));
 
   event_choice_game_data* event_data = new event_choice_game_data;
   event_data->selected_row = lv_event_get_current_target_obj(e);
@@ -245,7 +245,7 @@ static void delete_save_box_event_handler(lv_event_t* e) {
   strcat(json_path, ".json");
 
   if (sd_begin() == false) {
-    display_alert(_("game.error"), _("sd.card.not_found"));
+    create_message_box(_("game.error"), _("sd.card.not_found"));
     return;
   }
 
@@ -301,7 +301,7 @@ static void create_new_save_event_handler(lv_event_t* e) {
   lv_obj_t* textarea = (lv_obj_t*)lv_event_get_user_data(e);
   const char* text_content = lv_textarea_get_text(textarea);
   if (text_content[0] == '\0') {
-    display_alert(_("game.error"), _("game.save.file.invalid"));
+    create_message_box(_("game.error"), _("game.save.file.invalid"));
     return;
   }
 
@@ -370,7 +370,7 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon_time["potion"] = p->get_last_potion_time() - current_time;
 
   if (sd_begin() == false) {
-    display_alert(_("game.error"), _("sd.card.not_found"));
+    create_message_box(_("game.error"), _("sd.card.not_found"));
     return;
   }
 
@@ -393,13 +393,13 @@ static void save_game_event_handler(lv_event_t* e) {
   }
 
   if (!file) {
-    display_alert(_("game.error"), _("game.save.failed"));
+    create_message_box(_("game.error"), _("game.save.failed"));
   } else {
     serializeJson(doc, Serial);
     serializeJson(doc, file);
     file.close();
 
-    display_alert("", _("game.save.success"));
+    create_message_box("", _("game.save.success"));
     GameMenu::getInstance()->toggle();
   }
 

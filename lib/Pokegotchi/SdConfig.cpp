@@ -52,13 +52,13 @@ void SdConfig::free_list() {
 
 void SdConfig::load_save_files() {
   if (sd_begin() == false) {
-    display_alert("", _("sd.card.not_found"));
+    create_message_box("", _("sd.card.not_found"));
     return;
   }
 
   File directory = SD.open(_config->save_files_path);
   if (!directory or !directory.isDirectory()) {
-    display_alert("", _("game.load.error"));
+    create_message_box("", _("game.load.error"));
     return;
   }
 

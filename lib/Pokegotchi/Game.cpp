@@ -160,9 +160,8 @@ void Game::loop() {
   Pokemon* p = Pokemon::getInstance();
   if (p->is_ko()) {
     serial_printf("Game", "Pokemon is ko!");
-    lv_obj_t* msg_box = display_alert(_("pokemon.ko.title"), _("pokemon.ko.message"));
-    lv_obj_t* close_btn = lv_obj_get_child(lv_msgbox_get_header(msg_box), -1);
-    lv_obj_add_event_cb(close_btn, end_game_msg_box_event_handler, LV_EVENT_PRESSED, NULL);
+    poke_messagebox_t* messagebox = create_message_box(_("pokemon.ko.title"), _("pokemon.ko.message"));
+    lv_obj_add_event_cb(messagebox->close_button, end_game_msg_box_event_handler, LV_EVENT_PRESSED, NULL);
 
     game_over = true;
     return;

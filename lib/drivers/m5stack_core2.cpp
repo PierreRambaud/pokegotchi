@@ -4,6 +4,7 @@
 
 M5Display *tft;
 
+// Initialize driver
 void driver_init() {
   randomSeed(analogRead(ANALOG_PIN));
   M5.begin(true, false);
@@ -13,6 +14,7 @@ void driver_init() {
   tft = &M5.Lcd;
 }
 
+// driver loop behavior
 void driver_loop() { M5.update(); }
 
 // Initialize the touch screen
@@ -22,7 +24,12 @@ void init_touch_driver() {
   lv_indev_set_read_cb(indev, touchpad_read_cb);
 }
 
-// Read the touchpad
+/**
+ * @param lv_indev_t *indev
+ * @param lv_indev_data_t *data
+ *
+ * @return void
+ */
 void touchpad_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
   TouchPoint_t pos = M5.Touch.getPressPoint();
 
@@ -36,7 +43,13 @@ void touchpad_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
   }
 }
 
-// Display flushing
+/**
+ * @param lv_display_t *disp
+ * @param const lv_area_t *area
+ * @param const uint8_t *px_map
+ *
+ * @return void
+ */
 void display_flush_cb(lv_display_t *disp, const lv_area_t *area, uint8_t *px_map) {
   uint32_t w = (area->x2 - area->x1 + 1);
   uint32_t h = (area->y2 - area->y1 + 1);

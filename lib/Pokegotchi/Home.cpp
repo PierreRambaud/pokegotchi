@@ -98,24 +98,23 @@ void Home::load_buttons() {
  * @param lv_event_t* e
  */
 static void start_button_event_handler(lv_event_t* e) {
-  lv_obj_t* choice_box = display_alert(_("home.start.choice"), "");
-  lv_obj_t* choice_box_content = lv_msgbox_get_content(choice_box);
+  poke_messagebox_t* messagebox = create_message_box(_("home.start.choice"), "");
+  lv_obj_t* choice_box_content = lv_msgbox_get_content(messagebox->box);
+  lv_obj_set_flex_flow(choice_box_content, LV_FLEX_FLOW_ROW_WRAP);
 
   static int pichu_value = POKEMON_PICHU;
   lv_obj_t* pichu_btn = lv_img_create(choice_box_content);
   lv_img_set_src(pichu_btn, "L:/home/pichu.bin");
   lv_obj_add_flag(pichu_btn, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
-  lv_obj_add_event_cb(pichu_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
-  lv_obj_set_pos(pichu_btn, 25, 25);
+  lv_obj_add_event_cb(pichu_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
 
   static int eevee_value = POKEMON_EEVEE;
   lv_obj_t* eevee_btn = lv_img_create(choice_box_content);
   lv_img_set_src(eevee_btn, "L:/home/eevee.bin");
   lv_obj_add_flag(eevee_btn, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(eevee_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &eevee_value);
-  lv_obj_add_event_cb(eevee_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
-  lv_obj_set_pos(eevee_btn, 155, 25);
+  lv_obj_add_event_cb(eevee_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
 }
 
 /**
@@ -139,14 +138,24 @@ static void start_new_game_event_handler(lv_event_t* e) {
   Game::setInstance(g);
 }
 
+/**
+ * Close message box
+ *
+ * @param lv_event_t* e
+ */
 static void close_msg_box_event_handler(lv_event_t* e) {
   lv_obj_t* choice_box = (lv_obj_t*)lv_event_get_user_data(e);
   lv_msgbox_close(choice_box);
 }
 
+/**
+ * Click on load button
+ *
+ * @param lv_event_t* e
+ */
 static void load_button_event_handler(lv_event_t* e) {
-  lv_obj_t* choice_box = display_alert(_("home.start.choice"), "");
-  lv_obj_t* save_list = lv_list_create(choice_box);
+  poke_messagebox_t* messagebox = create_message_box(_("home.start.choice"), "");
+  lv_obj_t* save_list = lv_list_create(messagebox->box);
   lv_obj_set_size(save_list, 220, 120);
   SdConfig* sd_config = (SdConfig*)lv_event_get_user_data(e);
 
@@ -159,7 +168,7 @@ static void load_button_event_handler(lv_event_t* e) {
 
     lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
     lv_obj_add_event_cb(list_btn, load_file_button_event_handler, LV_EVENT_CLICKED, event_data);
-    lv_obj_add_event_cb(list_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, choice_box);
+    lv_obj_add_event_cb(list_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
   }
 }
 
@@ -176,7 +185,7 @@ static void load_file_button_event_handler(lv_event_t* e) {
   sd_begin();
   File file = SD.open(save_files[event_data->index].path);
   if (!file) {
-    display_alert(_("game.error"), _("game.load.error"));
+    create_message_box(_("game.error"), _("game.load.error"));
     return;
   }
 
@@ -185,7 +194,7 @@ static void load_file_button_event_handler(lv_event_t* e) {
   SD.end();
 
   if (error) {
-    display_alert(_("game.error"), _("game.load.unserialize.error"));
+    create_message_box(_("game.error"), _("game.load.unserialize.error"));
     serial_printf("Home", "deserializeJson() failed: ");
     serial_printf("Home", "Error: %s", error.c_str());
     return;
