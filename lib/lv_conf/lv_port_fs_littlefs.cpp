@@ -1,6 +1,10 @@
 #include <Arduino.h>
+#include <LittleFS.h>
 #include "lv_port_fs_littlefs.h"
-#include "littlefile.h"
+
+struct LittleFile {
+  File file;
+};
 
 static void fs_init(void);
 

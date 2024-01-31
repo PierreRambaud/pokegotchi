@@ -40,7 +40,7 @@ void loop() {
   driver_loop();
 
   lv_task_handler();
-  lv_tick_inc(5);
+  lv_tick_inc(1);
 
   GameSwitcher::Runner::getInstance()->loop();
 }

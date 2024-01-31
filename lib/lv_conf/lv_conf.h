@@ -415,7 +415,7 @@
 
 
 #define LV_SYMBOL_RIGHT "▶"
-#define LV_SYMBOL_CLOSE "−"
+#define LV_SYMBOL_CLOSE "×"
 #define LV_SYMBOL_BACKSPACE "←"
 #define LV_SYMBOL_OK "√"
 

@@ -99,9 +99,10 @@ void Home::load_buttons() {
  */
 static void start_button_event_handler(lv_event_t* e) {
   lv_obj_t* choice_box = display_alert(_("home.start.choice"), "");
+  lv_obj_t* choice_box_content = lv_msgbox_get_content(choice_box);
 
   static int pichu_value = POKEMON_PICHU;
-  lv_obj_t* pichu_btn = lv_img_create(choice_box);
+  lv_obj_t* pichu_btn = lv_img_create(choice_box_content);
   lv_img_set_src(pichu_btn, "L:/home/pichu.bin");
   lv_obj_add_flag(pichu_btn, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
@@ -109,7 +110,7 @@ static void start_button_event_handler(lv_event_t* e) {
   lv_obj_set_pos(pichu_btn, 25, 25);
 
   static int eevee_value = POKEMON_EEVEE;
-  lv_obj_t* eevee_btn = lv_img_create(choice_box);
+  lv_obj_t* eevee_btn = lv_img_create(choice_box_content);
   lv_img_set_src(eevee_btn, "L:/home/eevee.bin");
   lv_obj_add_flag(eevee_btn, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(eevee_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &eevee_value);
