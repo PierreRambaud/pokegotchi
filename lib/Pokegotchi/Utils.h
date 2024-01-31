@@ -3,7 +3,10 @@
 #define POKEGOTCHI_UTILS
 
 #include <lvgl.h>
+
+#ifdef ARDUINO_M5STACK_Core2
 #include <M5Core2.h>
+#endif
 
 static lv_style_t style_default_title;
 static lv_style_t style_default_text;
@@ -87,7 +90,7 @@ static inline lv_obj_t* display_alert(const char* title, const char* message) {
   lv_msgbox_add_title(msg_box, title);
   lv_msgbox_add_text(msg_box, message);
 
-  lv_obj_t* close_button = lv_msgbox_add_close_button(msg_box);
+  lv_obj_t* const close_button = lv_msgbox_add_close_button(msg_box);
   lv_obj_t* close_label = lv_obj_get_child(close_button, -1);
   lv_label_set_text(close_label, "X");
 

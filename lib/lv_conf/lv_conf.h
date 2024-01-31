@@ -50,172 +50,133 @@
         #undef LV_MEM_POOL_INCLUDE
         #undef LV_MEM_POOL_ALLOC
     #endif
-
-#else       /*LV_MEM_CUSTOM*/
-    #define LV_MEM_CUSTOM_INCLUDE <stdlib.h>   /*Header for the dynamic memory function*/
-    #define LV_MEM_CUSTOM_ALLOC   malloc
-    #define LV_MEM_CUSTOM_FREE    free
-    #define LV_MEM_CUSTOM_REALLOC realloc
-#endif     /*LV_MEM_CUSTOM*/
-
-/*Number of the intermediate memory buffer used during rendering and other internal processing mechanisms.
- *You will see an error log message if there wasn't enough buffers. */
-#define LV_MEM_BUF_MAX_NUM 16
-
-/*Use the standard `memcpy` and `memset` instead of LVGL's own functions. (Might or might not be faster).*/
-#define LV_MEMCPY_MEMSET_STD 1
+#endif  /*LV_USE_MALLOC == LV_STDLIB_BUILTIN*/
 
 /*====================
    HAL SETTINGS
  *====================*/
 
-/*Default display refresh period. LVG will redraw changed areas with this period time*/
-#define LV_DISP_DEF_REFR_PERIOD 20      /*[ms]*/
-
-/*Input device read period in milliseconds*/
-#define LV_INDEV_DEF_READ_PERIOD 20     /*[ms]*/
-
-/*Use a custom tick source that tells the elapsed time in milliseconds.
- *It removes the need to manually update the tick with `lv_tick_inc()`)*/
-#define LV_TICK_CUSTOM 1
-#if LV_TICK_CUSTOM
-    #define LV_TICK_CUSTOM_INCLUDE "Arduino.h"         /*Header for the system time function*/
-    #define LV_TICK_CUSTOM_SYS_TIME_EXPR (millis())    /*Expression evaluating to current system time in ms*/
-    /*If using lvgl as ESP32 component*/
-    // #define LV_TICK_CUSTOM_INCLUDE "esp_timer.h"
-    // #define LV_TICK_CUSTOM_SYS_TIME_EXPR ((esp_timer_get_time() / 1000LL))
-#endif   /*LV_TICK_CUSTOM*/
+/*Default display refresh, input device read and animation step period.*/
+#define LV_DEF_REFR_PERIOD  33      /*[ms]*/
 
 /*Default Dot Per Inch. Used to initialize default sizes such as widgets sized, style paddings.
  *(Not so important, you can adjust it to modify default sizes and spaces)*/
 #define LV_DPI_DEF 130     /*[px/inch]*/
 
+/*=================
+ * OPERATING SYSTEM
+ *=================*/
+/*Select an operating system to use. Possible options:
+ * - LV_OS_NONE
+ * - LV_OS_PTHREAD
+ * - LV_OS_FREERTOS
+ * - LV_OS_CMSIS_RTOS2
+ * - LV_OS_RTTHREAD
+ * - LV_OS_WINDOWS
+ * - LV_OS_CUSTOM */
+#define LV_USE_OS   LV_OS_NONE
+
+#if LV_USE_OS == LV_OS_CUSTOM
+    #define LV_OS_CUSTOM_INCLUDE <stdint.h>
+#endif
+
+/*========================
+ * RENDERING CONFIGURATION
+ *========================*/
+
+/*Align the stride of all layers and images to this bytes*/
+#define LV_DRAW_BUF_STRIDE_ALIGN                1
+
+/*Align the start address of draw_buf addresses to this bytes*/
+#define LV_DRAW_BUF_ALIGN                       4
+
+#define LV_USE_DRAW_SW 1
+#if LV_USE_DRAW_SW == 1
+    /* Set the number of draw unit.
+     * > 1 requires an operating system enabled in `LV_USE_OS`
+     * > 1 means multiply threads will render the screen in parallel */
+    #define LV_DRAW_SW_DRAW_UNIT_CNT    1
+
+    /* Use Arm-2D to accelerate the sw render */
+    #define LV_USE_DRAW_ARM2D_SYNC      0
+
+    /* If a widget has `style_opa < 255` (not `bg_opa`, `text_opa` etc) or not NORMAL blend mode
+     * it is buffered into a "simple" layer before rendering. The widget can be buffered in smaller chunks.
+     * "Transformed layers" (if `transform_angle/zoom` are set) use larger buffers
+     * and can't be drawn in chunks. */
+
+    /*The target buffer size for simple layer chunks.*/
+    #define LV_DRAW_SW_LAYER_SIMPLE_BUF_SIZE    (24 * 1024)   /*[bytes]*/
+
+    /* 0: use a simple renderer capable of drawing only simple rectangles with gradient, images, texts, and straight lines only
+     * 1: use a complex renderer capable of drawing rounded corners, shadow, skew lines, and arcs too */
+    #define LV_DRAW_SW_COMPLEX          1
+
+    #if LV_DRAW_SW_COMPLEX == 1
+        /*Allow buffering some shadow calculation.
+        *LV_DRAW_SW_SHADOW_CACHE_SIZE is the max. shadow size to buffer, where shadow size is `shadow_width + radius`
+        *Caching has LV_DRAW_SW_SHADOW_CACHE_SIZE^2 RAM cost*/
+        #define LV_DRAW_SW_SHADOW_CACHE_SIZE 0
+
+        /* Set number of maximally cached circle data.
+        * The circumference of 1/4 circle are saved for anti-aliasing
+        * radius * 4 bytes are used per circle (the most often used radiuses are saved)
+        * 0: to disable caching */
+        #define LV_DRAW_SW_CIRCLE_CACHE_SIZE 4
+    #endif
+
+    #define  LV_USE_DRAW_SW_ASM     LV_DRAW_SW_ASM_NONE
+
+    #if LV_USE_DRAW_SW_ASM == LV_DRAW_SW_ASM_CUSTOM
+        #define  LV_DRAW_SW_ASM_CUSTOM_INCLUDE ""
+    #endif
+#endif
+
+/* Use NXP's VG-Lite GPU on iMX RTxxx platforms. */
+#define LV_USE_DRAW_VGLITE 0
+
+#if LV_USE_DRAW_VGLITE
+    /* Enable blit quality degradation workaround recommended for screen's dimension > 352 pixels. */
+    #define LV_USE_VGLITE_BLIT_SPLIT 0
+
+    #if LV_USE_OS
+        /* Enable VGLite draw async. Queue multiple tasks and flash them once to the GPU. */
+        #define LV_USE_VGLITE_DRAW_ASYNC 1
+    #endif
+
+    /* Enable VGLite asserts. */
+    #define LV_USE_VGLITE_ASSERT 0
+#endif
+
+/* Use NXP's PXP on iMX RTxxx platforms. */
+#define LV_USE_DRAW_PXP 0
+
+#if LV_USE_DRAW_PXP
+    /* Enable PXP asserts. */
+    #define LV_USE_PXP_ASSERT 0
+#endif
+
+/* Use Renesas Dave2D on RA  platforms. */
+#define LV_USE_DRAW_DAVE2D 0
+
+/* Draw using cached SDL textures*/
+#define LV_USE_DRAW_SDL 0
+
+/* Use VG-Lite GPU. */
+#define LV_USE_DRAW_VG_LITE 0
+
+#if LV_USE_DRAW_VG_LITE
+/* Enable VG-Lite custom external 'gpu_init()' function */
+#define LV_VG_LITE_USE_GPU_INIT 0
+
+/* Enable VG-Lite assert. */
+#define LV_VG_LITE_USE_ASSERT 0
+
+#endif
+
 /*=======================
  * FEATURE CONFIGURATION
  *=======================*/
-
-/*-------------
- * Drawing
- *-----------*/
-
-/*Enable complex draw engine.
- *Required to draw shadow, gradient, rounded corners, circles, arc, skew lines, image transformations or any masks*/
-#define LV_DRAW_COMPLEX 1
-#if LV_DRAW_COMPLEX != 0
-
-    /*Allow buffering some shadow calculation.
-    *LV_SHADOW_CACHE_SIZE is the max. shadow size to buffer, where shadow size is `shadow_width + radius`
-    *Caching has LV_SHADOW_CACHE_SIZE^2 RAM cost*/
-    #define LV_SHADOW_CACHE_SIZE 0
-
-    /* Set number of maximally cached circle data.
-    * The circumference of 1/4 circle are saved for anti-aliasing
-    * radius * 4 bytes are used per circle (the most often used radiuses are saved)
-    * 0: to disable caching */
-    #define LV_CIRCLE_CACHE_SIZE 4
-#endif /*LV_DRAW_COMPLEX*/
-
-/**
- * "Simple layers" are used when a widget has `style_opa < 255` to buffer the widget into a layer
- * and blend it as an image with the given opacity.
- * Note that `bg_opa`, `text_opa` etc don't require buffering into layer)
- * The widget can be buffered in smaller chunks to avoid using large buffers.
- *
- * - LV_LAYER_SIMPLE_BUF_SIZE: [bytes] the optimal target buffer size. LVGL will try to allocate it
- * - LV_LAYER_SIMPLE_FALLBACK_BUF_SIZE: [bytes]  used if `LV_LAYER_SIMPLE_BUF_SIZE` couldn't be allocated.
- *
- * Both buffer sizes are in bytes.
- * "Transformed layers" (where transform_angle/zoom properties are used) use larger buffers
- * and can't be drawn in chunks. So these settings affects only widgets with opacity.
- */
-#define LV_LAYER_SIMPLE_BUF_SIZE          (24 * 1024)
-#define LV_LAYER_SIMPLE_FALLBACK_BUF_SIZE (3 * 1024)
-
-/*Default image cache size. Image caching keeps the images opened.
- *If only the built-in image formats are used there is no real advantage of caching. (I.e. if no new image decoder is added)
- *With complex image decoders (e.g. PNG or JPG) caching can save the continuous open/decode of images.
- *However the opened images might consume additional RAM.
- *0: to disable caching*/
-#define LV_IMG_CACHE_DEF_SIZE 0
-
-/*Number of stops allowed per gradient. Increase this to allow more stops.
- *This adds (sizeof(lv_color_t) + 1) bytes per additional stop*/
-#define LV_GRADIENT_MAX_STOPS 2
-
-/*Default gradient buffer size.
- *When LVGL calculates the gradient "maps" it can save them into a cache to avoid calculating them again.
- *LV_GRAD_CACHE_DEF_SIZE sets the size of this cache in bytes.
- *If the cache is too small the map will be allocated only while it's required for the drawing.
- *0 mean no caching.*/
-#define LV_GRAD_CACHE_DEF_SIZE 0
-
-/*Allow dithering the gradients (to achieve visual smooth color gradients on limited color depth display)
- *LV_DITHER_GRADIENT implies allocating one or two more lines of the object's rendering surface
- *The increase in memory consumption is (32 bits * object width) plus 24 bits * object width if using error diffusion */
-#define LV_DITHER_GRADIENT 0
-#if LV_DITHER_GRADIENT
-    /*Add support for error diffusion dithering.
-     *Error diffusion dithering gets a much better visual result, but implies more CPU consumption and memory when drawing.
-     *The increase in memory consumption is (24 bits * object's width)*/
-    #define LV_DITHER_ERROR_DIFFUSION 0
-#endif
-
-/*Maximum buffer size to allocate for rotation.
- *Only used if software rotation is enabled in the display driver.*/
-#define LV_DISP_ROT_MAX_BUF (10*1024)
-
-/*-------------
- * GPU
- *-----------*/
-
-/*Use Arm's 2D acceleration library Arm-2D */
-#define LV_USE_GPU_ARM2D 0
-
-/*Use STM32's DMA2D (aka Chrom Art) GPU*/
-#define LV_USE_GPU_STM32_DMA2D 0
-#if LV_USE_GPU_STM32_DMA2D
-    /*Must be defined to include path of CMSIS header of target processor
-    e.g. "stm32f7xx.h" or "stm32f4xx.h"*/
-    #define LV_GPU_DMA2D_CMSIS_INCLUDE
-#endif
-
-/*Enable RA6M3 G2D GPU*/
-#define LV_USE_GPU_RA6M3_G2D 0
-#if LV_USE_GPU_RA6M3_G2D
-    /*include path of target processor
-    e.g. "hal_data.h"*/
-    #define LV_GPU_RA6M3_G2D_INCLUDE "hal_data.h"
-#endif
-
-/*Use SWM341's DMA2D GPU*/
-#define LV_USE_GPU_SWM341_DMA2D 0
-#if LV_USE_GPU_SWM341_DMA2D
-    #define LV_GPU_SWM341_DMA2D_INCLUDE "SWM341.h"
-#endif
-
-/*Use NXP's PXP GPU iMX RTxxx platforms*/
-#define LV_USE_GPU_NXP_PXP 0
-#if LV_USE_GPU_NXP_PXP
-    /*1: Add default bare metal and FreeRTOS interrupt handling routines for PXP (lv_gpu_nxp_pxp_osa.c)
-    *   and call lv_gpu_nxp_pxp_init() automatically during lv_init(). Note that symbol SDK_OS_FREE_RTOS
-    *   has to be defined in order to use FreeRTOS OSA, otherwise bare-metal implementation is selected.
-    *0: lv_gpu_nxp_pxp_init() has to be called manually before lv_init()
-    */
-    #define LV_USE_GPU_NXP_PXP_AUTO_INIT 0
-#endif
-
-/*Use NXP's VG-Lite GPU iMX RTxxx platforms*/
-#define LV_USE_GPU_NXP_VG_LITE 0
-
-/*Use SDL renderer API*/
-#define LV_USE_GPU_SDL 0
-#if LV_USE_GPU_SDL
-    #define LV_GPU_SDL_INCLUDE_PATH <SDL2/SDL.h>
-    /*Texture cache size, 8MB by default*/
-    #define LV_GPU_SDL_LRU_SIZE (1024 * 1024 * 8)
-    /*Custom blend mode for mask drawing, disable if you need to link with older SDL2 lib*/
-    #define LV_GPU_SDL_CUSTOM_BLEND_MODE (SDL_VERSION_ATLEAST(2, 0, 6))
-#endif
 
 /*-------------
  * Logging
