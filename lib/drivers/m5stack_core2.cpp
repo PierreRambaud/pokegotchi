@@ -4,7 +4,7 @@
 
 M5Display *tft;
 
-void driver_init() { 
+void driver_init() {
   randomSeed(analogRead(ANALOG_PIN));
   M5.begin(true, false);
 
@@ -13,9 +13,7 @@ void driver_init() {
   tft = &M5.Lcd;
 }
 
-void driver_loop() {
-  M5.update();
-}
+void driver_loop() { M5.update(); }
 
 // Initialize the touch screen
 void init_touch_driver() {

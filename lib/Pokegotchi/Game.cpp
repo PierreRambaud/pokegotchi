@@ -336,5 +336,4 @@ static void end_game_msg_box_event_handler(lv_event_t* e) {
   LV_UNUSED(e);
   serial_printf("Game", "Restart game");
   ESP.restart();
-
 }
