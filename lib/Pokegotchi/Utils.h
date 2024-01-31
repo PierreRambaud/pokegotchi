@@ -83,13 +83,15 @@ static inline bool sd_begin() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
  * @return lv_obj_t*
  **/
 static inline lv_obj_t* display_alert(const char* title, const char* message) {
-  static const char* btns[] = {""};
+  lv_obj_t* msg_box = lv_msgbox_create(NULL);
+  lv_msgbox_add_title(msg_box, title);
+  lv_msgbox_add_text(msg_box, message);
 
-  lv_obj_t* msg_box = lv_msgbox_create(NULL, title, message, btns, true);
-  lv_obj_center(msg_box);
-  lv_obj_t* close_button = lv_msgbox_get_close_btn(msg_box);
+  lv_obj_t* close_button = lv_msgbox_add_close_button(msg_box);
   lv_obj_t* close_label = lv_obj_get_child(close_button, -1);
   lv_label_set_text(close_label, "X");
+
+  lv_obj_center(msg_box);
 
   return msg_box;
 }
