@@ -967,11 +967,12 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_IMG_POKEMON_197 uint8_t pokemon_197_ma
 };
 
 const lv_img_dsc_t pokemon_197 = {
-  .header.cf = LV_IMG_CF_RAW,
-  .header.always_zero = 0,
-  .header.reserved = 0,
+  .header.magic = LV_IMAGE_HEADER_MAGIC,
+  .header.cf = LV_COLOR_FORMAT_RAW,
+  .header.flags = 0,
   .header.w = 0,
   .header.h = 0,
+  .header.stride = 0,
   .data_size = 12368,
   .data = pokemon_197_map,
 };

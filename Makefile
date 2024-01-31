@@ -29,3 +29,26 @@ i18n-extract:
 
 i18n-compile:
 	lv_i18n compile -t 'translations/*.yml' -o 'lib/lv_i18n'
+
+assets-background:
+	find assets_source/background/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB888 --ofmt=C -o src/assets/background/ {} \;
+
+assets-game:
+	find assets_source/game/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/game/ {} \;
+
+assets-battery:
+	find assets_source/battery/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=BIN -o data/menu/battery/ {} \;
+
+assets-home:
+	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/home assets_source/home/home_title.png
+	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=BIN -o data/home/ assets_source/home/eevee.png
+	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=BIN -o data/home/ assets_source/home/pichu.png
+
+assets-menu:
+	find assets_source/menu/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/menu/ {} \;
+
+assets-object-bag:
+	find assets_source/objects/bag/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/objects/bag {} \;
+
+assets-object-balls:
+	find assets_source/objects/balls/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/objects/balls {} \;
