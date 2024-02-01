@@ -1,5 +1,5 @@
-#include <M5Core2.h>
-#include <lv_i18n.h>
+#include "M5Core2.h"
+#include "lv_i18n.h"
 #include "DrawingBoard.h"
 #include "Utils.h"
 
@@ -14,13 +14,14 @@ Runner::Runner() {
   _color = 8;
   _clear_color = 0;
 
+
+  M5.Lcd.fillScreen(getColor(BLACK)); // Set default background color to black
+
   lv_style_set_text_color(&style_color_label, lv_color_hex3(getColor(_color)));
   lv_style_set_text_color(&style_size_label, lv_color_white());
   lv_style_set_text_color(&style_clear_label, lv_color_white());
 
   lv_obj_t* main_screen = lv_obj_create(NULL);
-  lv_obj_set_style_bg_color(main_screen, lv_color_hex3(0x000), LV_PART_MAIN);  // Set default background color to black
-
   lv_screen_load(main_screen);
   lv_obj_remove_style_all(main_screen);
   lv_obj_set_size(main_screen, LV_HOR_RES_MAX, 20);

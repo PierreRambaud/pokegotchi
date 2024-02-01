@@ -1,8 +1,8 @@
 #include "GameSwitcher.h"
-#include <lv_i18n.h>
-#include <Pokegotchi.h>
-#include <FloppyBird.h>
-#include <DrawingBoard.h>
+#include "lv_i18n.h"
+#include "Pokegotchi.h"
+#include "FloppyBird.h"
+#include "DrawingBoard.h"
 
 using namespace GameSwitcher;
 

@@ -34,12 +34,12 @@ Home::Home(poke_config_t* global_config, lv_obj_t* main_screen) {
   _main_screen = main_screen;
   _screen = create_screen(_main_screen);
 
-  lv_obj_t* background_image = lv_img_create(_screen);
-  lv_img_set_src(background_image, &background_16);
+  lv_obj_t* background_image = lv_image_create(_screen);
+  lv_image_set_src(background_image, &background_16);
   lv_obj_set_pos(background_image, 0, 0);
 
-  _title = lv_img_create(_screen);
-  lv_img_set_src(_title, &home_title);
+  _title = lv_image_create(_screen);
+  lv_image_set_src(_title, &home_title);
   lv_obj_align(_title, LV_ALIGN_TOP_MID, 0, -50);
 
   lv_anim_t anim;
@@ -55,7 +55,7 @@ Home::Home(poke_config_t* global_config, lv_obj_t* main_screen) {
   lv_anim_start(&anim);
 }
 
-Home::~Home() { lv_obj_del(_screen); }
+Home::~Home() { lv_obj_delete(_screen); }
 
 void Home::close() {
   lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
@@ -103,15 +103,15 @@ static void start_button_event_handler(lv_event_t* e) {
   lv_obj_set_flex_flow(choice_box_content, LV_FLEX_FLOW_ROW_WRAP);
 
   static int pichu_value = POKEMON_PICHU;
-  lv_obj_t* pichu_btn = lv_img_create(choice_box_content);
-  lv_img_set_src(pichu_btn, "L:/home/pichu.bin");
+  lv_obj_t* pichu_btn = lv_image_create(choice_box_content);
+  lv_image_set_src(pichu_btn, "L:/home/pichu.bin");
   lv_obj_add_flag(pichu_btn, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
   lv_obj_add_event_cb(pichu_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
 
   static int eevee_value = POKEMON_EEVEE;
-  lv_obj_t* eevee_btn = lv_img_create(choice_box_content);
-  lv_img_set_src(eevee_btn, "L:/home/eevee.bin");
+  lv_obj_t* eevee_btn = lv_image_create(choice_box_content);
+  lv_image_set_src(eevee_btn, "L:/home/eevee.bin");
   lv_obj_add_flag(eevee_btn, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(eevee_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &eevee_value);
   lv_obj_add_event_cb(eevee_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);

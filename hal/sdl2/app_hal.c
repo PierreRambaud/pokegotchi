@@ -53,6 +53,6 @@ void hal_loop(void)
 {
     while(1) {
         SDL_Delay(5);
-        lv_task_handler();
+        lv_timer_handler();
     }
 }

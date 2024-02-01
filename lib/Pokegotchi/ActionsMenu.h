@@ -37,7 +37,7 @@ namespace Pokegotchi {
     void close() {
       if (lv_obj_is_valid(_menu_child_screen)) {
         // Remove sub menu anyway
-        lv_obj_del(_menu_child_screen);
+        lv_obj_delete(_menu_child_screen);
       }
 
       serial_printf("ActionsMenu", "Hide ActionsMenu");

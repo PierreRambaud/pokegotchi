@@ -55,7 +55,7 @@ uint8_t object_frozen_carrots_map[] = {
 
 };
 
-const lv_img_dsc_t object_frozen_carrots = {
+const lv_image_dsc_t object_frozen_carrots = {
   .header.magic = LV_IMAGE_HEADER_MAGIC,
   .header.cf = LV_COLOR_FORMAT_ARGB8888,
   .header.flags = 0,

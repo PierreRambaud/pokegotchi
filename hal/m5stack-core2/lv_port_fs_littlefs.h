@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include <lvgl.h>
+#include "lvgl.h"
 
 void lv_port_littlefs_init(void);
 

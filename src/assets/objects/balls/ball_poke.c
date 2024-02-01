@@ -55,7 +55,7 @@ uint8_t ball_poke_map[] = {
 
 };
 
-const lv_img_dsc_t ball_poke = {
+const lv_image_dsc_t ball_poke = {
   .header.magic = LV_IMAGE_HEADER_MAGIC,
   .header.cf = LV_COLOR_FORMAT_ARGB8888,
   .header.flags = 0,

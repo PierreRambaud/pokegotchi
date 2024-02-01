@@ -72,7 +72,7 @@ uint8_t menu_bag_map[] = {
 
 };
 
-const lv_img_dsc_t menu_bag = {
+const lv_image_dsc_t menu_bag = {
   .header.magic = LV_IMAGE_HEADER_MAGIC,
   .header.cf = LV_COLOR_FORMAT_ARGB8888,
   .header.flags = 0,

@@ -90,7 +90,7 @@ namespace Pokegotchi {
     void clean_pee();
     void simple_check();
 
-    const lv_img_dsc_t* get_image() {
+    const lv_image_dsc_t* get_image() {
       switch (_number) {
         case POKEMON_EEVEE:
           return &pokemon_133;

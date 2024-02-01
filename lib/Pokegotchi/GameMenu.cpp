@@ -77,8 +77,8 @@ void GameMenu::display_pokemon() {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
-  lv_obj_t* img = lv_img_create(_menu_child_screen);
-  lv_img_set_src(img, p->get_avatar());
+  lv_obj_t* img = lv_image_create(_menu_child_screen);
+  lv_image_set_src(img, p->get_avatar());
   lv_obj_set_pos(img, 10, 20);
 
   lv_obj_t* name = lv_label_create(_menu_child_screen);
@@ -106,8 +106,8 @@ void GameMenu::display_options() {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
-  static lv_coord_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 30, LV_GRID_TEMPLATE_LAST};
-  static lv_coord_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, LV_GRID_TEMPLATE_LAST};
+  static int32_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 30, LV_GRID_TEMPLATE_LAST};
+  static int32_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, LV_GRID_TEMPLATE_LAST};
 
   lv_obj_set_grid_dsc_array(_menu_child_screen, options_grid_col_dsc, options_grid_row_dsc);
 
@@ -154,8 +154,8 @@ void GameMenu::display_options() {
   lv_obj_set_grid_cell(ball_choice_dropdown, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 5, 1);
   lv_obj_add_event_cb(ball_choice_dropdown, choice_ball_event_cb, LV_EVENT_ALL, NULL);
 
-  _ball_image = lv_img_create(_menu_child_screen);
-  lv_img_set_src(_ball_image, balls_choice_images[Game::getInstance()->get_options()->ball]);
+  _ball_image = lv_image_create(_menu_child_screen);
+  lv_image_set_src(_ball_image, balls_choice_images[Game::getInstance()->get_options()->ball]);
   lv_obj_set_grid_cell(_ball_image, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_START, 5, 1);
 }
 
@@ -217,7 +217,7 @@ void GameMenu::display_saves() {
 }
 
 void GameMenu::change_ball(uint16_t index) {
-  lv_img_set_src(_ball_image, balls_choice_images[index]);
+  lv_image_set_src(_ball_image, balls_choice_images[index]);
   Game::getInstance()->get_options()->ball = index;
 }
 
@@ -250,7 +250,7 @@ static void delete_save_box_event_handler(lv_event_t* e) {
   }
 
   serial_printf("GameMenu", "Delete file file \"%s\"", json_path);
-  lv_obj_del(event_data->selected_row);
+  lv_obj_delete(event_data->selected_row);
   SD.remove(json_path);
   SD.end();
 
@@ -288,7 +288,7 @@ static void game_new_save_event_handler(lv_event_t* e) {
                                  "l", "m", "\n", "w", "x", "c", "v", "b", "n", "\n", LV_SYMBOL_CLOSE,     LV_SYMBOL_OK, NULL};
 
   /*Set the relative width of the buttons and other controls*/
-  static const lv_buttonmatrix_ctrl_t kb_ctrl[] = {4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, LV_BTNMATRIX_CTRL_HIDDEN | 10, 2};
+  static const lv_buttonmatrix_ctrl_t kb_ctrl[] = {4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, LV_BUTTONMATRIX_CTRL_HIDDEN | 10, 2};
 
   lv_keyboard_set_map(keyboard, LV_KEYBOARD_MODE_USER_1, kb_map, kb_ctrl);
   lv_keyboard_set_mode(keyboard, LV_KEYBOARD_MODE_USER_1);

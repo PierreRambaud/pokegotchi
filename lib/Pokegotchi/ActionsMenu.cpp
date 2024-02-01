@@ -1,6 +1,6 @@
-#include <lvgl.h>
-#include <ArduinoJson.h>
-#include <lv_i18n.h>
+#include "lvgl.h"
+#include "ArduinoJson.h"
+#include "lv_i18n.h"
 #include "Config.h"
 #include "ActionsMenu.h"
 #include "Utils.h"
@@ -119,15 +119,15 @@ void ActionsMenu::open() {
     lv_imagebutton_set_state(_train_button, LV_IMAGEBUTTON_STATE_DISABLED);
     lv_imagebutton_set_state(_play_button, LV_IMAGEBUTTON_STATE_DISABLED);
   } else {
-    lv_obj_clear_state(_bag_button, LV_STATE_DISABLED);
-    lv_obj_clear_state(_train_button, LV_STATE_DISABLED);
-    lv_obj_clear_state(_play_button, LV_STATE_DISABLED);
+    lv_obj_remove_state(_bag_button, LV_STATE_DISABLED);
+    lv_obj_remove_state(_train_button, LV_STATE_DISABLED);
+    lv_obj_remove_state(_play_button, LV_STATE_DISABLED);
   }
 
   if (p->get_potions() == 0 or p->is_sleeping()) {
     lv_imagebutton_set_state(_heal_button, LV_IMAGEBUTTON_STATE_DISABLED);
   } else {
-    lv_obj_clear_state(_heal_button, LV_STATE_DISABLED);
+    lv_obj_remove_state(_heal_button, LV_STATE_DISABLED);
   }
 
   set_heal_menu_text(lv_obj_get_child(_heal_button, -1));
@@ -262,8 +262,8 @@ static void toggle_sleep_event_handler(lv_event_t* e) {
  * @return lv_obj_t* the row line
  */
 static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
-  static lv_coord_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
-  static lv_coord_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
+  static int32_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
+  static int32_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
 
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
@@ -275,8 +275,8 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
   lv_obj_set_style_radius(cont, 0, 0);
   lv_obj_set_grid_dsc_array(cont, grid_col_dsc, grid_row_dsc);
 
-  lv_obj_t* img = lv_img_create(cont);
-  lv_img_set_src(img, item->image);
+  lv_obj_t* img = lv_image_create(cont);
+  lv_image_set_src(img, item->image);
   lv_obj_set_grid_cell(img, LV_GRID_ALIGN_CENTER, 0, 1, LV_GRID_ALIGN_CENTER, 0, 2);
 
   lv_obj_t* label;

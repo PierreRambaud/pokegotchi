@@ -35,7 +35,7 @@ void setup() {
 void loop() {
   hal_loop();
 
-  lv_task_handler();
+  lv_timer_handler();
   lv_tick_inc(1);
 
   GameSwitcher::Runner::getInstance()->loop();

@@ -36,7 +36,7 @@ void init_touch_driver() {
 // Initialize hal
 void hal_setup() {
   randomSeed(analogRead(ANALOG_PIN));
-  M5.begin(true, false, true, true);
+  M5.begin(true, false);
 
   lv_port_littlefs_init();
   init_touch_driver();

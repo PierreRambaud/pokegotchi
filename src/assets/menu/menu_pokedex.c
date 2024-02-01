@@ -72,7 +72,7 @@ uint8_t menu_pokedex_map[] = {
 
 };
 
-const lv_img_dsc_t menu_pokedex = {
+const lv_image_dsc_t menu_pokedex = {
   .header.magic = LV_IMAGE_HEADER_MAGIC,
   .header.cf = LV_COLOR_FORMAT_ARGB8888,
   .header.flags = 0,

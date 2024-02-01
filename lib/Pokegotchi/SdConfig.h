@@ -2,7 +2,7 @@
 #ifndef POKEGOTCHI_SD
 #define POKEGOTCHI_SD
 
-#include <lvgl.h>
+#include "lvgl.h"
 #include "Config.h"
 
 struct poke_save_file_info {

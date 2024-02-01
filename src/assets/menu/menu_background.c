@@ -263,7 +263,7 @@ uint8_t menu_background_map[] = {
 
 };
 
-const lv_img_dsc_t menu_background = {
+const lv_image_dsc_t menu_background = {
   .header.magic = LV_IMAGE_HEADER_MAGIC,
   .header.cf = LV_COLOR_FORMAT_ARGB8888,
   .header.flags = 0,

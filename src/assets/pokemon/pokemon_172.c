@@ -1574,7 +1574,7 @@ const LV_ATTRIBUTE_MEM_ALIGN LV_ATTRIBUTE_IMG_POKEMON_172 uint8_t pokemon_172_ma
 
 };
 
-const lv_img_dsc_t pokemon_172 = {
+const lv_image_dsc_t pokemon_172 = {
   .header.magic = LV_IMAGE_HEADER_MAGIC,
   .header.cf = LV_COLOR_FORMAT_RAW,
   .header.flags = 0,

@@ -4,7 +4,7 @@
 // Adapter from:
 // https://github.com/m5stack/M5Core2/blob/master/examples/games/floppybird/floppybird.ino
 
-#include <lv_i18n.h>
+#include "lv_i18n.h"
 #include "FloppyBird.h"
 
 using namespace FloppyBird;

@@ -263,7 +263,7 @@ uint8_t background_12_map[] = {
 
 };
 
-const lv_img_dsc_t background_12 = {
+const lv_image_dsc_t background_12 = {
   .header.magic = LV_IMAGE_HEADER_MAGIC,
   .header.cf = LV_COLOR_FORMAT_RGB888,
   .header.flags = 0,

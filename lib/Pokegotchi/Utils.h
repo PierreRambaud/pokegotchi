@@ -31,7 +31,7 @@ static inline void serial_printf(const char* context, const char* format, ...) {
   va_list args;
   va_start(args, format);
 
-  lv_vsnprintf(buffer, sizeof(buffer), format, args);
+  vsnprintf(buffer, sizeof(buffer), format, args);
 
   va_end(args);
 
@@ -119,13 +119,13 @@ static inline bool check_action_time(long& last_millis, unsigned long wait) {
  * Create menu button
  *
  * @param lv_obj_t* parent
- * @param lv_img_dsc_t* img_src
- * @param lv_img_dsc_t* img_pressed_src
+ * @param lv_image_dsc_t* img_src
+ * @param lv_image_dsc_t* img_pressed_src
  * @param const char* title
  *
  * return lv_obj_t*
  */
-static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_img_dsc_t* img_src, const lv_img_dsc_t* img_pressed_src, const char* title) {
+static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_image_dsc_t* img_src, const lv_image_dsc_t* img_pressed_src, const char* title) {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
@@ -169,7 +169,7 @@ static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t 
   lv_style_set_bg_opa(&style_game_bar_indic, LV_OPA_COVER);
   lv_style_set_radius(&style_game_bar_indic, 3);
 
-  lv_obj_t* bar = lv_bar_create(lv_scr_act());
+  lv_obj_t* bar = lv_bar_create(lv_screen_active());
   lv_obj_remove_style_all(bar);
   lv_obj_add_style(bar, &style_game_bar_bg, 0);
   lv_obj_add_style(bar, &style_game_bar_indic, LV_PART_INDICATOR);
@@ -182,7 +182,7 @@ static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t 
 
   lv_obj_set_pos(bar, x, y);
 
-  lv_obj_t* label = lv_label_create(lv_scr_act());
+  lv_obj_t* label = lv_label_create(lv_screen_active());
   lv_label_set_text(label, title);
   lv_obj_add_style(label, &style_game_label, 0);
   lv_obj_align_to(label, bar, LV_ALIGN_OUT_TOP_MID, 0, -5);

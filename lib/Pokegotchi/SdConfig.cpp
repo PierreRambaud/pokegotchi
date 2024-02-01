@@ -1,4 +1,4 @@
-#include <lv_i18n.h>
+#include "lv_i18n.h"
 #include "Options.h"
 #include "SdConfig.h"
 #include "Utils.h"

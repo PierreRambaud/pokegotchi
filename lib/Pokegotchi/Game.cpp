@@ -23,18 +23,18 @@ LV_IMG_DECLARE(background_16)
 LV_IMG_DECLARE(background_18)
 LV_IMG_DECLARE(background_20)
 
-static const lv_img_dsc_t* anim_night[ANIMATION_NIGHT] = {
+static const lv_image_dsc_t* anim_night[ANIMATION_NIGHT] = {
     &background_6, &background_8, &background_10, &background_12, &background_14, &background_16,
 };
-static const lv_img_dsc_t* anim_day[ANIMATION_DAY] = {
+static const lv_image_dsc_t* anim_day[ANIMATION_DAY] = {
     &background_16, &background_18, &background_20, &background_2, &background_4, &background_6,
 };
 
 static void end_game_msg_box_event_handler(lv_event_t* e);
 static void drag_clean_event_handler(lv_event_t* e);
 static bool check_object_intersect(lv_obj_t* a, lv_obj_t* b);
-static void night_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_night[id]); }
-static void day_animation(void* img, int32_t id) { lv_img_set_src((lv_obj_t*)img, anim_day[id]); }
+static void night_animation(void* img, int32_t id) { lv_image_set_src((lv_obj_t*)img, anim_night[id]); }
+static void day_animation(void* img, int32_t id) { lv_image_set_src((lv_obj_t*)img, anim_day[id]); }
 
 Game* Game::_instance = nullptr;
 
@@ -55,8 +55,8 @@ void Game::_initialize(poke_config_t* global_config, lv_obj_t* main_screen, Poke
   _main_screen = main_screen;
   _screen = create_screen(_main_screen);
 
-  lv_obj_t* background_image = lv_img_create(_screen);
-  lv_img_set_src(background_image, anim_day[0]);
+  lv_obj_t* background_image = lv_image_create(_screen);
+  lv_image_set_src(background_image, anim_day[0]);
   lv_obj_set_pos(background_image, 0, 0);
 
   lv_anim_init(&_anim);
@@ -92,9 +92,9 @@ void Game::_initialize(poke_config_t* global_config, lv_obj_t* main_screen, Poke
   lv_gif_set_src(_pokemon_image, p->get_image());
   lv_obj_align(_pokemon_image, LV_ALIGN_CENTER, 0, 160);
 
-  _pokemon_ball = lv_img_create(_screen);
+  _pokemon_ball = lv_image_create(_screen);
   serial_printf("Game", "Ball second init %d", _options->ball);
-  lv_img_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
+  lv_image_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
   lv_obj_align(_pokemon_ball, LV_ALIGN_CENTER, 0, 90);
   lv_obj_add_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
 
@@ -130,7 +130,7 @@ void Game::switch_to_day() {
   lv_obj_report_style_change(&style_game_label);
 
   if (lv_obj_is_valid(_pokemon_image) && lv_obj_has_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN)) {
-    lv_obj_clear_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_remove_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN);
   }
 
   lv_obj_add_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
@@ -139,8 +139,8 @@ void Game::switch_to_day() {
 void Game::put_in_pokeball() {
   lv_obj_add_flag(_pokemon_image, LV_OBJ_FLAG_HIDDEN);
 
-  lv_img_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
-  lv_obj_clear_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
+  lv_image_set_src(_pokemon_ball, balls_choice_images[_options->ball]);
+  lv_obj_remove_flag(_pokemon_ball, LV_OBJ_FLAG_HIDDEN);
 }
 
 void Game::switch_to_night() {
@@ -185,15 +185,15 @@ void Game::loop() {
 }
 
 void Game::create_poo() {
-  lv_obj_t* poo = lv_img_create(_screen);
-  lv_img_set_src(poo, &game_poo);
+  lv_obj_t* poo = lv_image_create(_screen);
+  lv_image_set_src(poo, &game_poo);
   lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - game_poo.header.w), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - game_poo.header.h));
   _poos.push_back(poo);
 }
 
 void Game::create_pee() {
-  lv_obj_t* pee = lv_img_create(_screen);
-  lv_img_set_src(pee, &game_pee);
+  lv_obj_t* pee = lv_image_create(_screen);
+  lv_image_set_src(pee, &game_pee);
   lv_obj_set_pos(pee, random(1, LV_HOR_RES_MAX - game_pee.header.w), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - game_pee.header.h));
   _pees.push_back(pee);
 }
@@ -203,7 +203,7 @@ void Game::try_to_clean() {
   for (i = 0; i < _poos.size(); i++) {
     lv_obj_t* poo = _poos[i];
     if (check_object_intersect(_clean, poo)) {
-      lv_obj_del(poo);
+      lv_obj_delete(poo);
       Pokemon::getInstance()->clean_poo();
       _poos.erase(_poos.begin() + i);
     }
@@ -212,7 +212,7 @@ void Game::try_to_clean() {
   for (i = 0; i < _pees.size(); i++) {
     lv_obj_t* pee = _pees[i];
     if (check_object_intersect(_clean, pee)) {
-      lv_obj_del(pee);
+      lv_obj_delete(pee);
       Pokemon::getInstance()->clean_pee();
       _pees.erase(_pees.begin() + i);
     }
@@ -220,13 +220,13 @@ void Game::try_to_clean() {
 }
 
 static bool check_object_intersect(lv_obj_t* a, lv_obj_t* b) {
-  lv_coord_t x = lv_obj_get_x(a);
-  lv_coord_t y = lv_obj_get_y(a);
+  int32_t x = lv_obj_get_x(a);
+  int32_t y = lv_obj_get_y(a);
 
-  lv_coord_t d1x = lv_obj_get_x(b) - (x + lv_obj_get_height(a));
-  lv_coord_t d1y = lv_obj_get_y(b) - (y + lv_obj_get_width(a));
-  lv_coord_t d2x = x - (lv_obj_get_x(b) + lv_obj_get_width(b));
-  lv_coord_t d2y = y - (lv_obj_get_y(b) + lv_obj_get_height(b));
+  int32_t d1x = lv_obj_get_x(b) - (x + lv_obj_get_height(a));
+  int32_t d1y = lv_obj_get_y(b) - (y + lv_obj_get_width(a));
+  int32_t d2x = x - (lv_obj_get_x(b) + lv_obj_get_width(b));
+  int32_t d2y = y - (lv_obj_get_y(b) + lv_obj_get_height(b));
 
   if (d1x < 0 && d1y < 0 && d2x < 0 && d2y < 0) {
     return true;
@@ -240,8 +240,8 @@ void Game::action_clean() {
     return;
   }
 
-  _clean = lv_img_create(_screen);
-  lv_img_set_src(_clean, &game_clean);
+  _clean = lv_image_create(_screen);
+  lv_image_set_src(_clean, &game_clean);
   lv_obj_set_pos(_clean, LV_HOR_RES_MAX / 2, LV_VER_RES_MAX / 2);
   lv_obj_add_flag(_clean, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_flag(_clean, LV_OBJ_FLAG_CLICK_FOCUSABLE);
@@ -289,7 +289,7 @@ void Game::action_wake_up() {
 
 void Game::abort_actions() {
   if (lv_obj_is_valid(_clean)) {
-    lv_obj_del(_clean);
+    lv_obj_delete(_clean);
   }
 }
 
@@ -301,17 +301,17 @@ void Game::abort_actions() {
 static void drag_clean_event_handler(lv_event_t* e) {
   lv_obj_t* obj = lv_event_get_target_obj(e);
 
-  lv_indev_t* indev = lv_indev_get_act();
+  lv_indev_t* indev = lv_indev_active();
   if (indev == NULL) return;
 
   lv_point_t vect;
   lv_indev_get_vect(indev, &vect);
 
-  lv_coord_t x = lv_obj_get_x(obj) + vect.x;
-  lv_coord_t y = lv_obj_get_y(obj) + vect.y;
+  int32_t x = lv_obj_get_x(obj) + vect.x;
+  int32_t y = lv_obj_get_y(obj) + vect.y;
 
-  lv_coord_t obj_width = lv_obj_get_width(obj);
-  lv_coord_t obj_height = lv_obj_get_height(obj);
+  int32_t obj_width = lv_obj_get_width(obj);
+  int32_t obj_height = lv_obj_get_height(obj);
 
   // Make sure the object could not go outside the screen
   if ((x + obj_width) > LV_HOR_RES_MAX) {
