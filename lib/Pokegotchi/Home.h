@@ -1,7 +1,7 @@
 #ifndef POKEGOTCHI_HOME
 #define POKEGOTCHI_HOME
 
-#include <lvgl.h>
+#include "lvgl.h"
 #include "SdConfig.h"
 #include "Config.h"
 

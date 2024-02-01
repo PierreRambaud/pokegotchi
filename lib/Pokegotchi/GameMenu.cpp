@@ -1,7 +1,7 @@
-#include <lvgl.h>
-#include <ArduinoJson.h>
-#include <lv_i18n.h>
-#include <GameSwitcher.h>
+#include "lvgl.h"
+#include "ArduinoJson.h"
+#include "lv_i18n.h"
+#include "GameSwitcher.h"
 #include "SdConfig.h"
 #include "Game.h"
 #include "GameMenu.h"

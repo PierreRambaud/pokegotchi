@@ -2,7 +2,7 @@
 #ifndef POKEGOTCHI_MENU
 #define POKEGOTCHI_MENU
 
-#include <lvgl.h>
+#include "lvgl.h"
 #include "Utils.h"
 
 #define BAG_ITEMS_SIZE 15

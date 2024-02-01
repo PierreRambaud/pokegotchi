@@ -1,6 +1,6 @@
 #include <unistd.h>
 #define SDL_MAIN_HANDLED        /*To fix SDL's "undefined reference to WinMain" issue*/
-#include <SDL2/SDL.h>
+#include "SDL2/SDL.h"
 #include "display/monitor.h"
 #include "indev/mouse.h"
 #include "indev/mousewheel.h"
@@ -36,11 +36,10 @@ void hal_setup(void)
 
     /* Add the mouse as input device
      * Use the 'mouse' driver which reads the PC's mouse*/
-    static lv_indev_drv_t indev_drv;
-    lv_indev_drv_init(&indev_drv);            /*Basic initialization*/
-    indev_drv.type = LV_INDEV_TYPE_POINTER;
-    indev_drv.read_cb = sdl_mouse_read;       /*This function will be called periodically (by the library) to get the mouse position and state*/
-    lv_indev_drv_register(&indev_drv);
+
+    lv_indev_t *indev = lv_indev_create();
+    lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
+    lv_indev_set_read_cb(indev, sdl_mouse_read);
 
     sdl_init();
 

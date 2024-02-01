@@ -11,9 +11,9 @@
 #define POKEMON_JOLTEON 135
 #define POKEMON_FLAREON 136
 
-#include <lvgl.h>
-#include <ArduinoJson.h>
-#include <lv_i18n.h>
+#include "lvgl.h"
+#include "ArduinoJson.h"
+#include "lv_i18n.h"
 #include "ActionsMenu.h"
 
 LV_IMG_DECLARE(pokemon_133);

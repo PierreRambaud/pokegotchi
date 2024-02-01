@@ -2,11 +2,9 @@
 #ifndef POKEGOTCHI_UTILS
 #define POKEGOTCHI_UTILS
 
-#include <lvgl.h>
-
-#ifdef ARDUINO_M5STACK_Core2
-#include <M5Core2.h>
-#endif
+#include "lvgl.h"
+#include "M5Core2.h"
+#include "utils_hal.h"
 
 static lv_style_t style_default_title;
 static lv_style_t style_default_text;
@@ -37,8 +35,7 @@ static inline void serial_printf(const char* context, const char* format, ...) {
 
   va_end(args);
 
-  Serial.printf("[%s] ", context);
-  Serial.println(buffer);
+  hal_printf(context, buffer);
 }
 
 /**

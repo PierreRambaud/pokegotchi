@@ -1,7 +1,7 @@
-#include <ArduinoJson.h>
-#include <lvgl.h>
-#include <M5Core2.h>
-#include <lv_i18n.h>
+#include "ArduinoJson.h"
+#include "lvgl.h"
+#include "M5Core2.h"
+#include "lv_i18n.h"
 #include "Options.h"
 #include "Home.h"
 #include "SdConfig.h"

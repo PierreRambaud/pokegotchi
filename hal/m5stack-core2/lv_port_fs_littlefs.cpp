@@ -1,7 +1,7 @@
 
 #ifdef ARDUINO_M5STACK_Core2
-#include <Arduino.h>
-#include <LittleFS.h>
+#include "Arduino.h"
+#include "LittleFS.h"
 #include "lv_port_fs_littlefs.h"
 
 struct LittleFile {

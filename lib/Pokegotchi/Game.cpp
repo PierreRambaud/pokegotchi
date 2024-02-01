@@ -1,5 +1,5 @@
-#include <lvgl.h>
-#include <lv_i18n.h>
+#include "lvgl.h"
+#include "lv_i18n.h"
 #include "Game.h"
 #include "GameMenu.h"
 #include "Utils.h"
