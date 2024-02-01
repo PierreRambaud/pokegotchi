@@ -21,7 +21,7 @@ namespace Pokegotchi {
   typedef struct bag_item_specifications BagItemSpecifications;
 
   struct bag_item {
-    const lv_img_dsc_t* image;
+    const lv_image_dsc_t* image;
     const char* name;
     const char* description;
     BagItemSpecifications* specs;
