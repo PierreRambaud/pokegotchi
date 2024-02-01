@@ -33,7 +33,7 @@ static inline void serial_printf(const char* context, const char* format, ...) {
   va_list args;
   va_start(args, format);
 
-  vsnprintf(buffer, sizeof(buffer), format, args);
+  lv_vsnprintf(buffer, sizeof(buffer), format, args);
 
   va_end(args);
 

@@ -1,28 +1,10 @@
 #define ANALOG_PIN 35
-
-#include "m5stack_core2.h"
+#include "lvgl.h"
+#include <Arduino.h>
+#include <M5Core2.h>
+#include "lv_port_fs_littlefs.h"
 
 M5Display *tft;
-
-// Initialize driver
-void driver_init() {
-  randomSeed(analogRead(ANALOG_PIN));
-  M5.begin(true, false);
-
-  lv_port_littlefs_init();
-
-  tft = &M5.Lcd;
-}
-
-// driver loop behavior
-void driver_loop() { M5.update(); }
-
-// Initialize the touch screen
-void init_touch_driver() {
-  lv_indev_t *indev = lv_indev_create();
-  lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
-  lv_indev_set_read_cb(indev, touchpad_read_cb);
-}
 
 /**
  * @param lv_indev_t *indev
@@ -43,6 +25,27 @@ void touchpad_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
   }
 }
 
+// Initialize the touch screen
+void init_touch_driver() {
+  lv_indev_t *indev = lv_indev_create();
+  lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
+  lv_indev_set_read_cb(indev, touchpad_read_cb);
+}
+
+// Initialize hal
+void hal_setup() {
+  randomSeed(analogRead(ANALOG_PIN));
+  M5.begin(true, false, true, true);
+
+  lv_port_littlefs_init();
+  init_touch_driver();
+
+  tft = &M5.Lcd;
+}
+
+// hal loop behavior
+void hal_loop() { M5.update(); }
+
 /**
  * @param lv_display_t *disp
  * @param const lv_area_t *area
@@ -50,7 +53,7 @@ void touchpad_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
  *
  * @return void
  */
-void display_flush_cb(lv_display_t *disp, const lv_area_t *area, uint8_t *px_map) {
+void hal_flush_cb(lv_display_t *disp, const lv_area_t *area, uint8_t *px_map) {
   uint32_t w = (area->x2 - area->x1 + 1);
   uint32_t h = (area->y2 - area->y1 + 1);
 

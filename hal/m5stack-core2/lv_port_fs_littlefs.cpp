@@ -1,3 +1,5 @@
+
+#ifdef ARDUINO_M5STACK_Core2
 #include <Arduino.h>
 #include <LittleFS.h>
 #include "lv_port_fs_littlefs.h"
@@ -146,3 +148,4 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t* drv, void* file_p, uint32_t pos, lv_fs_w
   lf->file.seek(pos, mode);
   return LV_FS_RES_OK;
 }
+#endif

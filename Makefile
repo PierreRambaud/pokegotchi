@@ -1,25 +1,23 @@
 SRC_DIRS := lib
 
-# Fichiers source (C++ uniquement)
 SRC_FILES := $(shell find $(SRC_DIRS) -name "*.cpp" -o -name "*.h")
-
-# Exécutable Clang Format
 CLANG_FORMAT := clang-format
+DEFAULT_ENV=$(if $(filter-out $@,$(MAKECMDGOALS)), -e $(filter-out $@,$(MAKECMDGOALS)), -e m5stack-core2)
 
 format: $(SRC_FILES)
 	$(CLANG_FORMAT) -i -style=file $^
 
 build:
-	pio run
+	pio run${DEFAULT_ENV}
 
 monitor:
 	pio device monitor
 
 upload:
-	pio run -t upload
+	pio run -t upload${DEFAULT_ENV}
 
 uploadfs:
-	pio run -t uploadfs
+	pio run -t uploadfs${DEFAULT_ENV}
 
 install:
 	npm i lv_i18n -g
@@ -52,3 +50,6 @@ assets-object-bag:
 
 assets-object-balls:
 	find assets_source/objects/balls/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/objects/balls {} \;
+
+%:
+    @:
