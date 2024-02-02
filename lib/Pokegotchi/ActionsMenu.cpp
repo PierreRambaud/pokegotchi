@@ -290,7 +290,7 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
   lv_obj_add_style(desc_label, &style_default_text, 0);
   lv_obj_set_grid_cell(desc_label, LV_GRID_ALIGN_STRETCH, 2, 1, LV_GRID_ALIGN_END, 1, 1);
 
-  lv_obj_t* btn = lv_btn_create(cont);
+  lv_obj_t* btn = lv_button_create(cont);
   lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, 3, 1, LV_GRID_ALIGN_CENTER, 0, 2);
   lv_obj_add_event_cb(btn, use_item_event_handler, LV_EVENT_CLICKED, item);
 

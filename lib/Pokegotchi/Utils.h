@@ -93,7 +93,7 @@ static inline poke_messagebox_t* create_message_box(const char* title, const cha
   lv_msgbox_add_text(msg_box, message);
 
   lv_obj_t* close_button = lv_msgbox_add_close_button(msg_box);
-  lv_obj_center(msg_box);
+  lv_obj_set_size(close_button, 30, 30);
 
   return new poke_messagebox_t{msg_box, close_button};
 }

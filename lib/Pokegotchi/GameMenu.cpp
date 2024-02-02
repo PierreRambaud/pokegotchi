@@ -199,7 +199,7 @@ void GameMenu::display_saves() {
     lv_obj_add_event_cb(list_btn, choice_save_game_event_handler, LV_EVENT_CLICKED, save_files[i].name);
   }
 
-  lv_obj_t* new_save_button = lv_btn_create(_menu_child_screen);
+  lv_obj_t* new_save_button = lv_button_create(_menu_child_screen);
   lv_obj_align(new_save_button, LV_ALIGN_BOTTOM_LEFT, 10, -10);
   lv_obj_add_event_cb(new_save_button, game_new_save_event_handler, LV_EVENT_CLICKED, _menu_child_screen);
 
@@ -207,7 +207,7 @@ void GameMenu::display_saves() {
   lv_label_set_text(label, _("game.save.create.button"));
   lv_obj_center(label);
 
-  lv_obj_t* existing_game_save_button = lv_btn_create(_menu_child_screen);
+  lv_obj_t* existing_game_save_button = lv_button_create(_menu_child_screen);
   lv_obj_align(existing_game_save_button, LV_ALIGN_BOTTOM_RIGHT, -10, -10);
   lv_obj_add_event_cb(existing_game_save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
 

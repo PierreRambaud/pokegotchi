@@ -68,7 +68,7 @@ void Home::load_buttons() {
   }
 
   if (lv_obj_get_y(_title) >= 50) {
-    lv_obj_t* start_button = lv_btn_create(_screen);
+    lv_obj_t* start_button = lv_button_create(_screen);
     lv_obj_align(start_button, LV_ALIGN_CENTER, 0, 25);
     lv_obj_add_event_cb(start_button, start_button_event_handler, LV_EVENT_CLICKED, NULL);
 
@@ -79,7 +79,7 @@ void Home::load_buttons() {
     lv_obj_center(label);
 
     if (_sd_config->has_save_files() == true) {
-      lv_obj_t* load_button = lv_btn_create(_screen);
+      lv_obj_t* load_button = lv_button_create(_screen);
       lv_obj_align(load_button, LV_ALIGN_CENTER, 0, 60);
       lv_obj_add_event_cb(load_button, load_button_event_handler, LV_EVENT_CLICKED, _sd_config);
 
