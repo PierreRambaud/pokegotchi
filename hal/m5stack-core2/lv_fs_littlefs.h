@@ -1,5 +1,5 @@
-#ifndef LV_PORT_FS_SPIFFS_H
-#define LV_PORT_FS_SPIFFS_H
+#ifndef LV_PORT_FS_LITTLEFS_H
+#define LV_PORT_FS_LITTLEFS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -7,7 +7,7 @@ extern "C" {
 
 #include "lvgl.h"
 
-void lv_port_littlefs_init(void);
+void lv_fs_littlefs_init(void);
 
 #ifdef __cplusplus
 } /*extern "C"*/

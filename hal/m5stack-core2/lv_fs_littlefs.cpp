@@ -1,8 +1,5 @@
-
-#ifdef ARDUINO_M5STACK_Core2
-#include "Arduino.h"
 #include "LittleFS.h"
-#include "lv_port_fs_littlefs.h"
+#include "lv_fs_littlefs.h"
 
 struct LittleFile {
   File file;
@@ -18,7 +15,7 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t* drv, void* file_p, uint32_t pos, lv_fs_w
 static lv_fs_res_t fs_tell(lv_fs_drv_t* drv, void* file_p, uint32_t* pos_p);
 
 // Initialize little fs driver
-void lv_port_littlefs_init(void) {
+void lv_fs_littlefs_init(void) {
   fs_init();
 
   /*Add a simple drive to open images*/
@@ -148,4 +145,3 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t* drv, void* file_p, uint32_t pos, lv_fs_w
   lf->file.seek(pos, mode);
   return LV_FS_RES_OK;
 }
-#endif
