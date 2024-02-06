@@ -10,7 +10,7 @@ using namespace Pokegotchi;
 void prepare_sd_card_directory(poke_config_t*);
 
 Runner::Runner() {
-  _config = new poke_config_t{"/.pokegotchi", "/.pokegotchi/saves"};
+  _config = new poke_config_t{hal_start_storage(), "/.pokegotchi", "/.pokegotchi/saves"};
 
   prepare_sd_card_directory(_config);
 
@@ -54,7 +54,7 @@ void Runner::loop() {
 }
 
 void prepare_sd_card_directory(poke_config_t* global_config) {
-  if (sd_begin() == false) {
+  if (!global_config->use_sd_card) {
     return;
   }
 

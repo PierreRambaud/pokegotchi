@@ -75,12 +75,6 @@ static inline void anim_y_callback(void* obj, int32_t value) { lv_obj_set_y((lv_
 static inline void anim_x_callback(void* obj, int32_t value) { lv_obj_set_x((lv_obj_t*)obj, value); }
 
 /**
- * Start SD card
- * @return bool
- */
-static inline bool sd_begin() { return hal_start_storage(); }
-
-/**
  * Create message box
  *
  * @param const char* title

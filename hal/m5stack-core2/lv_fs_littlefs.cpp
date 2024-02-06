@@ -3,44 +3,43 @@
 #include "lv_fs_littlefs.h"
 
 struct LittleFile {
-    File file;
+  File file;
 };
 
 /**********************
  *  STATIC PROTOTYPES
  **********************/
 static void fs_init(void);
-static void * fs_open(lv_fs_drv_t * drv, const char * path, lv_fs_mode_t mode);
-static lv_fs_res_t fs_close(lv_fs_drv_t * drv, void * file_p);
-static lv_fs_res_t fs_read(lv_fs_drv_t * drv, void * file_p, void * buf, uint32_t btr, uint32_t * br);
-static lv_fs_res_t fs_write(lv_fs_drv_t * drv, void * file_p, const void * buf, uint32_t btw, uint32_t * bw);
-static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs_whence_t whence);
-static lv_fs_res_t fs_tell(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p);
+static void *fs_open(lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mode);
+static lv_fs_res_t fs_close(lv_fs_drv_t *drv, void *file_p);
+static lv_fs_res_t fs_read(lv_fs_drv_t *drv, void *file_p, void *buf, uint32_t btr, uint32_t *br);
+static lv_fs_res_t fs_write(lv_fs_drv_t *drv, void *file_p, const void *buf, uint32_t btw, uint32_t *bw);
+static lv_fs_res_t fs_seek(lv_fs_drv_t *drv, void *file_p, uint32_t pos, lv_fs_whence_t whence);
+static lv_fs_res_t fs_tell(lv_fs_drv_t *drv, void *file_p, uint32_t *pos_p);
 
 /**
  * Register a driver for the LittleFS File System interface
  */
-void lv_fs_littlefs_init(void)
-{
-    fs_init();
+void lv_fs_littlefs_init(void) {
+  fs_init();
 
-    /*Add a simple drive to open images*/
-    static lv_fs_drv_t fs_drv;
-    lv_fs_drv_init(&fs_drv);
+  /*Add a simple drive to open images*/
+  static lv_fs_drv_t fs_drv;
+  lv_fs_drv_init(&fs_drv);
 
-    fs_drv.letter = LV_FS_LITTLEFS_LETTER;
-    fs_drv.open_cb = fs_open;
-    fs_drv.close_cb = fs_close;
-    fs_drv.read_cb = fs_read;
-    fs_drv.write_cb = fs_write;
-    fs_drv.seek_cb = fs_seek;
-    fs_drv.tell_cb = fs_tell;
+  fs_drv.letter = LV_FS_LITTLEFS_LETTER;
+  fs_drv.open_cb = fs_open;
+  fs_drv.close_cb = fs_close;
+  fs_drv.read_cb = fs_read;
+  fs_drv.write_cb = fs_write;
+  fs_drv.seek_cb = fs_seek;
+  fs_drv.tell_cb = fs_tell;
 
-    fs_drv.dir_close_cb = NULL;
-    fs_drv.dir_open_cb = NULL;
-    fs_drv.dir_read_cb = NULL;
+  fs_drv.dir_close_cb = NULL;
+  fs_drv.dir_open_cb = NULL;
+  fs_drv.dir_read_cb = NULL;
 
-    lv_fs_drv_register(&fs_drv);
+  lv_fs_drv_register(&fs_drv);
 }
 
 /**********************
@@ -48,10 +47,7 @@ void lv_fs_littlefs_init(void)
  **********************/
 
 /*Initialize your Storage device and File system.*/
-static void fs_init(void)
-{
-    LittleFS.begin();
-}
+static void fs_init(void) { LittleFS.begin(); }
 
 /**
  * Open a file
@@ -60,27 +56,26 @@ static void fs_init(void)
  * @param mode      read: FS_MODE_RD, write: FS_MODE_WR, both: FS_MODE_RD | FS_MODE_WR
  * @return          a file descriptor or NULL on error
  */
-static void * fs_open(lv_fs_drv_t * drv, const char * path, lv_fs_mode_t mode)
-{
-    LV_UNUSED(drv);
+static void *fs_open(lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mode) {
+  LV_UNUSED(drv);
 
-    const char * flags = "";
+  const char *flags = "";
 
-    if(mode == LV_FS_MODE_WR)
-        flags = FILE_WRITE;
-    else if(mode == LV_FS_MODE_RD)
-        flags = FILE_READ;
-    else if(mode == (LV_FS_MODE_WR | LV_FS_MODE_RD))
-        flags = FILE_WRITE;
+  if (mode == LV_FS_MODE_WR)
+    flags = FILE_WRITE;
+  else if (mode == LV_FS_MODE_RD)
+    flags = FILE_READ;
+  else if (mode == (LV_FS_MODE_WR | LV_FS_MODE_RD))
+    flags = FILE_WRITE;
 
-    File f = LittleFS.open(path, flags);
-    if(!f) {
-        return NULL;
-    }
+  File f = LittleFS.open(path, flags);
+  if (!f) {
+    return NULL;
+  }
 
-    LittleFile * lf = new LittleFile{f};
+  LittleFile *lf = new LittleFile{f};
 
-    return (void *)lf;
+  return (void *)lf;
 }
 
 /**
@@ -89,15 +84,14 @@ static void * fs_open(lv_fs_drv_t * drv, const char * path, lv_fs_mode_t mode)
  * @param file_p    pointer to a file_t variable. (opened with fs_open)
  * @return          LV_FS_RES_OK: no error or  any error from @lv_fs_res_t enum
  */
-static lv_fs_res_t fs_close(lv_fs_drv_t * drv, void * file_p)
-{
-    LV_UNUSED(drv);
-    LittleFile * lf = (LittleFile *)file_p;
+static lv_fs_res_t fs_close(lv_fs_drv_t *drv, void *file_p) {
+  LV_UNUSED(drv);
+  LittleFile *lf = (LittleFile *)file_p;
 
-    lf->file.close();
+  lf->file.close();
 
-    delete lf;
-    return LV_FS_RES_OK;
+  delete lf;
+  return LV_FS_RES_OK;
 }
 
 /**
@@ -109,14 +103,13 @@ static lv_fs_res_t fs_close(lv_fs_drv_t * drv, void * file_p)
  * @param br        the real number of read bytes (Byte Read)
  * @return          LV_FS_RES_OK: no error or  any error from @lv_fs_res_t enum
  */
-static lv_fs_res_t fs_read(lv_fs_drv_t * drv, void * file_p, void * buf, uint32_t btr, uint32_t * br)
-{
-    LV_UNUSED(drv);
-    LittleFile * lf = (LittleFile *)file_p;
+static lv_fs_res_t fs_read(lv_fs_drv_t *drv, void *file_p, void *buf, uint32_t btr, uint32_t *br) {
+  LV_UNUSED(drv);
+  LittleFile *lf = (LittleFile *)file_p;
 
-    *br = lf->file.read((uint8_t *)buf, btr);
+  *br = lf->file.read((uint8_t *)buf, btr);
 
-    return (int32_t)(*br) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
+  return (int32_t)(*br) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
 }
 
 /**
@@ -128,13 +121,12 @@ static lv_fs_res_t fs_read(lv_fs_drv_t * drv, void * file_p, void * buf, uint32_
  * @param bw        the number of real written bytes (Bytes Written)
  * @return          LV_FS_RES_OK: no error or  any error from @lv_fs_res_t enum
  */
-static lv_fs_res_t fs_write(lv_fs_drv_t * drv, void * file_p, const void * buf, uint32_t btw, uint32_t * bw)
-{
-    LV_UNUSED(drv);
-    LittleFile * lf = (LittleFile *)file_p;
-    *bw = lf->file.write((uint8_t *)buf, btw);
+static lv_fs_res_t fs_write(lv_fs_drv_t *drv, void *file_p, const void *buf, uint32_t btw, uint32_t *bw) {
+  LV_UNUSED(drv);
+  LittleFile *lf = (LittleFile *)file_p;
+  *bw = lf->file.write((uint8_t *)buf, btw);
 
-    return (int32_t)(*bw) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
+  return (int32_t)(*bw) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
 }
 
 /**
@@ -145,21 +137,20 @@ static lv_fs_res_t fs_write(lv_fs_drv_t * drv, void * file_p, const void * buf, 
  * @param whence    tells from where to interpret the `pos`. See @lv_fs_whence_t
  * @return          LV_FS_RES_OK: no error or  any error from @lv_fs_res_t enum
  */
-static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs_whence_t whence)
-{
-    LV_UNUSED(drv);
-    SeekMode mode;
-    if(whence == LV_FS_SEEK_SET)
-        mode = SeekSet;
-    else if(whence == LV_FS_SEEK_CUR)
-        mode = SeekCur;
-    else if(whence == LV_FS_SEEK_END)
-        mode = SeekEnd;
+static lv_fs_res_t fs_seek(lv_fs_drv_t *drv, void *file_p, uint32_t pos, lv_fs_whence_t whence) {
+  LV_UNUSED(drv);
+  SeekMode mode;
+  if (whence == LV_FS_SEEK_SET)
+    mode = SeekSet;
+  else if (whence == LV_FS_SEEK_CUR)
+    mode = SeekCur;
+  else if (whence == LV_FS_SEEK_END)
+    mode = SeekEnd;
 
-    LittleFile * lf = (LittleFile *)file_p;
-    lf->file.seek(pos, mode);
-    
-    return LV_FS_RES_OK;
+  LittleFile *lf = (LittleFile *)file_p;
+  lf->file.seek(pos, mode);
+
+  return LV_FS_RES_OK;
 }
 
 /**
@@ -170,11 +161,10 @@ static lv_fs_res_t fs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos, lv_fs
  * @return LV_FS_RES_OK: no error
  *         any error from lv_fs_res_t enum
  */
-static lv_fs_res_t fs_tell(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p)
-{
-    LV_UNUSED(drv);
-    LittleFile * lf = (LittleFile *)file_p;
-    *pos_p = lf->file.position();
+static lv_fs_res_t fs_tell(lv_fs_drv_t *drv, void *file_p, uint32_t *pos_p) {
+  LV_UNUSED(drv);
+  LittleFile *lf = (LittleFile *)file_p;
+  *pos_p = lf->file.position();
 
-    return LV_FS_RES_OK;
+  return LV_FS_RES_OK;
 }

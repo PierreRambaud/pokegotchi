@@ -52,8 +52,7 @@ void SdConfig::free_list() {
 }
 
 void SdConfig::load_save_files() {
-  if (sd_begin() == false) {
-    create_message_box("", _("sd.card.not_found"));
+  if (hal_start_storage() == false) {
     return;
   }
 

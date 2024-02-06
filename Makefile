@@ -1,4 +1,4 @@
-SRC_DIRS := lib
+SRC_DIRS := lib hal src/main.cpp
 
 SRC_FILES := $(shell find $(SRC_DIRS) -name "*.cpp" -o -name "*.h")
 CLANG_FORMAT := clang-format

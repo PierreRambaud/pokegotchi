@@ -12,7 +12,7 @@ Menu::Menu(lv_obj_t* main_screen) {
   lv_image_set_src(background_image, &menu_background);
   lv_obj_set_pos(background_image, 0, 0);
 
-#ifndef POKEGOTCHI_BATTERY
+#ifdef POKEGOTCHI_BATTERY
   _battery_level_icon = lv_image_create(_screen);
   lv_obj_set_pos(_battery_level_icon, LV_HOR_RES_MAX - 30, 0);
 

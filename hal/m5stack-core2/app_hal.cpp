@@ -7,10 +7,7 @@
 
 M5Display *tft;
 
-
-lv_display_t* hal_create_display(void) {
-  return lv_display_create(LV_HOR_RES_MAX, LV_VER_RES_MAX);
-}
+lv_display_t *hal_create_display(void) { return lv_display_create(LV_HOR_RES_MAX, LV_VER_RES_MAX); }
 
 /**
  * @param lv_indev_t *indev

@@ -3,7 +3,7 @@
 #include "Utils.h"
 #include "GameSwitcher.h"
 
-static lv_display_t * display;
+static lv_display_t *display;
 
 void custom_log_cb(lv_log_level_t level, const char *buf) {
   LV_UNUSED(level);
@@ -13,9 +13,7 @@ void custom_log_cb(lv_log_level_t level, const char *buf) {
 void lv_display_initialization() {
   lv_init();
 
-  lv_display_t * display = hal_create_display();
-  
-
+  lv_display_t *display = hal_create_display();
 
   static uint16_t buf[(LV_HOR_RES_MAX * LV_VER_RES_MAX) / 10];  // Declare a buffer for 1/10 screen size
   // Initialize `display_buf` display buffer with the buffer(s).

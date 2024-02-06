@@ -182,7 +182,7 @@ static void load_file_button_event_handler(lv_event_t* e) {
   event_load_game_data* event_data = (event_load_game_data*)lv_event_get_user_data(e);
   poke_save_file_info* save_files = event_data->sd_config->get_save_files();
 
-  sd_begin();
+  hal_start_storage();
   File file = SD.open(save_files[event_data->index].path);
   if (!file) {
     create_message_box(_("game.error"), _("game.load.error"));

@@ -245,13 +245,14 @@ static void delete_save_box_event_handler(lv_event_t* e) {
   strcat(json_path, event_data->file_name);
   strcat(json_path, ".json");
 
-  if (sd_begin() == false) {
+  if (hal_start_storage() == false) {
     create_message_box(_("game.error"), _("sd.card.not_found"));
     return;
   }
 
   serial_printf("GameMenu", "Delete file file \"%s\"", json_path);
   lv_obj_delete(event_data->selected_row);
+
   SD.remove(json_path);
   SD.end();
 
@@ -343,8 +344,30 @@ static void click_button_save_game_event_handler(lv_event_t* e) { GameMenu::getI
  * @param lv_event_t* e
  */
 static void save_game_event_handler(lv_event_t* e) {
-  Pokemon* p = Pokemon::getInstance();
+  if (hal_start_storage() == false) {
+    create_message_box(_("game.error"), _("sd.card.not_found"));
+    return;
+  }
 
+  char* save_file_name = (char*)lv_event_get_user_data(e);
+  File file;
+  if (save_file_name == NULL and Game::getInstance()->get_options()->save_file_path) {
+    serial_printf("GameMenu", "Save file \"%s\"", Game::getInstance()->get_options()->save_file_path);
+    file = SD.open(Game::getInstance()->get_options()->save_file_path, FILE_WRITE);
+  } else {
+    char json_path[50];
+    strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
+    strcat(json_path, "/");
+    strcat(json_path, save_file_name);
+    strcat(json_path, ".json");
+    file = SD.open(json_path, FILE_WRITE);
+    serial_printf("GameMenu", "Save file \"%s\"", json_path);
+    if (file) {
+      Game::getInstance()->get_options()->save_file_path = json_path;
+    }
+  }
+
+  Pokemon* p = Pokemon::getInstance();
   JsonDocument doc;
   doc["options"]["brightness"] = Game::getInstance()->get_options()->brightness;
   doc["options"]["ball"] = Game::getInstance()->get_options()->ball;
@@ -369,29 +392,6 @@ static void save_game_event_handler(lv_event_t* e) {
   pokemon_time["sleep"] = p->get_last_sleep_time() - current_time;
   pokemon_time["without_sleep"] = p->get_last_without_sleep_time() - current_time;
   pokemon_time["potion"] = p->get_last_potion_time() - current_time;
-
-  if (sd_begin() == false) {
-    create_message_box(_("game.error"), _("sd.card.not_found"));
-    return;
-  }
-
-  char* save_file_name = (char*)lv_event_get_user_data(e);
-  File file;
-  if (save_file_name == NULL and Game::getInstance()->get_options()->save_file_path) {
-    serial_printf("GameMenu", "Save file \"%s\"", Game::getInstance()->get_options()->save_file_path);
-    file = SD.open(Game::getInstance()->get_options()->save_file_path, FILE_WRITE);
-  } else {
-    char json_path[50];
-    strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
-    strcat(json_path, "/");
-    strcat(json_path, save_file_name);
-    strcat(json_path, ".json");
-    file = SD.open(json_path, FILE_WRITE);
-    serial_printf("GameMenu", "Save file \"%s\"", json_path);
-    if (file) {
-      Game::getInstance()->get_options()->save_file_path = json_path;
-    }
-  }
 
   if (!file) {
     create_message_box(_("game.error"), _("game.save.failed"));
