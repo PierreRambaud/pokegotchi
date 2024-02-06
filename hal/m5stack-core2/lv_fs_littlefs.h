@@ -1,5 +1,5 @@
-#ifndef LV_PORT_FS_LITTLEFS_H
-#define LV_PORT_FS_LITTLEFS_H
+#ifndef LV_FS_LITTLEFS_H
+#define LV_FS_LITTLEFS_H
 
 #ifdef __cplusplus
 extern "C" {

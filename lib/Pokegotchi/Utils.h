@@ -2,8 +2,8 @@
 #ifndef POKEGOTCHI_UTILS
 #define POKEGOTCHI_UTILS
 
+#include "stdio.h"
 #include "lvgl.h"
-#include "M5Core2.h"
 #include "utils_hal.h"
 
 static lv_style_t style_default_title;
@@ -78,7 +78,7 @@ static inline void anim_x_callback(void* obj, int32_t value) { lv_obj_set_x((lv_
  * Start SD card
  * @return bool
  */
-static inline bool sd_begin() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
+static inline bool sd_begin() { return hal_start_storage(); }
 
 /**
  * Create message box
@@ -107,8 +107,8 @@ static inline poke_messagebox_t* create_message_box(const char* title, const cha
  * return bool
  */
 static inline bool check_action_time(long& last_millis, unsigned long wait) {
-  if (millis() - last_millis >= wait) {
-    last_millis = millis();
+  if (hal_millis() - last_millis >= wait) {
+    last_millis = hal_millis();
     return true;
   }
 
@@ -196,7 +196,7 @@ static inline lv_obj_t* lv_game_bar_create(lv_obj_t* parent, const lv_palette_t 
  */
 static inline void set_lcd_brightness(int32_t value) {
   serial_printf("Options", "Brightness new value: %d", value);
-  M5.Axp.SetLcdVoltage(2500 + ((value * 800) / 100));
+  hal_set_brightness(value);
 }
 
 #endif

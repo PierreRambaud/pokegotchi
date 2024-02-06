@@ -1,12 +1,12 @@
 #include <unistd.h>
 #define SDL_MAIN_HANDLED        /*To fix SDL's "undefined reference to WinMain" issue*/
 #include "SDL2/SDL.h"
-#include "display/monitor.h"
-#include "indev/mouse.h"
-#include "indev/mousewheel.h"
-#include "indev/keyboard.h"
-#include "sdl/sdl.h"
+#include "lvgl.h"
 
+
+lv_display_t* hal_create_display(void) {
+    return lv_sdl_window_create(LV_HOR_RES_MAX, LV_VER_RES_MAX);
+}
 
 /**
  * A task to measure the elapsed time for LittlevGL
@@ -37,11 +37,9 @@ void hal_setup(void)
     /* Add the mouse as input device
      * Use the 'mouse' driver which reads the PC's mouse*/
 
-    lv_indev_t *indev = lv_indev_create();
-    lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
-    lv_indev_set_read_cb(indev, sdl_mouse_read);
+    lv_indev_t *indev = lv_sdl_mouse_create();
 
-    sdl_init();
+    SDL_Init(SDL_INIT_VIDEO);
 
     /* Tick init.
      * You have to call 'lv_tick_inc()' in periodically to inform LittelvGL about how much time were elapsed

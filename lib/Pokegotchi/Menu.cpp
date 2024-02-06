@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "utils_hal.h"
 
 using namespace Pokegotchi;
 
@@ -11,10 +12,12 @@ Menu::Menu(lv_obj_t* main_screen) {
   lv_image_set_src(background_image, &menu_background);
   lv_obj_set_pos(background_image, 0, 0);
 
+#ifndef POKEGOTCHI_BATTERY
   _battery_level_icon = lv_image_create(_screen);
   lv_obj_set_pos(_battery_level_icon, LV_HOR_RES_MAX - 30, 0);
 
   refresh_battery_status();
+#endif
 
   _menu_screen = create_child_screen(_screen);
 
@@ -41,16 +44,19 @@ void Menu::open() {
 }
 
 void Menu::refresh_battery_status() {
+#ifndef POKEGOTCHI_BATTERY
+  return;
+#else
   if (_is_open == false) {
     return;
   }
 
   const char* battery_image = "";
-  if (M5.Axp.isCharging() == true) {
+  if (hal_battery_is_charging() == true) {
     serial_printf("Menu", "Battery is charging");
     battery_image = "L:/menu/battery/charging.bin";
   } else {
-    float battery_level = M5.Axp.GetBatteryLevel();
+    float battery_level = hal_battery_level();
     if (battery_level >= 80) {
       battery_image = "L:/menu/battery/full.bin";
     } else if (battery_level >= 40) {
@@ -67,4 +73,5 @@ void Menu::refresh_battery_status() {
     lv_image_set_src(_battery_level_icon, battery_image);
     _previous_battery_image = battery_image;
   }
+#endif
 }

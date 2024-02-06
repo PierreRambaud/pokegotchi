@@ -1,4 +1,5 @@
 #include "lvgl.h"
+#include "M5Core2.h"
 #include "ArduinoJson.h"
 #include "lv_i18n.h"
 #include "GameSwitcher.h"

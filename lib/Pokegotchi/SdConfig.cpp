@@ -1,6 +1,7 @@
 #include "lv_i18n.h"
 #include "Options.h"
 #include "SdConfig.h"
+#include "M5Core2.h"
 #include "Utils.h"
 
 using namespace Pokegotchi;
