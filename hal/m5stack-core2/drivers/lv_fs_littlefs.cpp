@@ -1,6 +1,6 @@
 #include "lvgl.h"
 #include "LittleFS.h"
-#include "lv_fs_littlefs.h"
+#include "drivers/lv_fs_littlefs.h"
 
 struct LittleFile {
   File file;

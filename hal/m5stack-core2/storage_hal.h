@@ -4,6 +4,7 @@
 
 #include "lvgl.h"
 
+
 void hal_delete_file(char);
 
 #endif /*STORAGE_HAL_H*/

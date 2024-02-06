@@ -2,7 +2,7 @@
 #include "lvgl.h"
 #include "Arduino.h"
 #include "M5Core2.h"
-#include "lv_fs_littlefs.h"
+#include "drivers/lv_fs_littlefs.h"
 #include "app_hal.h"
 
 M5Display *tft;
