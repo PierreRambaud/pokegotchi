@@ -4043,6 +4043,6 @@ const lv_image_dsc_t pokemon_471 = {
   .header.w = 0,
   .header.h = 0,
   .header.stride = 0,
-  .data_size = 52280,
+  .data_size = sizeof(pokemon_471_map),
   .data = pokemon_471_map,
 };

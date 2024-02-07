@@ -62,7 +62,7 @@ const lv_image_dsc_t object_beans = {
   .header.w = 32,
   .header.h = 32,
   .header.stride = 128,
-  .data_size = 4096,
+  .data_size = sizeof(object_beans_map),
   .data = object_beans_map,
 };
 

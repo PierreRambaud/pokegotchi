@@ -2794,6 +2794,6 @@ const lv_image_dsc_t pokemon_134 = {
   .header.w = 0,
   .header.h = 0,
   .header.stride = 0,
-  .data_size = 36040,
+  .data_size = sizeof(pokemon_134_map),
   .data = pokemon_134_map,
 };

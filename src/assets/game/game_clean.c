@@ -62,7 +62,7 @@ const lv_image_dsc_t game_clean = {
   .header.w = 32,
   .header.h = 32,
   .header.stride = 128,
-  .data_size = 4096,
+  .data_size = sizeof(game_clean_map),
   .data = game_clean_map,
 };
 

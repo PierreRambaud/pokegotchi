@@ -62,7 +62,7 @@ const lv_image_dsc_t ball_master = {
   .header.w = 32,
   .header.h = 32,
   .header.stride = 128,
-  .data_size = 4096,
+  .data_size = sizeof(ball_master_map),
   .data = ball_master_map,
 };
 

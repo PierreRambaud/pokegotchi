@@ -79,7 +79,7 @@ const lv_image_dsc_t menu_play_disabled = {
   .header.w = 150,
   .header.h = 49,
   .header.stride = 600,
-  .data_size = 29400,
+  .data_size = sizeof(menu_play_disabled_map),
   .data = menu_play_disabled_map,
 };
 

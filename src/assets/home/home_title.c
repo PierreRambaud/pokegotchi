@@ -85,7 +85,7 @@ const lv_image_dsc_t home_title = {
   .header.w = 164,
   .header.h = 55,
   .header.stride = 656,
-  .data_size = 36080,
+  .data_size = sizeof(home_title_map),
   .data = home_title_map,
 };
 

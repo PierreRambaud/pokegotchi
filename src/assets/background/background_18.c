@@ -270,7 +270,7 @@ const lv_image_dsc_t background_18 = {
   .header.w = 320,
   .header.h = 240,
   .header.stride = 960,
-  .data_size = 230400,
+  .data_size = sizeof(background_18_map),
   .data = background_18_map,
 };
 

@@ -3214,6 +3214,6 @@ const lv_image_dsc_t pokemon_470 = {
   .header.w = 0,
   .header.h = 0,
   .header.stride = 0,
-  .data_size = 41505,
+  .data_size = sizeof(pokemon_470_map),
   .data = pokemon_470_map,
 };

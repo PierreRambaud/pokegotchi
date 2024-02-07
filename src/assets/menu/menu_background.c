@@ -270,7 +270,7 @@ const lv_image_dsc_t menu_background = {
   .header.w = 320,
   .header.h = 240,
   .header.stride = 1280,
-  .data_size = 307200,
+  .data_size = sizeof(menu_background_map),
   .data = menu_background_map,
 };
 

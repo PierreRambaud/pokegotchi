@@ -60,7 +60,7 @@ const lv_image_dsc_t game_poo = {
   .header.w = 30,
   .header.h = 30,
   .header.stride = 120,
-  .data_size = 3600,
+  .data_size = sizeof(game_poo_map),
   .data = game_poo_map,
 };
 

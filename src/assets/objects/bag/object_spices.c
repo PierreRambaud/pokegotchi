@@ -62,7 +62,7 @@ const lv_image_dsc_t object_spices = {
   .header.w = 32,
   .header.h = 32,
   .header.stride = 128,
-  .data_size = 4096,
+  .data_size = sizeof(object_spices_map),
   .data = object_spices_map,
 };
 
