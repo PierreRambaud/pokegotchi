@@ -1,4 +1,3 @@
-#include "M5Core2.h"
 #include "Utils.h"
 #include "Pokemon.h"
 
@@ -8,7 +7,7 @@ Pokemon* Pokemon::_instance = nullptr;
 
 Pokemon::Pokemon(int number) {
   _number = number;
-  _last_boredom_time = _last_hunger_time = _last_sleep_time = _last_without_sleep_time = _last_simple_check_time = millis();
+  _last_boredom_time = _last_hunger_time = _last_sleep_time = _last_without_sleep_time = _last_simple_check_time = hal_millis();
 };
 
 void Pokemon::loop() {
@@ -90,10 +89,10 @@ void Pokemon::heal() {
 void Pokemon::sleep() {
   _is_sleeping = true;
   _update_property(PROPERTY_SLEEPINESS, 5);
-  _last_sleep_time = millis();
+  _last_sleep_time = hal_millis();
 }
 
 void Pokemon::wake_up() {
   _is_sleeping = false;
-  _last_without_sleep_time = millis();
+  _last_without_sleep_time = hal_millis();
 }

@@ -3,9 +3,10 @@
 #include "ArduinoJson.h"
 #include "lv_i18n.h"
 #include "GameSwitcher.h"
-#include "SdConfig.h"
+#include "StorageConfig.h"
 #include "Game.h"
 #include "GameMenu.h"
+#include "storage_hal.h"
 
 using namespace Pokegotchi;
 
@@ -190,12 +191,12 @@ void GameMenu::display_saves() {
   lv_obj_set_pos(save_list, 10, 10);
   lv_obj_set_size(save_list, LV_HOR_RES_MAX - 20, LV_VER_RES_MAX - 125);
 
-  SdConfig* sd_config = new SdConfig(Game::getInstance()->get_config());
-  sd_config->load_save_files();
+  StorageConfig* storage_config = new StorageConfig(Game::getInstance()->get_config());
+  storage_config->load_save_files();
 
-  poke_save_file_info* save_files = sd_config->get_save_files();
+  poke_save_file_info* save_files = storage_config->get_save_files();
 
-  for (int i = 0; i < sd_config->get_save_count(); i++) {
+  for (int i = 0; i < storage_config->get_save_count(); i++) {
     lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
     lv_obj_add_event_cb(list_btn, choice_save_game_event_handler, LV_EVENT_CLICKED, save_files[i].name);
   }

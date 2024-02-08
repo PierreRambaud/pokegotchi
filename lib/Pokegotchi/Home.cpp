@@ -1,13 +1,13 @@
 #include "ArduinoJson.h"
 #include "lvgl.h"
-#include "M5Core2.h"
 #include "lv_i18n.h"
 #include "Options.h"
 #include "Home.h"
-#include "SdConfig.h"
+#include "StorageConfig.h"
 #include "Game.h"
 #include "Utils.h"
 #include "Pokemon.h"
+#include "storage_hal.h"
 
 using namespace Pokegotchi;
 
@@ -21,7 +21,7 @@ static void start_button_event_handler(lv_event_t* e);
 static void start_new_game_event_handler(lv_event_t* e);
 
 struct event_load_game_data {
-  SdConfig* sd_config;
+  StorageConfig* storage_config;
   int index;
 };
 
@@ -29,8 +29,8 @@ Home* Home::_instance = nullptr;
 
 Home::Home(poke_config_t* global_config, lv_obj_t* main_screen) {
   _config = global_config;
-  _sd_config = new SdConfig(global_config);
-  _sd_config->load_save_files();
+  _storage_config = new StorageConfig(global_config);
+  _storage_config->load_save_files();
   _main_screen = main_screen;
   _screen = create_screen(_main_screen);
 
@@ -78,10 +78,10 @@ void Home::load_buttons() {
     lv_label_set_text(label, _("home.start"));
     lv_obj_center(label);
 
-    if (_sd_config->has_save_files() == true) {
+    if (_storage_config->has_save_files() == true) {
       lv_obj_t* load_button = lv_button_create(_screen);
       lv_obj_align(load_button, LV_ALIGN_CENTER, 0, 60);
-      lv_obj_add_event_cb(load_button, load_button_event_handler, LV_EVENT_CLICKED, _sd_config);
+      lv_obj_add_event_cb(load_button, load_button_event_handler, LV_EVENT_CLICKED, _storage_config);
 
       label = lv_label_create(load_button);
       lv_label_set_text(label, _("home.load"));
@@ -157,13 +157,13 @@ static void load_button_event_handler(lv_event_t* e) {
   poke_messagebox_t* messagebox = create_message_box(_("home.start.choice"), "");
   lv_obj_t* save_list = lv_list_create(messagebox->box);
   lv_obj_set_size(save_list, 220, 120);
-  SdConfig* sd_config = (SdConfig*)lv_event_get_user_data(e);
+  StorageConfig* storage_config = (StorageConfig*)lv_event_get_user_data(e);
 
-  poke_save_file_info* save_files = sd_config->get_save_files();
+  poke_save_file_info* save_files = storage_config->get_save_files();
 
-  for (int i = 0; i < sd_config->get_save_count(); i++) {
+  for (int i = 0; i < storage_config->get_save_count(); i++) {
     event_load_game_data* event_data = new event_load_game_data;
-    event_data->sd_config = sd_config;
+    event_data->storage_config = storage_config;
     event_data->index = i;
 
     lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
@@ -178,20 +178,13 @@ static void load_button_event_handler(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void load_file_button_event_handler(lv_event_t* e) {
-  JsonDocument doc;
   event_load_game_data* event_data = (event_load_game_data*)lv_event_get_user_data(e);
-  poke_save_file_info* save_files = event_data->sd_config->get_save_files();
+  poke_save_file_info* save_files = event_data->storage_config->get_save_files();
 
   hal_start_storage();
-  File file = SD.open(save_files[event_data->index].path);
-  if (!file) {
-    create_message_box(_("game.error"), _("game.load.error"));
-    return;
-  }
 
-  DeserializationError error = deserializeJson(doc, file);
-  file.close();
-  SD.end();
+  JsonDocument doc;
+  DeserializationError error = hal_load_save_file(&doc, save_files[event_data->index].path);
 
   if (error) {
     create_message_box(_("game.error"), _("game.load.unserialize.error"));
@@ -222,7 +215,7 @@ static void load_file_button_event_handler(lv_event_t* e) {
   Home::releaseInstance();
 
   // Clear memory
-  event_data->sd_config->free_list();
+  event_data->storage_config->free_list();
   delete event_data;
 
   Game* g = new Game(global_config, main_screen, p, game_options);

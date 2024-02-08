@@ -6,7 +6,6 @@
 
 void hal_printf(const char* context, char* buffer);
 void hal_set_brightness(int32_t value);
-bool hal_start_storage(void);
 unsigned long hal_millis(void);
 
 bool hal_battery_is_charging(void);
