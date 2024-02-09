@@ -3,7 +3,7 @@
 #define POKEGOTCHI_GAME
 
 #include <vector>
-#include <lvgl.h>
+#include "lvgl.h"
 #include "ActionsMenu.h"
 #include "Config.h"
 #include "Options.h"

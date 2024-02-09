@@ -2,8 +2,8 @@
 #ifndef DRAWINGBOARD_RUNNER
 #define DRAWINGBOARD_RUNNER
 
-#include <lvgl.h>
-#include <GameInterface.h>
+#include "lvgl.h"
+#include "GameInterface.h"
 
 namespace DrawingBoard {
   class Runner : public GameSwitcher::GameInterface {

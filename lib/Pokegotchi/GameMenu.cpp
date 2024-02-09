@@ -1,10 +1,12 @@
-#include <lvgl.h>
-#include <ArduinoJson.h>
-#include <lv_i18n.h>
-#include <GameSwitcher.h>
-#include "SdConfig.h"
+#include "lvgl.h"
+#include "M5Core2.h"
+#include "ArduinoJson.h"
+#include "lv_i18n.h"
+#include "GameSwitcher.h"
+#include "StorageConfig.h"
 #include "Game.h"
 #include "GameMenu.h"
+#include "storage_hal.h"
 
 using namespace Pokegotchi;
 
@@ -22,19 +24,20 @@ LV_IMG_DECLARE(menu_game_draw_pressed)
 LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 
-static void choice_ball_event_cb(lv_event_t*);
-static void confirm_save_box_event_handler(lv_event_t*);
-static void click_button_save_game_event_handler(lv_event_t*);
-static void game_new_save_event_handler(lv_event_t*);
-static void create_new_save_event_handler(lv_event_t*);
 static void cancel_new_save_event_handler(lv_event_t*);
+static void choice_ball_event_cb(lv_event_t*);
+static void choice_save_game_event_handler(lv_event_t*);
+static void click_button_save_game_event_handler(lv_event_t*);
+static void create_new_save_event_handler(lv_event_t*);
+static void delete_save_box_event_handler(lv_event_t*);
+static void game_new_save_event_handler(lv_event_t*);
 static void open_options_event_handler(lv_event_t*);
 static void open_pokemon_event_handler(lv_event_t*);
+static void replace_save_box_event_handler(lv_event_t*);
 static void run_game_event_handler(lv_event_t*);
 static void save_game_event_handler(lv_event_t*);
 static void slider_set_brightness_event_cb(lv_event_t*);
 static void trainercard_event_handler(lv_event_t*);
-static void choice_save_game_event_handler(lv_event_t*);
 
 struct event_choice_game_data {
   lv_obj_t* selected_row;
@@ -76,8 +79,8 @@ void GameMenu::display_pokemon() {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
-  lv_obj_t* img = lv_img_create(_menu_child_screen);
-  lv_img_set_src(img, p->get_avatar());
+  lv_obj_t* img = lv_image_create(_menu_child_screen);
+  lv_image_set_src(img, p->get_avatar());
   lv_obj_set_pos(img, 10, 20);
 
   lv_obj_t* name = lv_label_create(_menu_child_screen);
@@ -105,8 +108,8 @@ void GameMenu::display_options() {
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
-  static lv_coord_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 30, LV_GRID_TEMPLATE_LAST};
-  static lv_coord_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, LV_GRID_TEMPLATE_LAST};
+  static int32_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 30, LV_GRID_TEMPLATE_LAST};
+  static int32_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, LV_GRID_TEMPLATE_LAST};
 
   lv_obj_set_grid_dsc_array(_menu_child_screen, options_grid_col_dsc, options_grid_row_dsc);
 
@@ -153,8 +156,8 @@ void GameMenu::display_options() {
   lv_obj_set_grid_cell(ball_choice_dropdown, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 5, 1);
   lv_obj_add_event_cb(ball_choice_dropdown, choice_ball_event_cb, LV_EVENT_ALL, NULL);
 
-  _ball_image = lv_img_create(_menu_child_screen);
-  lv_img_set_src(_ball_image, balls_choice_images[Game::getInstance()->get_options()->ball]);
+  _ball_image = lv_image_create(_menu_child_screen);
+  lv_image_set_src(_ball_image, balls_choice_images[Game::getInstance()->get_options()->ball]);
   lv_obj_set_grid_cell(_ball_image, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_START, 5, 1);
 }
 
@@ -188,17 +191,17 @@ void GameMenu::display_saves() {
   lv_obj_set_pos(save_list, 10, 10);
   lv_obj_set_size(save_list, LV_HOR_RES_MAX - 20, LV_VER_RES_MAX - 125);
 
-  SdConfig* sd_config = new SdConfig(Game::getInstance()->get_config());
-  sd_config->load_save_files();
+  StorageConfig* storage_config = new StorageConfig(Game::getInstance()->get_config());
+  storage_config->load_save_files();
 
-  poke_save_file_info* save_files = sd_config->get_save_files();
+  poke_save_file_info* save_files = storage_config->get_save_files();
 
-  for (int i = 0; i < sd_config->get_save_count(); i++) {
+  for (int i = 0; i < storage_config->get_save_count(); i++) {
     lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
     lv_obj_add_event_cb(list_btn, choice_save_game_event_handler, LV_EVENT_CLICKED, save_files[i].name);
   }
 
-  lv_obj_t* new_save_button = lv_btn_create(_menu_child_screen);
+  lv_obj_t* new_save_button = lv_button_create(_menu_child_screen);
   lv_obj_align(new_save_button, LV_ALIGN_BOTTOM_LEFT, 10, -10);
   lv_obj_add_event_cb(new_save_button, game_new_save_event_handler, LV_EVENT_CLICKED, _menu_child_screen);
 
@@ -206,7 +209,7 @@ void GameMenu::display_saves() {
   lv_label_set_text(label, _("game.save.create.button"));
   lv_obj_center(label);
 
-  lv_obj_t* existing_game_save_button = lv_btn_create(_menu_child_screen);
+  lv_obj_t* existing_game_save_button = lv_button_create(_menu_child_screen);
   lv_obj_align(existing_game_save_button, LV_ALIGN_BOTTOM_RIGHT, -10, -10);
   lv_obj_add_event_cb(existing_game_save_button, save_game_event_handler, LV_EVENT_CLICKED, NULL);
 
@@ -216,50 +219,57 @@ void GameMenu::display_saves() {
 }
 
 void GameMenu::change_ball(uint16_t index) {
-  lv_img_set_src(_ball_image, balls_choice_images[index]);
+  lv_image_set_src(_ball_image, balls_choice_images[index]);
   Game::getInstance()->get_options()->ball = index;
 }
 
 static void choice_save_game_event_handler(lv_event_t* e) {
-  static const char* buttons[] = {_("game.save.box.replace"), _("game.save.box.delete"), ""};
+  poke_messagebox_t* messagebox = create_message_box(_("game.save.box.choose"), "");
 
-  lv_obj_t* save_box = lv_msgbox_create(NULL, _("game.save.box.choose"), "", buttons, true);
+  lv_obj_t* replace_button = lv_msgbox_add_footer_button(messagebox->box, _("game.save.box.replace"));
+  lv_obj_t* delete_button = lv_msgbox_add_footer_button(messagebox->box, _("game.save.box.delete"));
+
   event_choice_game_data* event_data = new event_choice_game_data;
-  event_data->selected_row = lv_event_get_current_target(e);
+  event_data->selected_row = lv_event_get_current_target_obj(e);
   event_data->file_name = (char*)lv_event_get_user_data(e);
 
-  lv_obj_add_event_cb(save_box, confirm_save_box_event_handler, LV_EVENT_VALUE_CHANGED, event_data);
-  lv_obj_center(save_box);
+  lv_obj_add_event_cb(replace_button, replace_save_box_event_handler, LV_EVENT_CLICKED, event_data);
+  lv_obj_add_event_cb(delete_button, delete_save_box_event_handler, LV_EVENT_CLICKED, event_data);
 }
 
-static void confirm_save_box_event_handler(lv_event_t* e) {
-  lv_obj_t* box = lv_event_get_current_target(e);
-  const char* text_button = lv_msgbox_get_active_btn_text(box);
+static void delete_save_box_event_handler(lv_event_t* e) {
   event_choice_game_data* event_data = (event_choice_game_data*)lv_event_get_user_data(e);
 
-  if (text_button == _("game.save.box.replace")) {
-    lv_event_t* custom_event = new lv_event_t;
-    custom_event->code = LV_EVENT_CLICKED;
-    custom_event->user_data = event_data->file_name;
-    save_game_event_handler(custom_event);
-  } else {
-    char json_path[50];
-    strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
-    strcat(json_path, "/");
-    strcat(json_path, event_data->file_name);
-    strcat(json_path, ".json");
+  char json_path[50];
+  strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
+  strcat(json_path, "/");
+  strcat(json_path, event_data->file_name);
+  strcat(json_path, ".json");
 
-    if (sd_begin() == false) {
-      display_alert(_("game.error"), _("sd.card.not_found"));
-      return;
-    }
-
-    serial_printf("GameMenu", "Delete file file \"%s\"", json_path);
-    lv_obj_del(event_data->selected_row);
-    SD.remove(json_path);
-    SD.end();
+  if (hal_start_storage() == false) {
+    create_message_box(_("game.error"), _("sd.card.not_found"));
+    return;
   }
 
+  serial_printf("GameMenu", "Delete file file \"%s\"", json_path);
+  lv_obj_delete(event_data->selected_row);
+
+  SD.remove(json_path);
+  SD.end();
+
+  lv_obj_t* box = lv_event_get_current_target_obj(e);
+  lv_msgbox_close(box);
+}
+
+static void replace_save_box_event_handler(lv_event_t* e) {
+  event_choice_game_data* event_data = (event_choice_game_data*)lv_event_get_user_data(e);
+
+  lv_event_t* custom_event = new lv_event_t;
+  custom_event->code = LV_EVENT_CLICKED;
+  custom_event->user_data = event_data->file_name;
+  save_game_event_handler(custom_event);
+
+  lv_obj_t* box = lv_event_get_current_target_obj(e);
   lv_msgbox_close(box);
 }
 
@@ -281,7 +291,7 @@ static void game_new_save_event_handler(lv_event_t* e) {
                                  "l", "m", "\n", "w", "x", "c", "v", "b", "n", "\n", LV_SYMBOL_CLOSE,     LV_SYMBOL_OK, NULL};
 
   /*Set the relative width of the buttons and other controls*/
-  static const lv_btnmatrix_ctrl_t kb_ctrl[] = {4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, LV_BTNMATRIX_CTRL_HIDDEN | 10, 2};
+  static const lv_buttonmatrix_ctrl_t kb_ctrl[] = {4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, LV_BUTTONMATRIX_CTRL_HIDDEN | 10, 2};
 
   lv_keyboard_set_map(keyboard, LV_KEYBOARD_MODE_USER_1, kb_map, kb_ctrl);
   lv_keyboard_set_mode(keyboard, LV_KEYBOARD_MODE_USER_1);
@@ -294,7 +304,7 @@ static void create_new_save_event_handler(lv_event_t* e) {
   lv_obj_t* textarea = (lv_obj_t*)lv_event_get_user_data(e);
   const char* text_content = lv_textarea_get_text(textarea);
   if (text_content[0] == '\0') {
-    display_alert(_("game.error"), _("game.save.file.invalid"));
+    create_message_box(_("game.error"), _("game.save.file.invalid"));
     return;
   }
 
@@ -306,7 +316,7 @@ static void create_new_save_event_handler(lv_event_t* e) {
 }
 
 static void slider_set_brightness_event_cb(lv_event_t* e) {
-  lv_obj_t* slider = lv_event_get_target(e);
+  lv_obj_t* slider = lv_event_get_target_obj(e);
   char buf[8];
   lv_snprintf(buf, sizeof(buf), "%d%%", (uint32_t)lv_slider_get_value(slider));
 
@@ -321,7 +331,7 @@ static void slider_set_brightness_event_cb(lv_event_t* e) {
 
 static void choice_ball_event_cb(lv_event_t* e) {
   lv_event_code_t code = lv_event_get_code(e);
-  lv_obj_t* obj = lv_event_get_target(e);
+  lv_obj_t* obj = lv_event_get_target_obj(e);
   if (code == LV_EVENT_VALUE_CHANGED) {
     GameMenu::getInstance()->change_ball(lv_dropdown_get_selected(obj));
   }
@@ -335,35 +345,8 @@ static void click_button_save_game_event_handler(lv_event_t* e) { GameMenu::getI
  * @param lv_event_t* e
  */
 static void save_game_event_handler(lv_event_t* e) {
-  Pokemon* p = Pokemon::getInstance();
-
-  StaticJsonDocument<900> doc;
-  doc["options"]["brightness"] = Game::getInstance()->get_options()->brightness;
-  doc["options"]["ball"] = Game::getInstance()->get_options()->ball;
-
-  JsonObject pokemon = doc.createNestedObject("pokemon");
-  pokemon["number"] = p->get_number();
-  pokemon["level"] = p->get_level();
-  pokemon["life"] = p->get_life();
-  pokemon["mood"] = p->get_mood();
-  pokemon["hunger"] = p->get_hunger();
-  pokemon["sleepiness"] = p->get_sleepiness();
-  pokemon["is_sleeping"] = p->is_sleeping();
-  pokemon["potions"] = p->get_potions();
-  pokemon["poos"] = p->get_poos();
-  pokemon["pees"] = p->get_pees();
-
-  unsigned long current_time = millis();
-  JsonObject pokemon_time = pokemon.createNestedObject("time");
-  pokemon_time["simple_check"] = p->get_last_simple_check_time() - current_time;
-  pokemon_time["boredom"] = p->get_last_boredom_time() - current_time;
-  pokemon_time["hunger"] = p->get_last_hunger_time() - current_time;
-  pokemon_time["sleep"] = p->get_last_sleep_time() - current_time;
-  pokemon_time["without_sleep"] = p->get_last_without_sleep_time() - current_time;
-  pokemon_time["potion"] = p->get_last_potion_time() - current_time;
-
-  if (sd_begin() == false) {
-    display_alert(_("game.error"), _("sd.card.not_found"));
+  if (hal_start_storage() == false) {
+    create_message_box(_("game.error"), _("sd.card.not_found"));
     return;
   }
 
@@ -385,14 +368,40 @@ static void save_game_event_handler(lv_event_t* e) {
     }
   }
 
+  Pokemon* p = Pokemon::getInstance();
+  JsonDocument doc;
+  doc["options"]["brightness"] = Game::getInstance()->get_options()->brightness;
+  doc["options"]["ball"] = Game::getInstance()->get_options()->ball;
+
+  JsonObject pokemon = doc["pokemon"].to<JsonObject>();
+  pokemon["number"] = p->get_number();
+  pokemon["level"] = p->get_level();
+  pokemon["life"] = p->get_life();
+  pokemon["mood"] = p->get_mood();
+  pokemon["hunger"] = p->get_hunger();
+  pokemon["sleepiness"] = p->get_sleepiness();
+  pokemon["is_sleeping"] = p->is_sleeping();
+  pokemon["potions"] = p->get_potions();
+  pokemon["poos"] = p->get_poos();
+  pokemon["pees"] = p->get_pees();
+
+  unsigned long current_time = millis();
+  JsonObject pokemon_time = pokemon["time"].to<JsonObject>();
+  pokemon_time["simple_check"] = p->get_last_simple_check_time() - current_time;
+  pokemon_time["boredom"] = p->get_last_boredom_time() - current_time;
+  pokemon_time["hunger"] = p->get_last_hunger_time() - current_time;
+  pokemon_time["sleep"] = p->get_last_sleep_time() - current_time;
+  pokemon_time["without_sleep"] = p->get_last_without_sleep_time() - current_time;
+  pokemon_time["potion"] = p->get_last_potion_time() - current_time;
+
   if (!file) {
-    display_alert(_("game.error"), _("game.save.failed"));
+    create_message_box(_("game.error"), _("game.save.failed"));
   } else {
     serializeJson(doc, Serial);
     serializeJson(doc, file);
     file.close();
 
-    display_alert("", _("game.save.success"));
+    create_message_box("", _("game.save.success"));
     GameMenu::getInstance()->toggle();
   }
 

@@ -5,9 +5,9 @@
 #ifndef FLOPPYBIRD_RUNNER
 #define FLOPPYBIRD_RUNNER
 
-#include <M5Core2.h>
-#include <EEPROM.h>
-#include <GameInterface.h>
+#include "M5Core2.h"
+#include "EEPROM.h"
+#include "GameInterface.h"
 
 #define TFTW 320   // screen width
 #define TFTH 240   // screen height

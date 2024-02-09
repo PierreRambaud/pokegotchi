@@ -5,7 +5,7 @@
 namespace Pokegotchi {
 
   struct game_config_struct {
-    const char* sd_directory_path;
+    const bool use_storage;
     const char* save_files_path;
   };
 

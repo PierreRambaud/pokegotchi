@@ -2,7 +2,7 @@
 #ifndef POKEGOTCHI_RUNNER
 #define POKEGOTCHI_RUNNER
 
-#include <GameInterface.h>
+#include "GameInterface.h"
 #include "Home.h"
 #include "Config.h"
 

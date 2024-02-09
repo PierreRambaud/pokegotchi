@@ -1,6 +1,6 @@
-#include <lvgl.h>
-#include <ArduinoJson.h>
-#include <lv_i18n.h>
+#include "lvgl.h"
+#include "ArduinoJson.h"
+#include "lv_i18n.h"
 #include "Config.h"
 #include "ActionsMenu.h"
 #include "Utils.h"
@@ -81,7 +81,7 @@ ActionsMenu::ActionsMenu(Menu* menu) {
   _items[14] = new BagItem{&object_water, _("bag.water.name"), _("bag.water.description"), new BagItemSpecifications{15, 0, 0, 0, 0, 4}};
 
   _bag_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_bag, &menu_bag_pressed, _("actions.menu.bag"));
-  lv_imgbtn_set_src(_bag_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_bag_disabled, NULL);
+  lv_imagebutton_set_src(_bag_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_bag_disabled, NULL);
   lv_obj_add_event_cb(_bag_button, display_bag_items_event_handler, LV_EVENT_CLICKED, NULL);
 
   _sleep_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_flute, &menu_flute_pressed, Pokemon::getInstance()->is_sleeping() ? _("actions.menu.wake_up") : _("actions.menu.sleep"));
@@ -89,11 +89,11 @@ ActionsMenu::ActionsMenu(Menu* menu) {
   lv_obj_add_event_cb(_sleep_button, toggle_sleep_event_handler, LV_EVENT_CLICKED, sleep_label);
 
   _train_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_train, &menu_train_pressed, _("menu.train"));
-  lv_imgbtn_set_src(_train_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_train_disabled, NULL);
+  lv_imagebutton_set_src(_train_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_train_disabled, NULL);
   lv_obj_add_event_cb(_train_button, train_event_handler, LV_EVENT_CLICKED, NULL);
 
   _play_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_play, &menu_play_pressed, _("menu.play"));
-  lv_imgbtn_set_src(_play_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_play_disabled, NULL);
+  lv_imagebutton_set_src(_play_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_play_disabled, NULL);
   lv_obj_add_event_cb(_play_button, play_event_handler, LV_EVENT_CLICKED, NULL);
 
   _clean_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_clean, &menu_clean_pressed, _("actions.menu.clean"));
@@ -101,7 +101,7 @@ ActionsMenu::ActionsMenu(Menu* menu) {
 
   _heal_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_heal, &menu_heal_pressed, _("actions.menu.heal"));
   set_heal_menu_text(lv_obj_get_child(_heal_button, -1));
-  lv_imgbtn_set_src(_heal_button, LV_IMGBTN_STATE_DISABLED, NULL, &menu_heal_disabled, NULL);
+  lv_imagebutton_set_src(_heal_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_heal_disabled, NULL);
   lv_obj_add_event_cb(_heal_button, heal_event_handler, LV_EVENT_CLICKED, NULL);
 
   serial_printf("ActionsMenu", "Buttons for actions menu created");
@@ -115,19 +115,19 @@ ActionsMenu::ActionsMenu(Menu* menu) {
 void ActionsMenu::open() {
   Pokemon* p = Pokemon::getInstance();
   if (p->is_sleeping()) {
-    lv_imgbtn_set_state(_bag_button, LV_IMGBTN_STATE_DISABLED);
-    lv_imgbtn_set_state(_train_button, LV_IMGBTN_STATE_DISABLED);
-    lv_imgbtn_set_state(_play_button, LV_IMGBTN_STATE_DISABLED);
+    lv_imagebutton_set_state(_bag_button, LV_IMAGEBUTTON_STATE_DISABLED);
+    lv_imagebutton_set_state(_train_button, LV_IMAGEBUTTON_STATE_DISABLED);
+    lv_imagebutton_set_state(_play_button, LV_IMAGEBUTTON_STATE_DISABLED);
   } else {
-    lv_obj_clear_state(_bag_button, LV_STATE_DISABLED);
-    lv_obj_clear_state(_train_button, LV_STATE_DISABLED);
-    lv_obj_clear_state(_play_button, LV_STATE_DISABLED);
+    lv_obj_remove_state(_bag_button, LV_STATE_DISABLED);
+    lv_obj_remove_state(_train_button, LV_STATE_DISABLED);
+    lv_obj_remove_state(_play_button, LV_STATE_DISABLED);
   }
 
   if (p->get_potions() == 0 or p->is_sleeping()) {
-    lv_imgbtn_set_state(_heal_button, LV_IMGBTN_STATE_DISABLED);
+    lv_imagebutton_set_state(_heal_button, LV_IMAGEBUTTON_STATE_DISABLED);
   } else {
-    lv_obj_clear_state(_heal_button, LV_STATE_DISABLED);
+    lv_obj_remove_state(_heal_button, LV_STATE_DISABLED);
   }
 
   set_heal_menu_text(lv_obj_get_child(_heal_button, -1));
@@ -156,7 +156,7 @@ void ActionsMenu::display_bag() {
 }
 
 static void options_bag_scroll_value_event_cb(lv_event_t* e) {
-  lv_obj_t* screen = lv_event_get_target(e);
+  lv_obj_t* screen = lv_event_get_target_obj(e);
   options_bag_scroll_value = lv_obj_get_scroll_y(screen);
 }
 
@@ -166,6 +166,7 @@ static void options_bag_scroll_value_event_cb(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void clean_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   ActionsMenu::getInstance()->toggle();
   Game* g = Game::getInstance();
   g->action_clean();
@@ -177,6 +178,7 @@ static void clean_event_handler(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void heal_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   ActionsMenu::getInstance()->toggle();
   Game* g = Game::getInstance();
   g->action_heal();
@@ -200,7 +202,10 @@ static void use_item_event_handler(lv_event_t* e) {
  *
  * @param lv_event_t* e
  */
-static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getInstance()->display_bag(); }
+static void display_bag_items_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
+  ActionsMenu::getInstance()->display_bag();
+}
 
 /**
  * Train pokemeon
@@ -208,6 +213,7 @@ static void display_bag_items_event_handler(lv_event_t* e) { ActionsMenu::getIns
  * @param lv_event_t* e
  */
 static void train_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   Game* g = Game::getInstance();
 
   ActionsMenu::getInstance()->toggle();
@@ -220,6 +226,7 @@ static void train_event_handler(lv_event_t* e) {
  * @param lv_event_t* e
  */
 static void play_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
   Game* g = Game::getInstance();
 
   ActionsMenu::getInstance()->toggle();
@@ -255,8 +262,8 @@ static void toggle_sleep_event_handler(lv_event_t* e) {
  * @return lv_obj_t* the row line
  */
 static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
-  static lv_coord_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
-  static lv_coord_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
+  static int32_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
+  static int32_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
 
   lv_style_init(&style_default_text);
   lv_style_set_text_color(&style_default_text, lv_color_white());
@@ -268,8 +275,8 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
   lv_obj_set_style_radius(cont, 0, 0);
   lv_obj_set_grid_dsc_array(cont, grid_col_dsc, grid_row_dsc);
 
-  lv_obj_t* img = lv_img_create(cont);
-  lv_img_set_src(img, item->image);
+  lv_obj_t* img = lv_image_create(cont);
+  lv_image_set_src(img, item->image);
   lv_obj_set_grid_cell(img, LV_GRID_ALIGN_CENTER, 0, 1, LV_GRID_ALIGN_CENTER, 0, 2);
 
   lv_obj_t* label;
@@ -283,7 +290,7 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
   lv_obj_add_style(desc_label, &style_default_text, 0);
   lv_obj_set_grid_cell(desc_label, LV_GRID_ALIGN_STRETCH, 2, 1, LV_GRID_ALIGN_END, 1, 1);
 
-  lv_obj_t* btn = lv_btn_create(cont);
+  lv_obj_t* btn = lv_button_create(cont);
   lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, 3, 1, LV_GRID_ALIGN_CENTER, 0, 2);
   lv_obj_add_event_cb(btn, use_item_event_handler, LV_EVENT_CLICKED, item);
 

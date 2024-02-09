@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Size: 14 px
  * Bpp: 4
- * Opts: 
+ * Opts:
  ******************************************************************************/
 
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
@@ -4285,13 +4285,7 @@ static const lv_font_fmt_txt_cmap_t cmaps[] =
  *  ALL CUSTOM DATA
  *--------------------*/
 
-#if LVGL_VERSION_MAJOR >= 8
-/*Store all the custom data of the font*/
-static  lv_font_fmt_txt_glyph_cache_t cache;
-static const lv_font_fmt_txt_dsc_t font_dsc = {
-#else
 static lv_font_fmt_txt_dsc_t font_dsc = {
-#endif
     .glyph_bitmap = glyph_bitmap,
     .glyph_dsc = glyph_dsc,
     .cmaps = cmaps,
@@ -4301,9 +4295,6 @@ static lv_font_fmt_txt_dsc_t font_dsc = {
     .bpp = 4,
     .kern_classes = 0,
     .bitmap_format = 0,
-#if LVGL_VERSION_MAJOR >= 8
-    .cache = &cache
-#endif
 };
 
 
@@ -4336,4 +4327,3 @@ lv_font_t pokemon_font_14 = {
 
 
 #endif /*#if POKEMON_FONT_14*/
-

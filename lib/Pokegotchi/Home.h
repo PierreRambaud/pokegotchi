@@ -1,8 +1,8 @@
 #ifndef POKEGOTCHI_HOME
 #define POKEGOTCHI_HOME
 
-#include <lvgl.h>
-#include "SdConfig.h"
+#include "lvgl.h"
+#include "StorageConfig.h"
 #include "Config.h"
 
 namespace Pokegotchi {
@@ -31,7 +31,7 @@ namespace Pokegotchi {
    private:
     static Home* _instance;
 
-    SdConfig* _sd_config;
+    StorageConfig* _storage_config;
     poke_config_t* _config;
 
     bool _loaded = false;

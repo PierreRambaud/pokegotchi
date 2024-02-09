@@ -1,5 +1,5 @@
-#include <M5Core2.h>
-#include <lv_i18n.h>
+#include "M5Core2.h"
+#include "lv_i18n.h"
 #include "DrawingBoard.h"
 #include "Utils.h"
 
@@ -14,14 +14,12 @@ Runner::Runner() {
   _color = 8;
   _clear_color = 0;
 
-  lv_disp_set_bg_color(NULL, lv_color_hex3(0x000));  // Set default background color to black
-
   lv_style_set_text_color(&style_color_label, lv_color_hex3(getColor(_color)));
   lv_style_set_text_color(&style_size_label, lv_color_white());
   lv_style_set_text_color(&style_clear_label, lv_color_white());
 
   lv_obj_t* main_screen = lv_obj_create(NULL);
-  lv_scr_load(main_screen);
+  lv_screen_load(main_screen);
   lv_obj_remove_style_all(main_screen);
   lv_obj_set_size(main_screen, LV_HOR_RES_MAX, 20);
   lv_obj_set_pos(main_screen, 0, LV_VER_RES_MAX - 20);
@@ -31,20 +29,19 @@ Runner::Runner() {
   lv_style_set_flex_flow(&flex_style, LV_FLEX_FLOW_ROW_WRAP);
   lv_style_set_flex_main_place(&flex_style, LV_FLEX_ALIGN_SPACE_AROUND);
   lv_style_set_layout(&flex_style, LV_LAYOUT_FLEX);
-
-  lv_obj_add_style(main_screen, &flex_style, 0);
+  lv_obj_add_style(main_screen, &flex_style, LV_PART_MAIN);
 
   _color_label = lv_label_create(main_screen);
   lv_label_set_text(_color_label, _("game.draw.color"));
-  lv_obj_add_style(_color_label, &style_color_label, 0);
+  lv_obj_add_style(_color_label, &style_color_label, LV_PART_MAIN);
 
   _size_label = lv_label_create(main_screen);
   lv_label_set_text_fmt(_size_label, _("game.draw.size"), _size);
-  lv_obj_add_style(_size_label, &style_size_label, 0);
+  lv_obj_add_style(_size_label, &style_size_label, LV_PART_MAIN);
 
   _clear_label = lv_label_create(main_screen);
   lv_label_set_text(_clear_label, _("game.draw.clear"));
-  lv_obj_add_style(_clear_label, &style_clear_label, 0);
+  lv_obj_add_style(_clear_label, &style_clear_label, LV_PART_MAIN);
 
   clear();
 }

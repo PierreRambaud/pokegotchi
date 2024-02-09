@@ -2,6 +2,10 @@
 #ifndef POKEGOTCHI_POKEMON
 #define POKEGOTCHI_POKEMON
 
+#define POKEMON_EVOLVE_ONE 16
+#define POKEMON_EVOLVE_TWO 34
+#define POKEMON_EVOLVE_THREE 50
+
 #define POKEMON_PICHU 172
 #define POKEMON_PIKACHU 25
 #define POKEMON_RAICHU 26
@@ -11,9 +15,9 @@
 #define POKEMON_JOLTEON 135
 #define POKEMON_FLAREON 136
 
-#include <lvgl.h>
-#include <ArduinoJson.h>
-#include <lv_i18n.h>
+#include "lvgl.h"
+#include "ArduinoJson.h"
+#include "lv_i18n.h"
 #include "ActionsMenu.h"
 
 LV_IMG_DECLARE(pokemon_133);
@@ -90,7 +94,7 @@ namespace Pokegotchi {
     void clean_pee();
     void simple_check();
 
-    const lv_img_dsc_t* get_image() {
+    const lv_image_dsc_t* get_image() {
       switch (_number) {
         case POKEMON_EEVEE:
           return &pokemon_133;
@@ -191,19 +195,19 @@ namespace Pokegotchi {
     }
 
     bool try_to_evolve() {
-      if (_level == 16) {
+      if (_level == POKEMON_EVOLVE_ONE) {
         if (_number == POKEMON_PICHU) {
           _number = POKEMON_PIKACHU;
         } else if (_number == POKEMON_EEVEE) {
           _number = POKEMON_FLAREON;
         }
-      } else if (_level == 34) {
+      } else if (_level == POKEMON_EVOLVE_TWO) {
         if (_number == POKEMON_PIKACHU) {
           _number = POKEMON_RAICHU;
         } else if (_number == POKEMON_FLAREON) {
           _number = POKEMON_VAPOREON;
         }
-      } else if (_level == 50) {
+      } else if (_level == POKEMON_EVOLVE_THREE) {
         if (_number == POKEMON_VAPOREON) {
           _number = POKEMON_JOLTEON;
         }

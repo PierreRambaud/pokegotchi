@@ -2,7 +2,7 @@
 #ifndef POKEGOTCHI_ACTIONSMENU
 #define POKEGOTCHI_ACTIONSMENU
 
-#include <lvgl.h>
+#include "lvgl.h"
 #include "Menu.h"
 
 #define BAG_ITEMS_SIZE 15
@@ -21,7 +21,7 @@ namespace Pokegotchi {
   typedef struct bag_item_specifications BagItemSpecifications;
 
   struct bag_item {
-    const lv_img_dsc_t* image;
+    const lv_image_dsc_t* image;
     const char* name;
     const char* description;
     BagItemSpecifications* specs;
@@ -37,7 +37,7 @@ namespace Pokegotchi {
     void close() {
       if (lv_obj_is_valid(_menu_child_screen)) {
         // Remove sub menu anyway
-        lv_obj_del(_menu_child_screen);
+        lv_obj_delete(_menu_child_screen);
       }
 
       serial_printf("ActionsMenu", "Hide ActionsMenu");

@@ -2,7 +2,7 @@
 #ifndef POKEGOTCHI_GAMEMENU
 #define POKEGOTCHI_GAMEMENU
 
-#include <lvgl.h>
+#include "lvgl.h"
 #include "Menu.h"
 #include "Options.h"
 
@@ -18,7 +18,7 @@ LV_IMG_DECLARE(ball_moon)
 LV_IMG_DECLARE(ball_poke)
 LV_IMG_DECLARE(ball_super)
 
-static const lv_img_dsc_t* balls_choice_images[9] = {
+static const lv_image_dsc_t* balls_choice_images[9] = {
     &ball_poke, &ball_super, &ball_hyper, &ball_master, &ball_love, &ball_fast, &ball_memory, &ball_moon, &ball_dream,
 };
 
@@ -35,7 +35,7 @@ namespace Pokegotchi {
     void close() {
       if (lv_obj_is_valid(_menu_child_screen)) {
         // Remove sub menu anyway
-        lv_obj_del(_menu_child_screen);
+        lv_obj_delete(_menu_child_screen);
       }
 
       _menu->close();
