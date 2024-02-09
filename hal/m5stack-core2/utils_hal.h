@@ -11,4 +11,8 @@ unsigned long hal_millis(void);
 bool hal_battery_is_charging(void);
 float hal_battery_level();
 
+void hal_restart();
+
+int hal_random(int min, int max);
+
 #endif /*UTILS_HAL_H*/

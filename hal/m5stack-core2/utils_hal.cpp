@@ -13,3 +13,7 @@ unsigned long hal_millis(void) { return millis(); }
 bool hal_battery_is_charging() { return M5.Axp.isCharging(); }
 
 float hal_battery_level() { return M5.Axp.GetBatteryLevel(); }
+
+void hal_restart() { ESP.restart(); }
+
+int hal_random(int min, int max) { return random(min, max); }

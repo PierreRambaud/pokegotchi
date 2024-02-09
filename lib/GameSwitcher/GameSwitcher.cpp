@@ -1,8 +1,11 @@
 #include "GameSwitcher.h"
 #include "lv_i18n.h"
 #include "Pokegotchi.h"
+
+#ifdef POKEGOTCHI_INCLUDE_GAMES
 #include "FloppyBird.h"
 #include "DrawingBoard.h"
+#endif
 
 using namespace GameSwitcher;
 
@@ -16,6 +19,7 @@ Runner::Runner() {
 }
 
 void Runner::switch_game(int8_t game) {
+#ifdef POKEGOTCHI_INCLUDE_GAMES
   switch (game) {
     case GAME_FLOPPYBIRD:
       _game_instance = new FloppyBird::Runner();
@@ -24,6 +28,7 @@ void Runner::switch_game(int8_t game) {
       _game_instance = new DrawingBoard::Runner();
       break;
   }
+#endif
 }
 
 void Runner::loop() { _game_instance->loop(); }

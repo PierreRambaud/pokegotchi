@@ -1,3 +1,4 @@
+#ifdef POKEGOTCHI_INCLUDE_GAMES
 // By Ponticelli Domenico.
 // And M5Stack Core team
 // 12NOV2020 Added touch screen support for M5Core2 By Zontex
@@ -288,3 +289,4 @@ void eventDisplay(Event& e) {
     bird.vel_y = 0;
   }
 }
+#endif

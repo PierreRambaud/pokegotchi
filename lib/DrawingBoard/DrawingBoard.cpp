@@ -1,3 +1,4 @@
+#ifdef POKEGOTCHI_INCLUDE_GAMES
 #include "M5Core2.h"
 #include "lv_i18n.h"
 #include "DrawingBoard.h"
@@ -136,3 +137,5 @@ void Runner::loop() {
 
   drawPoints();
 }
+
+#endif

@@ -9,6 +9,7 @@
 using namespace Pokegotchi;
 
 bool hal_remove_file(const char*);
+
 bool hal_start_storage(void);
 void hal_prepare_storage(poke_config_t*);
 DeserializationError hal_load_save_file(JsonDocument* doc, char* file_path);

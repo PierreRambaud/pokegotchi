@@ -187,14 +187,14 @@ void Game::loop() {
 void Game::create_poo() {
   lv_obj_t* poo = lv_image_create(_screen);
   lv_image_set_src(poo, &game_poo);
-  lv_obj_set_pos(poo, random(1, LV_HOR_RES_MAX - game_poo.header.w), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - game_poo.header.h));
+  lv_obj_set_pos(poo, hal_random(1, LV_HOR_RES_MAX - game_poo.header.w), hal_random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - game_poo.header.h));
   _poos.push_back(poo);
 }
 
 void Game::create_pee() {
   lv_obj_t* pee = lv_image_create(_screen);
   lv_image_set_src(pee, &game_pee);
-  lv_obj_set_pos(pee, random(1, LV_HOR_RES_MAX - game_pee.header.w), random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - game_pee.header.h));
+  lv_obj_set_pos(pee, hal_random(1, LV_HOR_RES_MAX - game_pee.header.w), hal_random(LV_VER_RES_MAX / 2, LV_VER_RES_MAX - game_pee.header.h));
   _pees.push_back(pee);
 }
 
@@ -334,5 +334,5 @@ static void drag_clean_event_handler(lv_event_t* e) {
 static void end_game_msg_box_event_handler(lv_event_t* e) {
   LV_UNUSED(e);
   serial_printf("Game", "Restart game");
-  ESP.restart();
+  hal_restart();
 }

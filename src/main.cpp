@@ -39,3 +39,15 @@ void loop() {
 
   GameSwitcher::Runner::getInstance()->loop();
 }
+
+#ifdef USE_SDL
+int main(void) {
+  setup();
+
+  while (1) {
+    loop();
+  }
+
+  return 1;
+}
+#endif

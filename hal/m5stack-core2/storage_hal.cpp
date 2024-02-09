@@ -3,6 +3,18 @@
 #include "lv_i18n.h"
 #include "storage_hal.h"
 
+bool hal_remove_file(const char* path) {
+  if (hal_start_storage() == false) {
+    create_message_box(_("game.error"), _("sd.card.not_found"));
+    return false;
+  }
+
+  bool result = SD.remove(path);
+  SD.end();
+
+  return result;
+}
+
 bool hal_start_storage() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
 
 void hal_prepare_storage(poke_config_t* global_config) {
