@@ -55,14 +55,14 @@ Home::Home(poke_config_t* global_config, lv_obj_t* main_screen) {
   lv_anim_start(&anim);
 }
 
-Home::~Home() { lv_obj_delete(_screen); }
+Home::~Home(void) { lv_obj_delete(_screen); }
 
-void Home::close() {
+void Home::close(void) {
   lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
   _closed = true;
 }
 
-void Home::load_buttons() {
+void Home::load_buttons(void) {
   if (_loaded == true) {
     return;
   }

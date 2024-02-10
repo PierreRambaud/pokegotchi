@@ -12,10 +12,10 @@
 namespace GameSwitcher {
   class Runner {
    public:
-    explicit Runner();
-    void loop();
+    explicit Runner(void);
+    void loop(void);
     void switch_game(int8_t game);
-    static Runner* getInstance() { return _instance; }
+    static Runner* getInstance(void) { return _instance; }
     static void setInstance(Runner* instance) { _instance = instance; }
 
    private:

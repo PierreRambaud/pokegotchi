@@ -9,15 +9,15 @@ namespace Pokegotchi {
   class Home {
    public:
     explicit Home(poke_config_t*, lv_obj_t*);
-    ~Home();
-    void load_buttons();
-    void close();
+    ~Home(void);
+    void load_buttons(void);
+    void close(void);
 
-    bool isClosed() { return _closed; }
+    bool isClosed(void) { return _closed; }
 
-    static Home* getInstance() { return _instance; }
+    static Home* getInstance(void) { return _instance; }
     static void setInstance(Home* instance) { _instance = instance; }
-    static void releaseInstance() {
+    static void releaseInstance(void) {
       if (_instance != nullptr) {
         _instance->close();
         delete _instance;
@@ -25,8 +25,8 @@ namespace Pokegotchi {
       }
     }
 
-    poke_config_t* get_config() { return _config; }
-    lv_obj_t* get_main_screen() { return _main_screen; }
+    poke_config_t* get_config(void) { return _config; }
+    lv_obj_t* get_main_screen(void) { return _main_screen; }
 
    private:
     static Home* _instance;

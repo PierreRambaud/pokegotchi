@@ -47,8 +47,4 @@ void hal_setup(void) {
   SDL_CreateThread(tick_thread, "tick", NULL);
 }
 
-void hal_loop(void) {
-  SDL_Delay(1);
-}
-
-void hal_flush_cb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map) {}
+void hal_loop(void) { SDL_Delay(5); }

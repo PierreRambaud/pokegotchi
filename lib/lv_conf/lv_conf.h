@@ -7,7 +7,6 @@
 #ifndef LV_CONF_H
 #define LV_CONF_H
 
-#define LV_LVGL_H_INCLUDE_SIMPLE 1
 #define LV_HOR_RES 320
 #define LV_VER_RES 240
 #define LV_HOR_RES_MAX 320

@@ -11,9 +11,9 @@ using namespace GameSwitcher;
 
 Runner* Runner::_instance = nullptr;
 
-Runner::Runner() {
+Runner::Runner(void) {
   lv_i18n_init(lv_i18n_language_pack);
-  lv_i18n_set_locale("fr");
+  lv_i18n_set_locale(POKEGOTCHI_DEFAULT_LOCALE);
 
   _game_instance = new Pokegotchi::Runner();
 }
@@ -31,4 +31,4 @@ void Runner::switch_game(int8_t game) {
 #endif
 }
 
-void Runner::loop() { _game_instance->loop(); }
+void Runner::loop(void) { _game_instance->loop(); }

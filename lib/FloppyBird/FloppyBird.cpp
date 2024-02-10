@@ -15,14 +15,14 @@ static short tmpx, tmpy;
 
 void eventDisplay(Event& e);
 
-Runner::Runner() {
+Runner::Runner(void) {
   M5.Buttons.addHandler(eventDisplay, E_TOUCH);
   EEPROM.begin(1000);
   Serial.println("Last max score:");
   Serial.println(EEPROM.readInt(address));
 }
 
-void Runner::loop() {
+void Runner::loop(void) {
   // put your main code here, to run repeatedly:
   game_start();
   game_loop();
@@ -32,7 +32,7 @@ void Runner::loop() {
 // ---------------
 // game loop
 // ---------------
-void Runner::game_loop() {
+void Runner::game_loop(void) {
   // ===============
   // prepare game variables
   // draw floor
@@ -184,7 +184,7 @@ void Runner::game_loop() {
   delay(1200);
 }
 
-void Runner::game_init() {
+void Runner::game_init(void) {
   // clear screen
   M5.Lcd.fillScreen(BCKGRDCOL);
   // reset score
@@ -204,7 +204,7 @@ void Runner::game_init() {
 // ---------------
 // game start
 // ---------------
-void Runner::game_start() {
+void Runner::game_start(void) {
   M5.Lcd.fillScreen(TFT_BLACK);
   M5.Lcd.fillRect(10, TFTH2 - 20, TFTW - 20, 1, TFT_WHITE);
   M5.Lcd.fillRect(10, TFTH2 + 32, TFTW - 20, 1, TFT_WHITE);
@@ -234,7 +234,7 @@ void Runner::game_start() {
 // ---------------
 // game over
 // ---------------
-void Runner::game_over() {
+void Runner::game_over(void) {
   M5.Lcd.fillScreen(TFT_BLACK);
   maxScore = EEPROM.readInt(address);
 
@@ -275,7 +275,7 @@ void Runner::game_over() {
   }
 }
 
-void Runner::resetMaxScore() {
+void Runner::resetMaxScore(void) {
   EEPROM.writeInt(address, 0);
   EEPROM.commit();
 }

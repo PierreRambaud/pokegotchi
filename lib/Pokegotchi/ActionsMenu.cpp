@@ -112,7 +112,7 @@ ActionsMenu::ActionsMenu(Menu* menu) {
 /**
  * Change the state of buttons depending on pokemon status
  */
-void ActionsMenu::open() {
+void ActionsMenu::open(void) {
   Pokemon* p = Pokemon::getInstance();
   if (p->is_sleeping()) {
     lv_imagebutton_set_state(_bag_button, LV_IMAGEBUTTON_STATE_DISABLED);
@@ -135,7 +135,7 @@ void ActionsMenu::open() {
   _menu->open();
 }
 
-void ActionsMenu::display_bag() {
+void ActionsMenu::display_bag(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());

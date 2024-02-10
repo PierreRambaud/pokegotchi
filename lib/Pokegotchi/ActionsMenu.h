@@ -32,9 +32,9 @@ namespace Pokegotchi {
   class ActionsMenu {
    public:
     explicit ActionsMenu(Menu* menu);
-    void display_bag();
-    void open();
-    void close() {
+    void display_bag(void);
+    void open(void);
+    void close(void) {
       if (lv_obj_is_valid(_menu_child_screen)) {
         // Remove sub menu anyway
         lv_obj_delete(_menu_child_screen);
@@ -43,7 +43,7 @@ namespace Pokegotchi {
       serial_printf("ActionsMenu", "Hide ActionsMenu");
       _menu->close();
     }
-    void toggle() {
+    void toggle(void) {
       if (lv_obj_has_flag(_menu->get_screen(), LV_OBJ_FLAG_HIDDEN)) {
         open();
       } else {
@@ -51,10 +51,10 @@ namespace Pokegotchi {
       }
     }
 
-    static ActionsMenu* getInstance() { return _instance; }
+    static ActionsMenu* getInstance(void) { return _instance; }
     static void setInstance(ActionsMenu* instance) { _instance = instance; }
 
-    Menu* get_menu() { return _menu; }
+    Menu* get_menu(void) { return _menu; }
 
    private:
     static ActionsMenu* _instance;

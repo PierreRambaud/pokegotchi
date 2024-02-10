@@ -1,10 +1,7 @@
 #ifndef POKE_CONF_H
 #define POKE_CONF_H
 
-#define ARDUINO_M5STACK_Core2
 #define POKEGOTCHI_BATTERY
-
-#define POKEGOTCHI_INCLUDE_GAMES
 
 #include "Config.h"
 #include "storage_hal.h"

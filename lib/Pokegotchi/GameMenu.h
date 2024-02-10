@@ -26,13 +26,13 @@ namespace Pokegotchi {
   class GameMenu {
    public:
     explicit GameMenu(Menu*);
-    void display_games();
-    void display_options();
-    void display_pokemon();
-    void display_saves();
+    void display_games(void);
+    void display_options(void);
+    void display_pokemon(void);
+    void display_saves(void);
     void change_ball(uint16_t);
 
-    void close() {
+    void close(void) {
       if (lv_obj_is_valid(_menu_child_screen)) {
         // Remove sub menu anyway
         lv_obj_delete(_menu_child_screen);
@@ -41,7 +41,7 @@ namespace Pokegotchi {
       _menu->close();
       serial_printf("GameMenu", "Hide GameMenu");
     }
-    void toggle() {
+    void toggle(void) {
       if (lv_obj_has_flag(_menu->get_screen(), LV_OBJ_FLAG_HIDDEN)) {
         _menu->open();
       } else {
@@ -49,10 +49,10 @@ namespace Pokegotchi {
       }
     }
 
-    static GameMenu* getInstance() { return _instance; }
+    static GameMenu* getInstance(void) { return _instance; }
     static void setInstance(GameMenu* instance) { _instance = instance; }
 
-    Menu* get_menu() { return _menu; }
+    Menu* get_menu(void) { return _menu; }
 
    private:
     static GameMenu* _instance;

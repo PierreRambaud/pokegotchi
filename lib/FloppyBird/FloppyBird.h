@@ -89,16 +89,16 @@ static struct PIPES {
 namespace FloppyBird {
   class Runner : public GameSwitcher::GameInterface {
    public:
-    explicit Runner();
+    explicit Runner(void);
 
-    void loop();
+    void loop(void);
 
    private:
-    void game_init();
-    void game_start();
-    void game_loop();
-    void game_over();
-    void resetMaxScore();
+    void game_init(void);
+    void game_start(void);
+    void game_loop(void);
+    void game_over(void);
+    void resetMaxScore(void);
 
     int address = 0;
     int maxScore = EEPROM.readInt(address);

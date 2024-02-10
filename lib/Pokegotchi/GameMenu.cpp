@@ -67,7 +67,7 @@ GameMenu::GameMenu(Menu* menu) {
   toggle();
 }
 
-void GameMenu::display_pokemon() {
+void GameMenu::display_pokemon(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());
@@ -97,7 +97,7 @@ void GameMenu::display_pokemon() {
   lv_obj_set_style_text_font(description, &pokemon_font_10, 0);
 }
 
-void GameMenu::display_options() {
+void GameMenu::display_options(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());
@@ -162,7 +162,7 @@ void GameMenu::display_options() {
   lv_obj_set_grid_cell(_ball_image, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_START, 5, 1);
 }
 
-void GameMenu::display_games() {
+void GameMenu::display_games(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());
@@ -182,7 +182,7 @@ void GameMenu::display_games() {
   lv_obj_add_event_cb(bird_button, run_game_event_handler, LV_EVENT_CLICKED, &game_floppybird);
 }
 
-void GameMenu::display_saves() {
+void GameMenu::display_saves(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());

@@ -4,7 +4,7 @@
 
 bool hal_remove_file(const char*) { return false; }
 
-bool hal_start_storage() { return false; }
+bool hal_start_storage(void) { return false; }
 
 void hal_prepare_storage(poke_config_t* global_config) { return; }
 

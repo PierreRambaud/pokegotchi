@@ -15,7 +15,7 @@ bool hal_remove_file(const char* path) {
   return result;
 }
 
-bool hal_start_storage() { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
+bool hal_start_storage(void) { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
 
 void hal_prepare_storage(poke_config_t* global_config) {
   File entry = SD.open(global_config->save_files_path);

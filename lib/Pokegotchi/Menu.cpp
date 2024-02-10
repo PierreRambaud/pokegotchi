@@ -29,13 +29,13 @@ Menu::Menu(lv_obj_t* main_screen) {
   lv_obj_add_style(_menu_screen, &flex_style, 0);
 }
 
-void Menu::close() {
+void Menu::close(void) {
   _is_open = false;
   lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
   lv_obj_add_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
 }
 
-void Menu::open() {
+void Menu::open(void) {
   _is_open = true;
   refresh_battery_status();
 
@@ -43,7 +43,7 @@ void Menu::open() {
   lv_obj_remove_flag(_menu_screen, LV_OBJ_FLAG_HIDDEN);
 }
 
-void Menu::refresh_battery_status() {
+void Menu::refresh_battery_status(void) {
 #ifndef POKEGOTCHI_BATTERY
   return;
 #else
