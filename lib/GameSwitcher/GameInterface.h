@@ -5,7 +5,7 @@
 namespace GameSwitcher {
   class GameInterface {
    public:
-    virtual void loop();
+    virtual void loop() = 0;
   };
 }  // namespace GameSwitcher
 #endif

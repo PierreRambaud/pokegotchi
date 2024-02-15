@@ -10,6 +10,10 @@ void hal_set_brightness(int32_t value) { M5.Axp.SetLcdVoltage(2500 + ((value * 8
 
 unsigned long hal_millis(void) { return millis(); }
 
-bool hal_battery_is_charging() { return M5.Axp.isCharging(); }
+bool hal_battery_is_charging(void) { return M5.Axp.isCharging(); }
 
-float hal_battery_level() { return M5.Axp.GetBatteryLevel(); }
+float hal_battery_level(void) { return M5.Axp.GetBatteryLevel(); }
+
+void hal_restart(void) { ESP.restart(); }
+
+int hal_random(int min, int max) { return random(min, max); }

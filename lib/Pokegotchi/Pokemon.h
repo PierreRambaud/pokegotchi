@@ -56,45 +56,45 @@ namespace Pokegotchi {
   class Pokemon {
    public:
     explicit Pokemon(int number);
-    void loop();
-    void animate();
+    void loop(void);
+    void animate(void);
 
     static void setInstance(Pokemon* instance) { _instance = instance; }
-    static Pokemon* getInstance() { return _instance; }
+    static Pokemon* getInstance(void) { return _instance; }
 
-    int8_t get_potions() { return _potions; }
-    int8_t get_poos() { return _poos; }
-    int8_t get_pees() { return _pees; }
-    int8_t get_level() { return _level; }
-    int8_t get_life() { return _life; }
-    int8_t get_mood() { return _mood; }
-    int8_t get_hunger() { return _hunger; }
-    int8_t get_sleepiness() { return _sleepiness; }
-    int get_number() { return _number; }
+    int8_t get_potions(void) { return _potions; }
+    int8_t get_poos(void) { return _poos; }
+    int8_t get_pees(void) { return _pees; }
+    int8_t get_level(void) { return _level; }
+    int8_t get_life(void) { return _life; }
+    int8_t get_mood(void) { return _mood; }
+    int8_t get_hunger(void) { return _hunger; }
+    int8_t get_sleepiness(void) { return _sleepiness; }
+    int get_number(void) { return _number; }
 
-    long get_last_simple_check_time() { return _last_simple_check_time; }
-    long get_last_boredom_time() { return _last_boredom_time; }
-    long get_last_hunger_time() { return _last_hunger_time; }
-    long get_last_sleep_time() { return _last_sleep_time; }
-    long get_last_without_sleep_time() { return _last_without_sleep_time; }
-    long get_last_potion_time() { return _last_potion_time; }
+    long get_last_simple_check_time(void) { return _last_simple_check_time; }
+    long get_last_boredom_time(void) { return _last_boredom_time; }
+    long get_last_hunger_time(void) { return _last_hunger_time; }
+    long get_last_sleep_time(void) { return _last_sleep_time; }
+    long get_last_without_sleep_time(void) { return _last_without_sleep_time; }
+    long get_last_potion_time(void) { return _last_potion_time; }
 
-    bool is_sick() { return _is_sick; }
-    bool is_sleeping() { return _is_sleeping; }
-    bool is_ko() { return _is_ko; }
+    bool is_sick(void) { return _is_sick; }
+    bool is_sleeping(void) { return _is_sleeping; }
+    bool is_ko(void) { return _is_ko; }
 
     void eat(BagItem* item);
-    void heal();
-    void train();
-    void play();
-    void sleep();
-    void wake_up();
-    void poo();
-    void clean_poo();
-    void clean_pee();
-    void simple_check();
+    void heal(void);
+    void train(void);
+    void play(void);
+    void sleep(void);
+    void wake_up(void);
+    void poo(void);
+    void clean_poo(void);
+    void clean_pee(void);
+    void simple_check(void);
 
-    const lv_image_dsc_t* get_image() {
+    const lv_image_dsc_t* get_image(void) {
       switch (_number) {
         case POKEMON_EEVEE:
           return &pokemon_133;
@@ -114,7 +114,7 @@ namespace Pokegotchi {
       }
     }
 
-    const char* get_avatar() {
+    const char* get_avatar(void) {
       switch (_number) {
         case POKEMON_EEVEE:
           return "L:/pokemon/face/133.bin";
@@ -134,7 +134,7 @@ namespace Pokegotchi {
       }
     }
 
-    const char* get_description() {
+    const char* get_description(void) {
       switch (_number) {
         case POKEMON_EEVEE:
           return _("pokemon.eevee.description");
@@ -154,7 +154,7 @@ namespace Pokegotchi {
       }
     }
 
-    const char* get_name() {
+    const char* get_name(void) {
       switch (_number) {
         case POKEMON_EEVEE:
           return _("pokemon.eevee.name");
@@ -194,7 +194,7 @@ namespace Pokegotchi {
       _last_potion_time = pokemon_time["potion"];
     }
 
-    bool try_to_evolve() {
+    bool try_to_evolve(void) {
       if (_level == POKEMON_EVOLVE_ONE) {
         if (_number == POKEMON_PICHU) {
           _number = POKEMON_PIKACHU;

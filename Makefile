@@ -41,6 +41,8 @@ assets-home:
 	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/home assets_source/home/home_title.png
 	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=BIN -o data/home/ assets_source/home/eevee.png
 	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=BIN -o data/home/ assets_source/home/pichu.png
+	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o hal/sdl2/assets/home assets_source/home/eevee.png
+	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o hal/sdl2/assets/home assets_source/home/pichu.png
 
 assets-pokemon-face:
 	find assets_source/pokemon/face/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=BIN -o data/pokemon/face/ {} \;

@@ -42,7 +42,7 @@ void StorageConfig::add_save_file_to_list(const char* file_name) {
   _save_count++;
 }
 
-void StorageConfig::free_list() {
+void StorageConfig::free_list(void) {
   for (int i = 0; i < _save_count; i++) {
     free(_save_files[i].name);
     free(_save_files[i].path);
@@ -51,7 +51,7 @@ void StorageConfig::free_list() {
   free(_save_files);
 }
 
-void StorageConfig::load_save_files() {
+void StorageConfig::load_save_files(void) {
   if (hal_start_storage() == false) {
     return;
   }

@@ -1,5 +1,4 @@
 #include "lvgl.h"
-#include "M5Core2.h"
 #include "ArduinoJson.h"
 #include "lv_i18n.h"
 #include "GameSwitcher.h"
@@ -58,15 +57,17 @@ GameMenu::GameMenu(Menu* menu) {
   lv_obj_t* options_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_options, &menu_options_pressed, _("menu.options"));
   lv_obj_add_event_cb(options_button, open_options_event_handler, LV_EVENT_CLICKED, NULL);
 
+#ifdef POKEGOTCHI_INCLUDE_GAMES
   lv_obj_t* trainercard_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_trainercard, &menu_trainercard_pressed, _("menu.games"));
   lv_obj_add_event_cb(trainercard_button, trainercard_event_handler, LV_EVENT_CLICKED, NULL);
+#endif
 
   serial_printf("GameMenu", "Buttons for menu created");
 
   toggle();
 }
 
-void GameMenu::display_pokemon() {
+void GameMenu::display_pokemon(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());
@@ -96,7 +97,7 @@ void GameMenu::display_pokemon() {
   lv_obj_set_style_text_font(description, &pokemon_font_10, 0);
 }
 
-void GameMenu::display_options() {
+void GameMenu::display_options(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());
@@ -161,7 +162,7 @@ void GameMenu::display_options() {
   lv_obj_set_grid_cell(_ball_image, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_START, 5, 1);
 }
 
-void GameMenu::display_games() {
+void GameMenu::display_games(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());
@@ -181,7 +182,7 @@ void GameMenu::display_games() {
   lv_obj_add_event_cb(bird_button, run_game_event_handler, LV_EVENT_CLICKED, &game_floppybird);
 }
 
-void GameMenu::display_saves() {
+void GameMenu::display_saves(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
   _menu_child_screen = create_child_screen(_menu->get_screen());
@@ -246,16 +247,10 @@ static void delete_save_box_event_handler(lv_event_t* e) {
   strcat(json_path, event_data->file_name);
   strcat(json_path, ".json");
 
-  if (hal_start_storage() == false) {
-    create_message_box(_("game.error"), _("sd.card.not_found"));
-    return;
-  }
+  hal_remove_file(json_path);
 
-  serial_printf("GameMenu", "Delete file file \"%s\"", json_path);
+  serial_printf("GameMenu", "Delete file \"%s\"", json_path);
   lv_obj_delete(event_data->selected_row);
-
-  SD.remove(json_path);
-  SD.end();
 
   lv_obj_t* box = lv_event_get_current_target_obj(e);
   lv_msgbox_close(box);
@@ -349,63 +344,62 @@ static void save_game_event_handler(lv_event_t* e) {
     create_message_box(_("game.error"), _("sd.card.not_found"));
     return;
   }
-
-  char* save_file_name = (char*)lv_event_get_user_data(e);
-  File file;
-  if (save_file_name == NULL and Game::getInstance()->get_options()->save_file_path) {
-    serial_printf("GameMenu", "Save file \"%s\"", Game::getInstance()->get_options()->save_file_path);
-    file = SD.open(Game::getInstance()->get_options()->save_file_path, FILE_WRITE);
-  } else {
-    char json_path[50];
-    strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
-    strcat(json_path, "/");
-    strcat(json_path, save_file_name);
-    strcat(json_path, ".json");
-    file = SD.open(json_path, FILE_WRITE);
-    serial_printf("GameMenu", "Save file \"%s\"", json_path);
-    if (file) {
-      Game::getInstance()->get_options()->save_file_path = json_path;
+  /*
+    char* save_file_name = (char*)lv_event_get_user_data(e);
+    if (save_file_name == NULL and Game::getInstance()->get_options()->save_file_path) {
+      serial_printf("GameMenu", "Save file \"%s\"", Game::getInstance()->get_options()->save_file_path);
+      File file = SD.open(Game::getInstance()->get_options()->save_file_path, FILE_WRITE);
+    } else {
+      char json_path[50];
+      strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
+      strcat(json_path, "/");
+      strcat(json_path, save_file_name);
+      strcat(json_path, ".json");
+      File file = SD.open(json_path, FILE_WRITE);
+      serial_printf("GameMenu", "Save file \"%s\"", json_path);
+      if (file) {
+        Game::getInstance()->get_options()->save_file_path = json_path;
+      }
     }
-  }
 
-  Pokemon* p = Pokemon::getInstance();
-  JsonDocument doc;
-  doc["options"]["brightness"] = Game::getInstance()->get_options()->brightness;
-  doc["options"]["ball"] = Game::getInstance()->get_options()->ball;
+    Pokemon* p = Pokemon::getInstance();
+    JsonDocument doc;
+    doc["options"]["brightness"] = Game::getInstance()->get_options()->brightness;
+    doc["options"]["ball"] = Game::getInstance()->get_options()->ball;
 
-  JsonObject pokemon = doc["pokemon"].to<JsonObject>();
-  pokemon["number"] = p->get_number();
-  pokemon["level"] = p->get_level();
-  pokemon["life"] = p->get_life();
-  pokemon["mood"] = p->get_mood();
-  pokemon["hunger"] = p->get_hunger();
-  pokemon["sleepiness"] = p->get_sleepiness();
-  pokemon["is_sleeping"] = p->is_sleeping();
-  pokemon["potions"] = p->get_potions();
-  pokemon["poos"] = p->get_poos();
-  pokemon["pees"] = p->get_pees();
+    JsonObject pokemon = doc["pokemon"].to<JsonObject>();
+    pokemon["number"] = p->get_number();
+    pokemon["level"] = p->get_level();
+    pokemon["life"] = p->get_life();
+    pokemon["mood"] = p->get_mood();
+    pokemon["hunger"] = p->get_hunger();
+    pokemon["sleepiness"] = p->get_sleepiness();
+    pokemon["is_sleeping"] = p->is_sleeping();
+    pokemon["potions"] = p->get_potions();
+    pokemon["poos"] = p->get_poos();
+    pokemon["pees"] = p->get_pees();
 
-  unsigned long current_time = millis();
-  JsonObject pokemon_time = pokemon["time"].to<JsonObject>();
-  pokemon_time["simple_check"] = p->get_last_simple_check_time() - current_time;
-  pokemon_time["boredom"] = p->get_last_boredom_time() - current_time;
-  pokemon_time["hunger"] = p->get_last_hunger_time() - current_time;
-  pokemon_time["sleep"] = p->get_last_sleep_time() - current_time;
-  pokemon_time["without_sleep"] = p->get_last_without_sleep_time() - current_time;
-  pokemon_time["potion"] = p->get_last_potion_time() - current_time;
+    unsigned long current_time = millis();
+    JsonObject pokemon_time = pokemon["time"].to<JsonObject>();
+    pokemon_time["simple_check"] = p->get_last_simple_check_time() - current_time;
+    pokemon_time["boredom"] = p->get_last_boredom_time() - current_time;
+    pokemon_time["hunger"] = p->get_last_hunger_time() - current_time;
+    pokemon_time["sleep"] = p->get_last_sleep_time() - current_time;
+    pokemon_time["without_sleep"] = p->get_last_without_sleep_time() - current_time;
+    pokemon_time["potion"] = p->get_last_potion_time() - current_time;
 
-  if (!file) {
-    create_message_box(_("game.error"), _("game.save.failed"));
-  } else {
-    serializeJson(doc, Serial);
-    serializeJson(doc, file);
-    file.close();
+    if (!file) {
+      create_message_box(_("game.error"), _("game.save.failed"));
+    } else {
+      serializeJson(doc, Serial);
+      serializeJson(doc, file);
+      file.close();
 
-    create_message_box("", _("game.save.success"));
-    GameMenu::getInstance()->toggle();
-  }
+      create_message_box("", _("game.save.success"));
+      GameMenu::getInstance()->toggle();
+    }
 
-  SD.end();
+    SD.end();*/
 }
 
 /**

@@ -1,7 +1,9 @@
 #ifndef POKE_CONF_H
 #define POKE_CONF_H
 
-#define POKEGOTCHI_BATTERY
+#define SDL_HOR_RES 480
+#define SDL_VER_RES 320
+#define SDL_ZOOM 1
 
 #include "Config.h"
 #include "storage_hal.h"
@@ -9,7 +11,7 @@
 using namespace Pokegotchi;
 
 static poke_config_t* poke_config = new poke_config_t({
-    hal_start_storage(),
+    false,
     "/.pokegotchi/saves",
 });
 

@@ -3,7 +3,7 @@
 #include "drivers/lv_fs_littlefs.h"
 
 struct LittleFile {
-  File file;
+  fs::File file;
 };
 
 /**********************
@@ -68,7 +68,7 @@ static void *fs_open(lv_fs_drv_t *drv, const char *path, lv_fs_mode_t mode) {
   else if (mode == (LV_FS_MODE_WR | LV_FS_MODE_RD))
     flags = FILE_WRITE;
 
-  File f = LittleFS.open(path, flags);
+  fs::File f = LittleFS.open(path, flags);
   if (!f) {
     return NULL;
   }

@@ -11,7 +11,7 @@ using namespace Pokegotchi;
 
 void prepare_storage_directory(poke_config_t*);
 
-Runner::Runner() {
+Runner::Runner(void) {
   _config = poke_config;
 
   prepare_storage_directory(_config);
@@ -24,7 +24,7 @@ Runner::Runner() {
   _home = home;
 }
 
-void Runner::loop() {
+void Runner::loop(void) {
   if (_home != nullptr) {
     if (_home->isClosed() == false) {
       _home->load_buttons();

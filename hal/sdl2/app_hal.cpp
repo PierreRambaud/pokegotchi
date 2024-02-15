@@ -1,4 +1,6 @@
 #include <unistd.h>
+#include <time.h>
+#include <stdlib.h>
 #define SDL_MAIN_HANDLED /*To fix SDL's "undefined reference to WinMain" issue*/
 #include "SDL2/SDL.h"
 #include "lvgl.h"
@@ -28,6 +30,10 @@ void hal_setup(void) {
   setenv("DBUS_FATAL_WARNINGS", "0", 1);
 #endif
 
+  // Use current time as
+  // seed for random generator
+  srand(time(0));
+
   /* Add the mouse as input device
    * Use the 'mouse' driver which reads the PC's mouse*/
 
@@ -41,9 +47,4 @@ void hal_setup(void) {
   SDL_CreateThread(tick_thread, "tick", NULL);
 }
 
-void hal_loop(void) {
-  while (1) {
-    SDL_Delay(5);
-    lv_timer_handler();
-  }
-}
+void hal_loop(void) { SDL_Delay(5); }

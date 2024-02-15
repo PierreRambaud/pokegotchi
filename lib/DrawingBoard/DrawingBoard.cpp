@@ -1,3 +1,4 @@
+#ifdef POKEGOTCHI_INCLUDE_GAMES
 #include "M5Core2.h"
 #include "lv_i18n.h"
 #include "DrawingBoard.h"
@@ -9,7 +10,7 @@ static lv_style_t style_color_label;
 static lv_style_t style_size_label;
 static lv_style_t style_clear_label;
 
-Runner::Runner() {
+Runner::Runner(void) {
   _size = 5;
   _color = 8;
   _clear_color = 0;
@@ -76,7 +77,7 @@ void Runner::drawPoint(uint32_t x, uint32_t y) {
   serial_printf("DrawingBoard", "Draw point: %d, %d\r\n", x, y);
 }
 
-void Runner::changeColor() {
+void Runner::changeColor(void) {
   _color = _color + 1;
   if (_color > 8) {
     _color = 0;
@@ -88,7 +89,7 @@ void Runner::changeColor() {
   serial_printf("DrawingBoard", "Color changed: %d\r\n", _color);
 }
 
-void Runner::changeSize() {
+void Runner::changeSize(void) {
   _size = _size + 5;
   if (_size == 20) {
     _size = 5;
@@ -98,7 +99,7 @@ void Runner::changeSize() {
   serial_printf("DrawingBoard", "Size changed: %d\r\n", _size);
 }
 
-void Runner::drawPoints() {
+void Runner::drawPoints(void) {
   if (M5.Touch.ispressed() == false) {
     return;
   }
@@ -113,7 +114,7 @@ void Runner::drawPoints() {
   }
 }
 
-void Runner::clear() {
+void Runner::clear(void) {
   _clear_color = _clear_color + 1;
   if (_clear_color > 8) {
     _clear_color = 0;
@@ -125,7 +126,7 @@ void Runner::clear() {
   lv_label_set_text_fmt(_size_label, _("game.draw.size"), _size);
 }
 
-void Runner::loop() {
+void Runner::loop(void) {
   if (M5.BtnA.wasPressed()) {
     changeColor();
   } else if (M5.BtnB.wasPressed()) {
@@ -136,3 +137,5 @@ void Runner::loop() {
 
   drawPoints();
 }
+
+#endif

@@ -15,11 +15,11 @@ namespace Pokegotchi {
    public:
     StorageConfig(poke_config_t*);
     void add_save_file_to_list(const char* base_path);
-    void free_list();
-    poke_save_file_info* get_save_files() { return _save_files; }
-    int get_save_count() { return _save_count; }
-    bool has_save_files() { return _save_count > 0; }
-    void load_save_files();
+    void free_list(void);
+    poke_save_file_info* get_save_files(void) { return _save_files; }
+    int get_save_count(void) { return _save_count; }
+    bool has_save_files(void) { return _save_count > 0; }
+    void load_save_files(void);
 
    private:
     poke_config_t* _config;

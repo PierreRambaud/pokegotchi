@@ -11,13 +11,13 @@ namespace Pokegotchi {
   class Menu {
    public:
     explicit Menu(lv_obj_t* main_screen);
-    void open();
-    void close();
+    void open(void);
+    void close(void);
 
-    void refresh_battery_status();
+    void refresh_battery_status(void);
 
-    lv_obj_t* get_screen() { return _screen; }
-    lv_obj_t* get_menu_screen() { return _menu_screen; }
+    lv_obj_t* get_screen(void) { return _screen; }
+    lv_obj_t* get_menu_screen(void) { return _menu_screen; }
 
    protected:
     bool _is_open = false;

@@ -11,8 +11,8 @@ namespace Pokegotchi {
 
   class Runner : public GameSwitcher::GameInterface {
    public:
-    explicit Runner();
-    void loop();
+    explicit Runner(void);
+    void loop(void);
 
    private:
     long _last_refresh_time = 0;

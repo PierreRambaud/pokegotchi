@@ -8,9 +8,9 @@
 namespace DrawingBoard {
   class Runner : public GameSwitcher::GameInterface {
    public:
-    explicit Runner();
-    void clear();
-    void loop();
+    explicit Runner(void);
+    void clear(void);
+    void loop(void);
 
    protected:
     uint8_t _size;
@@ -22,12 +22,12 @@ namespace DrawingBoard {
     lv_obj_t* _clear_label;
 
     uint32_t getColor(uint8_t);
-    void changeColor();
-    void changeSize();
+    void changeColor(void);
+    void changeSize(void);
     void drawPoint(uint32_t x, uint32_t y);
 
-    void drawPoints();
-    void drawPoint();
+    void drawPoints(void);
+    void drawPoint(void);
   };
 }  // namespace DrawingBoard
 #endif

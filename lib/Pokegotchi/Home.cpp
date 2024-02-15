@@ -9,6 +9,9 @@
 #include "Pokemon.h"
 #include "storage_hal.h"
 
+extern const void* eevee_home_face;
+extern const void* pichu_home_face;
+
 using namespace Pokegotchi;
 
 LV_IMG_DECLARE(home_title)
@@ -55,14 +58,14 @@ Home::Home(poke_config_t* global_config, lv_obj_t* main_screen) {
   lv_anim_start(&anim);
 }
 
-Home::~Home() { lv_obj_delete(_screen); }
+Home::~Home(void) { lv_obj_delete(_screen); }
 
-void Home::close() {
+void Home::close(void) {
   lv_obj_add_flag(_screen, LV_OBJ_FLAG_HIDDEN);
   _closed = true;
 }
 
-void Home::load_buttons() {
+void Home::load_buttons(void) {
   if (_loaded == true) {
     return;
   }
@@ -104,14 +107,14 @@ static void start_button_event_handler(lv_event_t* e) {
 
   static int pichu_value = POKEMON_PICHU;
   lv_obj_t* pichu_btn = lv_image_create(choice_box_content);
-  lv_image_set_src(pichu_btn, "L:/home/pichu.bin");
+  lv_image_set_src(pichu_btn, &pichu_home_face);
   lv_obj_add_flag(pichu_btn, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
   lv_obj_add_event_cb(pichu_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
 
   static int eevee_value = POKEMON_EEVEE;
   lv_obj_t* eevee_btn = lv_image_create(choice_box_content);
-  lv_image_set_src(eevee_btn, "L:/home/eevee.bin");
+  lv_image_set_src(eevee_btn, &eevee_home_face);
   lv_obj_add_flag(eevee_btn, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_add_event_cb(eevee_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &eevee_value);
   lv_obj_add_event_cb(eevee_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
