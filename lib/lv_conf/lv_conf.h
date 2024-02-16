@@ -7,8 +7,6 @@
 #ifndef LV_CONF_H
 #define LV_CONF_H
 
-#define LV_HOR_RES 320
-#define LV_VER_RES 240
 #define LV_HOR_RES_MAX 320
 #define LV_VER_RES_MAX 240
 
@@ -37,7 +35,9 @@
 
 #if LV_USE_STDLIB_MALLOC == LV_STDLIB_BUILTIN
     /*Size of the memory available for `lv_malloc()` in bytes (>= 2kB)*/
+    #ifndef LV_MEM_SIZE
     #define LV_MEM_SIZE (60U * 1024U)          /*[bytes]*/
+    #endif
 
     /*Size of the memory expand for `lv_malloc()` in bytes*/
     #define LV_MEM_POOL_EXPAND_SIZE 0

@@ -13,11 +13,11 @@ lv_display_t* hal_create_display(void) { return lv_sdl_window_create(LV_HOR_RES_
  * @return never return
  */
 static int tick_thread(void* data) {
-  (void)data;
+  LV_UNUSED(data);
 
   while (1) {
-    SDL_Delay(5);   /*Sleep for 5 millisecond*/
-    lv_tick_inc(5); /*Tell LittelvGL that 5 milliseconds were elapsed*/
+    SDL_Delay(5);   /*Sleep for 1 millisecond*/
+    lv_tick_inc(5); /*Tell LittelvGL that 1 milliseconds were elapsed*/
   }
 
   return 0;
@@ -37,7 +37,8 @@ void hal_setup(void) {
   /* Add the mouse as input device
    * Use the 'mouse' driver which reads the PC's mouse*/
 
-  lv_indev_t* indev = lv_sdl_mouse_create();
+  lv_indev_t* mouse_indev = lv_sdl_mouse_create();
+  lv_sdl_keyboard_create();
 
   SDL_Init(SDL_INIT_VIDEO);
 
