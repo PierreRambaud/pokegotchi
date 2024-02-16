@@ -37,7 +37,7 @@ void hal_setup(void) {
   /* Add the mouse as input device
    * Use the 'mouse' driver which reads the PC's mouse*/
 
-  lv_sdl_mouse_create();
+  lv_indev_t* mouse_indev = lv_sdl_mouse_create();
   lv_sdl_keyboard_create();
 
   SDL_Init(SDL_INIT_VIDEO);
