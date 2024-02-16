@@ -3,38 +3,19 @@
 #include "Game.h"
 #include "GameMenu.h"
 #include "Utils.h"
+#include "game_anim.h"
 
-#define ANIMATION_NIGHT 6
-#define ANIMATION_DAY 6
+LV_IMG_DECLARE(game_pee)
+LV_IMG_DECLARE(game_poo)
+LV_IMG_DECLARE(game_clean)
 
 using namespace Pokegotchi;
-
-LV_IMG_DECLARE(game_pee);
-LV_IMG_DECLARE(game_poo);
-LV_IMG_DECLARE(game_clean);
-LV_IMG_DECLARE(background_2)
-LV_IMG_DECLARE(background_4)
-LV_IMG_DECLARE(background_6)
-LV_IMG_DECLARE(background_8)
-LV_IMG_DECLARE(background_10)
-LV_IMG_DECLARE(background_12)
-LV_IMG_DECLARE(background_14)
-LV_IMG_DECLARE(background_16)
-LV_IMG_DECLARE(background_18)
-LV_IMG_DECLARE(background_20)
-
-static const lv_image_dsc_t* anim_night[ANIMATION_NIGHT] = {
-    &background_6, &background_8, &background_10, &background_12, &background_14, &background_16,
-};
-static const lv_image_dsc_t* anim_day[ANIMATION_DAY] = {
-    &background_16, &background_18, &background_20, &background_2, &background_4, &background_6,
-};
 
 static void end_game_msg_box_event_handler(lv_event_t* e);
 static void drag_clean_event_handler(lv_event_t* e);
 static bool check_object_intersect(lv_obj_t* a, lv_obj_t* b);
-static void night_animation(void* img, int32_t id) { lv_image_set_src((lv_obj_t*)img, anim_night[id]); }
-static void day_animation(void* img, int32_t id) { lv_image_set_src((lv_obj_t*)img, anim_day[id]); }
+static void night_animation(void* img, int32_t id) { lv_image_set_src((lv_obj_t*)img, game_anim_night[id]); }
+static void day_animation(void* img, int32_t id) { lv_image_set_src((lv_obj_t*)img, game_anim_day[id]); }
 
 Game* Game::_instance = nullptr;
 
@@ -56,7 +37,7 @@ void Game::_initialize(poke_config_t* global_config, lv_obj_t* main_screen, Poke
   _screen = create_screen(_main_screen);
 
   lv_obj_t* background_image = lv_image_create(_screen);
-  lv_image_set_src(background_image, anim_day[0]);
+  lv_image_set_src(background_image, game_anim_day[0]);
   lv_obj_set_pos(background_image, 0, 0);
 
   lv_anim_init(&_anim);
