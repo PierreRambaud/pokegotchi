@@ -285,14 +285,14 @@ static void drag_clean_event_handler(lv_event_t* e) {
   lv_indev_t* indev = lv_indev_active();
   if (indev == NULL) return;
 
-  lv_point_t point;
-  lv_indev_get_point(indev, &point);
+  lv_point_t vect;
+  lv_indev_get_vect(indev, &vect);
+
+  int32_t x = lv_obj_get_x_aligned(obj) + vect.x;
+  int32_t y = lv_obj_get_y_aligned(obj) + vect.y;
 
   int32_t obj_width = lv_obj_get_width(obj);
   int32_t obj_height = lv_obj_get_height(obj);
-
-  int32_t x = point.x - (obj_width / 2);
-  int32_t y = point.y - (obj_height / 2);
 
   // Make sure the object could not go outside the screen
   if ((x + obj_width) > LV_HOR_RES_MAX) {
