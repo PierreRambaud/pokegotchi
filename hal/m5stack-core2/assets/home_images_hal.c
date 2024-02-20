@@ -1,4 +1,4 @@
 #include "lvgl.h"
 
-const char* eevee_home_face = "L:/home/eevee.bin";
-const char* pichu_home_face = "L:/home/pichu.bin"; 
+const char const eevee_home_face[] = "L:/home/eevee.bin";
+const char const pichu_home_face[] = "L:/home/pichu.bin"; 

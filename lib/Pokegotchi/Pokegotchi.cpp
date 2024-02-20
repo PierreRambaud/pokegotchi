@@ -1,11 +1,11 @@
 #include "Pokegotchi.h"
+/*
 #include "Game.h"
 #include "ActionsMenu.h"
-#include "GameMenu.h"
+#include "GameMenu.h"*/
 #include "Utils.h"
 #include "conf/poke_conf_hal.h"
 #include "storage_hal.h"
-#include "keyboard_hal.h"
 
 using namespace Pokegotchi;
 
@@ -35,6 +35,7 @@ void Runner::loop(void) {
     _home = nullptr;
   }
 
+/*
   Game::getInstance()->loop();
   if (check_action_time(_last_refresh_time, PERIOD_REFRESH)) {
     ActionsMenu::getInstance()->get_menu()->refresh_battery_status();
@@ -52,7 +53,7 @@ void Runner::loop(void) {
     serial_printf("Runner", "Button C pressed");
     ActionsMenu::getInstance()->close();
     GameMenu::getInstance()->toggle();
-  }
+  }*/
 }
 
 void prepare_storage_directory(poke_config_t* global_config) {
