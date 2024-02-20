@@ -2,11 +2,11 @@
 
 Trying to provide a tamagotchi game for my daugther, based on little characters she likes.
 
-Everything is done for the M5Core2 in C with [lvgl 8](https://github.com/lvgl/lvgl).
+Everything is working for the M5Core2 and SDL in C/C++, Thanks to [lvgl v9](https://github.com/lvgl/lvgl)
 
 ## Installation
 
-### Requirements
+### Requirements for M5Core2
 
 You need to copy the `mklittlefs` tool at the root of the project directory.
 It's available here: https://github.com/earlephilhower/mklittlefs/releases
@@ -15,6 +15,14 @@ Then you will be able to upload files into the `LittleFs` partition (SPIFFS).
 
 ```
 $ pio run -t uploadfs
+```
+
+### Requirements for SDL
+
+Install `SDL2` development package.
+
+```
+$ apt install libsdl2-dev
 ```
 
 ### Build translations
