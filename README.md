@@ -50,18 +50,18 @@ You have to change `_p` into `_pl` and make sure struct are correctly defined.
 
 Features:
 
-- Save/Load game
-- Start with Evee or Pikachu
+- Save/Load game (M5Core2 only)
+- Start with Eevee or Pikachu
 - Choose pokeball
-- Brightness
-- Two additionals games inside
+- Brightness (M5Core2 only)
+- Two additionals games inside (M5Core2 only)
 - Pokemon description
 
 Actions:
 
 - Clean (poos and pees)
 - Eat
-- Train
+- Train (Evolve)
 - Play
 - Sleep
 
