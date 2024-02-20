@@ -28,6 +28,16 @@ LV_IMG_DECLARE(pokemon_25);
 LV_IMG_DECLARE(pokemon_26);
 LV_IMG_DECLARE(pokemon_172);
 
+
+extern const void* eevee_face;
+extern const void* pichu_face;
+extern const void* vaporeon_face;
+extern const void* jolteon_face;
+extern const void* flareon_face;
+extern const void* pikachu_face;
+extern const void* raichu_face;
+extern const void* pichu_face;
+
 namespace Pokegotchi {
   const unsigned long PERIOD_BOREDOM = 15 * 1000UL;
   const unsigned long PERIOD_HUNGER = 15 * 1000UL;
@@ -114,23 +124,23 @@ namespace Pokegotchi {
       }
     }
 
-    const char* get_avatar(void) {
+    const void* get_avatar(void) {
       switch (_number) {
         case POKEMON_EEVEE:
-          return "L:/pokemon/face/133.bin";
+          return &eevee_face;
         case POKEMON_VAPOREON:
-          return "L:/pokemon/face/134.bin";
+          return &vaporeon_face;
         case POKEMON_JOLTEON:
-          return "L:/pokemon/face/135.bin";
+          return &jolteon_face;
         case POKEMON_FLAREON:
-          return "L:/pokemon/face/136.bin";
+          return &flareon_face;
         case POKEMON_PIKACHU:
-          return "L:/pokemon/face/25.bin";
+          return &pikachu_face;
         case POKEMON_RAICHU:
-          return "L:/pokemon/face/26.bin";
+          return &raichu_face;
         case POKEMON_PICHU:
         default:
-          return "L:/pokemon/face/172.bin";
+          return &pichu_face;
       }
     }
 

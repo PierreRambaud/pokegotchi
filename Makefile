@@ -46,6 +46,7 @@ assets-home:
 
 assets-pokemon-face:
 	find assets_source/pokemon/face/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=BIN -o data/pokemon/face/ {} \;
+	find assets_source/pokemon/face/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o hal/sdl2/assets/resume/ {} \;
 
 assets-menu:
 	find assets_source/menu/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/menu/ {} \;
