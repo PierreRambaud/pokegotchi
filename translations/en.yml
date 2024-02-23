@@ -17,7 +17,7 @@ en:
   bag.chicken.description: Fried Chicken
   bag.chicken.name: Chicken
   bag.coconut_milk.description: Always good with chicken
-  bag.coconut_milk.name: Coconut milt
+  bag.coconut_milk.name: Coconut milk
   bag.frozen_carrots.description: Come from the south
   bag.frozen_carrots.name: Frozen carrot
   bag.haricots.description: Green vegetable
@@ -26,7 +26,7 @@ en:
   bag.honey.name: Honey
   bag.milk.description: Organic milk
   bag.milk.name: Milk
-  bag.noodles.description: Frech noodles!
+  bag.noodles.description: Fresh noodles!
   bag.noodles.name: Noodles
   bag.spices.description: Add some spice to your life
   bag.spices.name: Spices
@@ -51,8 +51,7 @@ en:
     Despite its small size, it can zap even adult humans. However, if it does
     so, it also surprises itself.
   pokemon.pikachu.description: >-
-    Pikachu that can generate powerful electricity have cheek sacs that are
-    extra soft and super stretchy.
+    Pikachu can generate powerful electricity with its extra soft and super stretchy cheek pouches.
   pokemon.raichu.description: >-
     Its long tail serves as a ground to protect itself from its own high-voltage
     power.
@@ -108,8 +107,8 @@ en:
   ball.moon: Moon Ball
   ball.dream: Dream Ball
   menu.options.ball: Ball choice
-  pokemon.ko.title: Pokémon K.O
-  pokemon.ko.message: The game is over!
+  pokemon.ko.title: Pokémon K.O.
+  pokemon.ko.message: Game Over!
   game.save.box.delete: Delete
   game.save.box.choose: What to do?
   game.save.box.replace: Replace
