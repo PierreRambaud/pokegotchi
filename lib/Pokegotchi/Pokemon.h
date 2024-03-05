@@ -28,7 +28,6 @@ LV_IMG_DECLARE(pokemon_25);
 LV_IMG_DECLARE(pokemon_26);
 LV_IMG_DECLARE(pokemon_172);
 
-
 extern const void* eevee_face;
 extern const void* pichu_face;
 extern const void* vaporeon_face;
