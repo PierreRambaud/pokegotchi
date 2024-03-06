@@ -127,8 +127,8 @@ static inline lv_obj_t* lv_menu_button_create(lv_obj_t* parent, const lv_image_d
   lv_obj_add_style(button, &style_default_text, 0);
   lv_obj_set_width(button, 150);
 
-  lv_imagebutton_set_src(button, LV_IMAGEBUTTON_STATE_RELEASED, NULL, img_src, NULL);
-  lv_imagebutton_set_src(button, LV_IMAGEBUTTON_STATE_PRESSED, NULL, img_pressed_src, NULL);
+  lv_imagebutton_set_src(button, LV_IMAGEBUTTON_STATE_RELEASED, img_src, img_src, img_src);
+  lv_imagebutton_set_src(button, LV_IMAGEBUTTON_STATE_PRESSED, img_pressed_src, img_pressed_src, img_pressed_src);
 
   lv_obj_t* label = lv_label_create(button);
   lv_label_set_text(label, title);
