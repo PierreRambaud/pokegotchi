@@ -23,6 +23,8 @@ LV_IMG_DECLARE(menu_game_draw_pressed)
 LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 
+
+static void save_game(char*);
 static void cancel_new_save_event_handler(lv_event_t*);
 static void choice_ball_event_cb(lv_event_t*);
 static void choice_save_game_event_handler(lv_event_t*);
@@ -141,7 +143,7 @@ void GameMenu::display_options(void) {
 
   lv_obj_t* ball_label = lv_label_create(_menu_child_screen);
   lv_label_set_text(ball_label, _("menu.options.ball"));
-  lv_obj_set_grid_cell(ball_label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, 4, 1);
+  lv_obj_set_grid_cell(ball_label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_START, LV_BUTTONMATRIX_CTRL_CHECKABLE, 1);
   lv_obj_add_style(ball_label, &style_default_text, 0);
 
   lv_obj_t* ball_choice_dropdown = lv_dropdown_create(_menu_child_screen);
@@ -260,10 +262,7 @@ static void delete_save_box_event_handler(lv_event_t* e) {
 static void replace_save_box_event_handler(lv_event_t* e) {
   event_choice_game_data* event_data = (event_choice_game_data*)lv_event_get_user_data(e);
 
-  lv_event_t* custom_event = new lv_event_t;
-  custom_event->code = LV_EVENT_CLICKED;
-  custom_event->user_data = event_data->file_name;
-  save_game_event_handler(custom_event);
+  save_game(event_data->file_name);
 
   lv_msgbox_close(event_data->box);
 }
@@ -286,7 +285,13 @@ static void game_new_save_event_handler(lv_event_t* e) {
                                  "l", "m", "\n", "w", "x", "c", "v", "b", "n", "\n", LV_SYMBOL_CLOSE,     LV_SYMBOL_OK, NULL};
 
   /*Set the relative width of the buttons and other controls*/
-  static const lv_buttonmatrix_ctrl_t kb_ctrl[] = {4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, LV_BUTTONMATRIX_CTRL_HIDDEN | 10, 2};
+  static const lv_buttonmatrix_ctrl_t kb_ctrl[] = {
+      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
+      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_HIDDEN,    LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
+      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
+      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_HIDDEN,    LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
+      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
+      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_NO_REPEAT, LV_BUTTONMATRIX_CTRL_HIDDEN,    LV_BUTTONMATRIX_CTRL_NO_REPEAT};
 
   lv_keyboard_set_map(keyboard, LV_KEYBOARD_MODE_USER_1, kb_map, kb_ctrl);
   lv_keyboard_set_mode(keyboard, LV_KEYBOARD_MODE_USER_1);
@@ -303,11 +308,7 @@ static void create_new_save_event_handler(lv_event_t* e) {
     return;
   }
 
-  lv_event_t* custom_event = new lv_event_t;
-  custom_event->code = LV_EVENT_CLICKED;
-  custom_event->user_data = (void*)text_content;
-
-  save_game_event_handler(custom_event);
+  save_game((char*) text_content);
 }
 
 static void slider_set_brightness_event_cb(lv_event_t* e) {
@@ -340,13 +341,21 @@ static void click_button_save_game_event_handler(lv_event_t* e) { GameMenu::getI
  * @param lv_event_t* e
  */
 static void save_game_event_handler(lv_event_t* e) {
+  save_game(NULL);
+}
+
+/**
+ * Save game information
+ *
+ * @param char* save_file_name
+ */
+static void save_game(char* save_file_name) {
   if (hal_start_storage() == false) {
     create_message_box(_("game.error"), _("sd.card.not_found"));
     return;
   }
 
   hal_file_t file;
-  char* save_file_name = (char*)lv_event_get_user_data(e);
   if (save_file_name == NULL and Game::getInstance()->get_options()->save_file_path) {
     serial_printf("GameMenu", "Save file \"%s\"", Game::getInstance()->get_options()->save_file_path);
     file = hal_open_file(Game::getInstance()->get_options()->save_file_path);
