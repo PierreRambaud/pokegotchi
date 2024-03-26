@@ -633,11 +633,11 @@
 #endif
 
 /*API for Arduino LittleFS. */
-#ifndef LV_USE_FS_ARDUINO_LITTLEFS
-#define LV_USE_FS_ARDUINO_LITTLEFS 0
+#ifndef LV_USE_FS_ARDUINO_ESP_LITTLEFS
+#define LV_USE_FS_ARDUINO_ESP_LITTLEFS 0
 #endif
-#if LV_USE_FS_ARDUINO_LITTLEFS
-    #define LV_FS_ARDUINO_LITTLEFS_LETTER 'L'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+#if LV_USE_FS_ARDUINO_ESP_LITTLEFS
+    #define LV_FS_ARDUINO_ESP_LITTLEFS_LETTER 'L'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
 #endif
 
 /*LODEPNG decoder library*/
