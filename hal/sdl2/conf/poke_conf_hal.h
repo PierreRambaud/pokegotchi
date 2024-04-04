@@ -6,7 +6,6 @@
 #define SDL_ZOOM 1
 
 #include "Config.h"
-#include "storage_hal.h"
 
 using namespace Pokegotchi;
 

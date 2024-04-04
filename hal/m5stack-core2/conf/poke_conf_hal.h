@@ -4,12 +4,11 @@
 #define POKEGOTCHI_BATTERY
 
 #include "Config.h"
-#include "storage_hal.h"
 
 using namespace Pokegotchi;
 
 static poke_config_t* poke_config = new poke_config_t({
-    hal_start_storage(),
+    false,
     "/.pokegotchi/saves",
 });
 

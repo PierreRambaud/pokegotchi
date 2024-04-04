@@ -633,9 +633,11 @@
 #endif
 
 /*API for LittleFs. */
-#define LV_USE_FS_LITTLEFS 1
-#if LV_USE_FS_LITTLEFS
-    #define LV_FS_LITTLEFS_LETTER 'L'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+#define LV_USE_FS_ARDUINO_SD 1
+#if LV_USE_FS_ARDUINO_SD
+    #define LV_FS_ARDUINO_SD_LETTER 'S'     /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+    #define LV_FS_ARDUINO_SD_FREQUENCY 40000000
+    #define LV_FS_ARDUINO_SD_PIN 4
 #endif
 
 /*LODEPNG decoder library*/
@@ -656,7 +658,7 @@
 #define LV_USE_LIBJPEG_TURBO 0
 
 /*GIF decoder library*/
-#define LV_USE_GIF 1
+#define LV_USE_GIF 0
 #if LV_USE_GIF
 /*GIF decoder accelerate*/
 #define LV_GIF_CACHE_DECODE_DATA 0
