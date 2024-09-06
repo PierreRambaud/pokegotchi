@@ -17,6 +17,8 @@ bool hal_remove_file(const char* path) {
 
 bool hal_start_storage(void) { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
 
+void hal_stop_storage(void) { SD.end(); }
+
 void hal_prepare_storage(poke_config_t* global_config) {
   File entry = SD.open(global_config->save_files_path);
   if (entry && !entry.isDirectory()) {
@@ -66,3 +68,5 @@ void hal_read_directory(StorageConfig* storage_config, const char* path) {
   directory.close();
   SD.end();
 }
+
+hal_file_t hal_open_file(const char* path) { return SD.open(path, FILE_WRITE); }

@@ -2,7 +2,6 @@
 #include "lvgl.h"
 #include "Arduino.h"
 #include "M5Core2.h"
-#include "drivers/lv_fs_littlefs.h"
 #include "app_hal.h"
 
 M5Display *tft;
@@ -64,7 +63,6 @@ void hal_setup(void) {
   randomSeed(analogRead(ANALOG_PIN));
   M5.begin(true, false);
 
-  lv_fs_littlefs_init();
   init_touch_driver();
 
   tft = &M5.Lcd;
