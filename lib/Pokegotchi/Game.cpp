@@ -26,6 +26,25 @@ Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p, poke
   set_lcd_brightness((int32_t)_options->brightness);
 }
 
+Pokegotchi::Game::~Game() {
+  serial_printf("Game", "Destructor called, cleaning up LVGL objects");
+
+  if (_screen != nullptr) {
+    lv_obj_del(_screen);
+    _screen = nullptr;
+  }
+
+  for (lv_obj_t* poo : _poos) {
+    if (lv_obj_is_valid(poo)) lv_obj_del(poo);
+  }
+  _poos.clear();
+
+  for (lv_obj_t* pee : _pees) {
+    if (lv_obj_is_valid(pee)) lv_obj_del(pee);
+  }
+  _pees.clear();
+}
+
 Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
   _options = new poke_options_t{OPTIONS_BRIGHTNESS_DEFAULT, OPTIONS_BALL_DEFAULT, NULL};
   _initialize(global_config, main_screen, p);

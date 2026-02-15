@@ -1,10 +1,8 @@
 #define ANALOG_PIN 35
 #include "lvgl.h"
 #include "Arduino.h"
-#include "M5Core2.h"
+#include "M5Unified.h"
 #include "app_hal.h"
-
-M5Display *tft;
 
 /**
  * @param lv_display_t *disp
@@ -17,10 +15,10 @@ void flush_cb(lv_display_t *disp, const lv_area_t *area, uint8_t *px_map) {
   uint32_t w = (area->x2 - area->x1 + 1);
   uint32_t h = (area->y2 - area->y1 + 1);
 
-  tft->startWrite();
-  tft->setAddrWindow(area->x1, area->y1, w, h);
-  tft->pushColors((uint16_t *)px_map, w * h, true);
-  tft->endWrite();
+  M5.Display.startWrite();
+  M5.Display.setAddrWindow(area->x1, area->y1, w, h);
+  M5.Display.pushPixels((uint16_t *)px_map, w * h, true);
+  M5.Display.endWrite();
 
   lv_display_flush_ready(disp);
 }
@@ -39,15 +37,21 @@ lv_display_t *hal_create_display(void) {
  * @return void
  */
 void touchpad_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
-  TouchPoint_t pos = M5.Touch.getPressPoint();
+  static int16_t last_x = 0;
+  static int16_t last_y = 0;
 
-  bool touched = (pos.x <= 0 || pos.y <= 0 || pos.x >= LV_HOR_RES_MAX || pos.y >= LV_VER_RES_MAX) ? false : true;
-  if (!touched) {
-    data->state = LV_INDEV_STATE_RELEASED;
-  } else {
+  auto touch = M5.Touch.getDetail();
+
+  if (touch.isPressed()) {
     data->state = LV_INDEV_STATE_PRESSED;
-    data->point.x = pos.x;
-    data->point.y = pos.y;
+    data->point.x = touch.x;
+    data->point.y = touch.y;
+    last_x = touch.x;
+    last_y = touch.y;
+  } else {
+    data->state = LV_INDEV_STATE_RELEASED;
+    data->point.x = last_x;
+    data->point.y = last_y;
   }
 }
 
@@ -61,11 +65,31 @@ void init_touch_driver(void) {
 // Initialize hal
 void hal_setup(void) {
   randomSeed(analogRead(ANALOG_PIN));
-  M5.begin(true, false);
+
+  auto cfg = M5.config();
+
+  // Configure M5Unified - these are the correct settings
+  cfg.clear_display = true;
+  cfg.output_power = true;
+  cfg.internal_imu = true;
+  cfg.internal_rtc = true;
+  cfg.internal_spk = true;
+  cfg.internal_mic = true;
+
+  M5.begin(cfg);
+
+  // Initialize display
+  M5.Display.begin();
+  M5.Display.setRotation(1);
+  M5.Display.fillScreen(TFT_BLACK);
+
+  Serial.begin(115200);
+  Serial.println("M5Stack Core2 initialized");
+
+  // Debug: Check if touch is working
+  Serial.printf("Touch available: %d\n", M5.Touch.isEnabled());
 
   init_touch_driver();
-
-  tft = &M5.Lcd;
 }
 
 // hal loop behavior

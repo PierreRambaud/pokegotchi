@@ -24,6 +24,23 @@ Runner::Runner(void) {
   _home = home;
 }
 
+void Runner::close(void) {
+  serial_printf("Runner", "Closing and cleaning up...");
+
+  if (_home != nullptr) {
+    delete _home;
+    _home = nullptr;
+    Home::setInstance(nullptr);
+  }
+
+  if (Game::getInstance() != nullptr) {
+    // Assuming you add a static method to delete the instance
+    Game::destroyInstance();
+  }
+
+  lv_obj_clean(lv_screen_active());
+}
+
 void Runner::loop(void) {
   if (_home != nullptr) {
     if (_home->isClosed() == false) {

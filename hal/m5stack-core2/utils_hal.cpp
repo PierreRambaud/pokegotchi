@@ -1,4 +1,4 @@
-#include "M5Core2.h"
+#include "M5Unified.h"
 #include "utils_hal.h"
 
 void hal_printf(const char* context, char* buffer) {
@@ -6,13 +6,13 @@ void hal_printf(const char* context, char* buffer) {
   Serial.println(buffer);
 }
 
-void hal_set_brightness(int32_t value) { M5.Axp.SetLcdVoltage(2500 + ((value * 800) / 100)); }
+void hal_set_brightness(int32_t value) { M5.Display.setBrightness(value); }
 
 unsigned long hal_millis(void) { return millis(); }
 
-bool hal_battery_is_charging(void) { return M5.Axp.isCharging(); }
+bool hal_battery_is_charging(void) { return M5.Power.isCharging(); }
 
-float hal_battery_level(void) { return M5.Axp.GetBatteryLevel(); }
+float hal_battery_level(void) { return M5.Power.getBatteryLevel(); }
 
 void hal_restart(void) { ESP.restart(); }
 

@@ -13,10 +13,7 @@ using namespace FloppyBird;
 // temporary x and y var
 static short tmpx, tmpy;
 
-void eventDisplay(Event& e);
-
 Runner::Runner(void) {
-  M5.Buttons.addHandler(eventDisplay, E_TOUCH);
   EEPROM.begin(1000);
   Serial.println("Last max score:");
   Serial.println(EEPROM.readInt(address));
@@ -28,6 +25,8 @@ void Runner::loop(void) {
   game_loop();
   game_over();
 }
+
+void FloppyBird::Runner::close() {}
 
 // ---------------
 // game loop
@@ -41,14 +40,14 @@ void Runner::game_loop(void) {
   unsigned char GAMEH = TFTH - FLOORH;
   // draw the floor once, we will not overwrite on this area in-game
   // black line
-  M5.Lcd.drawFastHLine(0, GAMEH, TFTW, TFT_BLACK);
+  M5.Display.drawFastHLine(0, GAMEH, TFTW, TFT_BLACK);
   // grass and stripe
-  M5.Lcd.fillRect(0, GAMEH + 1, TFTW2, GRASSH, GRASSCOL);
-  M5.Lcd.fillRect(TFTW2, GAMEH + 1, TFTW2, GRASSH, GRASSCOL2);
+  M5.Display.fillRect(0, GAMEH + 1, TFTW2, GRASSH, GRASSCOL);
+  M5.Display.fillRect(TFTW2, GAMEH + 1, TFTW2, GRASSH, GRASSCOL2);
   // black line
-  M5.Lcd.drawFastHLine(0, GAMEH + GRASSH, TFTW, TFT_BLACK);
+  M5.Display.drawFastHLine(0, GAMEH + GRASSH, TFTW, TFT_BLACK);
   // mud
-  M5.Lcd.fillRect(0, GAMEH + GRASSH + 1, TFTW, FLOORH - GRASSH, FLOORCOL);
+  M5.Display.fillRect(0, GAMEH + GRASSH + 1, TFTW, FLOORH - GRASSH, FLOORCOL);
   // grass x position (for stripe animation)
   long grassx = TFTW;
   // game loop time variables
@@ -66,6 +65,17 @@ void Runner::game_loop(void) {
       // input
       // ===============
       M5.update();
+
+      // Check for touch input (replaces event handler)
+      if (M5.Touch.getCount() > 0) {
+        // if the bird is not too close to the top of the screen apply jump force
+        if (bird.y > BIRDH2 * 0.5) {
+          bird.vel_y = -JUMP_FORCE;
+        } else {
+          // else zero velocity
+          bird.vel_y = 0;
+        }
+      }
 
       // ===============
       // update
@@ -103,11 +113,11 @@ void Runner::game_loop(void) {
     // we save cycles if we avoid drawing the pipe when outside the screen
     if (pipes.x >= 0 && pipes.x < TFTW) {
       // pipe color
-      M5.Lcd.drawFastVLine(pipes.x + 3, 0, pipes.gap_y, PIPECOL);
-      M5.Lcd.drawFastVLine(pipes.x + 3, pipes.gap_y + GAPHEIGHT + 1, GAMEH - (pipes.gap_y + GAPHEIGHT + 1), PIPECOL);
+      M5.Display.drawFastVLine(pipes.x + 3, 0, pipes.gap_y, PIPECOL);
+      M5.Display.drawFastVLine(pipes.x + 3, pipes.gap_y + GAPHEIGHT + 1, GAMEH - (pipes.gap_y + GAPHEIGHT + 1), PIPECOL);
       // highlight
-      M5.Lcd.drawFastVLine(pipes.x, 0, pipes.gap_y, PIPEHIGHCOL);
-      M5.Lcd.drawFastVLine(pipes.x, pipes.gap_y + GAPHEIGHT + 1, GAMEH - (pipes.gap_y + GAPHEIGHT + 1), PIPEHIGHCOL);
+      M5.Display.drawFastVLine(pipes.x, 0, pipes.gap_y, PIPEHIGHCOL);
+      M5.Display.drawFastVLine(pipes.x, pipes.gap_y + GAPHEIGHT + 1, GAMEH - (pipes.gap_y + GAPHEIGHT + 1), PIPEHIGHCOL);
       // bottom and top border of pipe
       drawPixel(pipes.x, pipes.gap_y, PIPESEAMCOL);
       drawPixel(pipes.x, pipes.gap_y + GAPHEIGHT, PIPESEAMCOL);
@@ -118,7 +128,7 @@ void Runner::game_loop(void) {
       drawPixel(pipes.x + 3, pipes.gap_y + GAPHEIGHT + 6, PIPESEAMCOL);
     }
     // erase behind pipe
-    if (pipes.x <= TFTW) M5.Lcd.drawFastVLine(pipes.x + PIPEW, 0, GAMEH, BCKGRDCOL);
+    if (pipes.x <= TFTW) M5.Display.drawFastVLine(pipes.x + PIPEW, 0, GAMEH, BCKGRDCOL);
 
     // bird
     // ---------------
@@ -145,8 +155,8 @@ void Runner::game_loop(void) {
     // ---------------
     grassx -= SPEED;
     if (grassx < 0) grassx = TFTW;
-    M5.Lcd.drawFastVLine(grassx % TFTW, GAMEH + 1, GRASSH - 1, GRASSCOL);
-    M5.Lcd.drawFastVLine((grassx + 64) % TFTW, GAMEH + 1, GRASSH - 1, GRASSCOL2);
+    M5.Display.drawFastVLine(grassx % TFTW, GAMEH + 1, GRASSH - 1, GRASSCOL);
+    M5.Display.drawFastVLine((grassx + 64) % TFTW, GAMEH + 1, GRASSH - 1, GRASSCOL2);
 
     // ===============
     // collision
@@ -165,19 +175,19 @@ void Runner::game_loop(void) {
     else if (bird.x > pipes.x + PIPEW - BIRDW && passed_pipe) {
       passed_pipe = false;
       // erase score with background color
-      M5.Lcd.setTextColor(BCKGRDCOL);
-      M5.Lcd.setCursor(TFTW2, 4);
-      M5.Lcd.print(score);
+      M5.Display.setTextColor(BCKGRDCOL);
+      M5.Display.setCursor(TFTW2, 4);
+      M5.Display.print(score);
       // set text color back to white for new score
-      M5.Lcd.setTextColor(TFT_WHITE);
+      M5.Display.setTextColor(TFT_WHITE);
       // increase score since we successfully passed a pipe
       score++;
     }
 
     // update score
     // ---------------
-    M5.Lcd.setCursor(TFTW2, 4);
-    M5.Lcd.print(score);
+    M5.Display.setCursor(TFTW2, 4);
+    M5.Display.print(score);
   }
 
   // add a small delay to show how the player lost
@@ -186,7 +196,7 @@ void Runner::game_loop(void) {
 
 void Runner::game_init(void) {
   // clear screen
-  M5.Lcd.fillScreen(BCKGRDCOL);
+  M5.Display.fillScreen(BCKGRDCOL);
   // reset score
   score = 0;
   // init bird
@@ -205,27 +215,27 @@ void Runner::game_init(void) {
 // game start
 // ---------------
 void Runner::game_start(void) {
-  M5.Lcd.fillScreen(TFT_BLACK);
-  M5.Lcd.fillRect(10, TFTH2 - 20, TFTW - 20, 1, TFT_WHITE);
-  M5.Lcd.fillRect(10, TFTH2 + 32, TFTW - 20, 1, TFT_WHITE);
-  M5.Lcd.setTextColor(TFT_WHITE);
-  M5.Lcd.setTextSize(3);
+  M5.Display.fillScreen(TFT_BLACK);
+  M5.Display.fillRect(10, TFTH2 - 20, TFTW - 20, 1, TFT_WHITE);
+  M5.Display.fillRect(10, TFTH2 + 32, TFTW - 20, 1, TFT_WHITE);
+  M5.Display.setTextColor(TFT_WHITE);
+  M5.Display.setTextSize(3);
   // half width - num char * char width in pixels
-  M5.Lcd.setCursor(TFTW2 - (6 * 9), TFTH2 - 16);
-  M5.Lcd.println("FLOPPY");
-  M5.Lcd.setTextSize(3);
-  M5.Lcd.setCursor(TFTW2 - (6 * 9), TFTH2 + 8);
-  M5.Lcd.println("-BIRD-");
-  M5.Lcd.setTextSize(2);
-  M5.Lcd.setCursor(TFTW2 - (M5.Lcd.textWidth(_("game.bird.start")) / 2), TFTH2 + 56);
-  M5.Lcd.println(_("game.bird.start"));
+  M5.Display.setCursor(TFTW2 - (6 * 9), TFTH2 - 16);
+  M5.Display.println("FLOPPY");
+  M5.Display.setTextSize(3);
+  M5.Display.setCursor(TFTW2 - (6 * 9), TFTH2 + 8);
+  M5.Display.println("-BIRD-");
+  M5.Display.setTextSize(2);
+  M5.Display.setCursor(TFTW2 - (M5.Display.textWidth(_("game.bird.start")) / 2), TFTH2 + 56);
+  M5.Display.println(_("game.bird.start"));
 
   while (1) {
-    // wait for push button
-    if (M5.BtnB.wasPressed()) {
+    M5.update();
+    // wait for touch or button B press
+    if (M5.Touch.getCount() > 0 || M5.BtnB.wasPressed()) {
       break;
     }
-    M5.update();
   }
   // init game settings
   game_init();
@@ -235,7 +245,7 @@ void Runner::game_start(void) {
 // game over
 // ---------------
 void Runner::game_over(void) {
-  M5.Lcd.fillScreen(TFT_BLACK);
+  M5.Display.fillScreen(TFT_BLACK);
   maxScore = EEPROM.readInt(address);
 
   if (score > maxScore) {
@@ -244,49 +254,40 @@ void Runner::game_over(void) {
 
     maxScore = score;
 
-    M5.Lcd.setTextColor(TFT_RED);
-    M5.Lcd.setTextSize(2);
-    M5.Lcd.setCursor(TFTW2 - (13 * 6), TFTH2 - 26);
-    M5.Lcd.println(_("game.bird.highscore"));
+    M5.Display.setTextColor(TFT_RED);
+    M5.Display.setTextSize(2);
+    M5.Display.setCursor(TFTW2 - (13 * 6), TFTH2 - 26);
+    M5.Display.println(_("game.bird.highscore"));
   }
 
-  M5.Lcd.setTextColor(TFT_WHITE);
-  M5.Lcd.setTextSize(3);
+  M5.Display.setTextColor(TFT_WHITE);
+  M5.Display.setTextSize(3);
   // half width - num char * char width in pixels
-  M5.Lcd.setCursor(TFTW2 - (M5.Lcd.textWidth(_("game.bird.gameover")) / 2), TFTH2 - 6);
-  M5.Lcd.println(_("game.bird.gameover"));
-  M5.Lcd.setTextSize(2);
-  M5.Lcd.setCursor(10, 10);
-  M5.Lcd.print(_("game.bird.score"));
-  M5.Lcd.print(" ");
-  M5.Lcd.print(score);
-  M5.Lcd.setCursor(TFTW2 - ((M5.Lcd.textWidth(_("game.bird.restart")) / 2)), TFTH2 + 18);
-  M5.Lcd.println(_("game.bird.restart"));
-  M5.Lcd.setCursor(10, 28);
-  M5.Lcd.print(_("game.bird.maxscore"));
-  M5.Lcd.print(" ");
-  M5.Lcd.print(maxScore);
+  M5.Display.setCursor(TFTW2 - (M5.Display.textWidth(_("game.bird.gameover")) / 2), TFTH2 - 6);
+  M5.Display.println(_("game.bird.gameover"));
+  M5.Display.setTextSize(2);
+  M5.Display.setCursor(10, 10);
+  M5.Display.print(_("game.bird.score"));
+  M5.Display.print(" ");
+  M5.Display.print(score);
+  M5.Display.setCursor(TFTW2 - ((M5.Display.textWidth(_("game.bird.restart")) / 2)), TFTH2 + 18);
+  M5.Display.println(_("game.bird.restart"));
+  M5.Display.setCursor(10, 28);
+  M5.Display.print(_("game.bird.maxscore"));
+  M5.Display.print(" ");
+  M5.Display.print(maxScore);
+
   while (1) {
-    // wait for push button
-    if (M5.BtnB.wasPressed()) {
+    M5.update();
+    // wait for touch or button B press
+    if (M5.Touch.getCount() > 0 || M5.BtnB.wasPressed()) {
       break;
     }
-    M5.update();
   }
 }
 
 void Runner::resetMaxScore(void) {
   EEPROM.writeInt(address, 0);
   EEPROM.commit();
-}
-
-void eventDisplay(Event& e) {
-  // if the bird is not too close to the top of the screen apply jump force
-  if (bird.y > BIRDH2 * 0.5) {
-    bird.vel_y = -JUMP_FORCE;
-  } else {
-    // else zero velocity
-    bird.vel_y = 0;
-  }
 }
 #endif

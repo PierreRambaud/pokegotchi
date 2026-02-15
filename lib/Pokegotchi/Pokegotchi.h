@@ -13,6 +13,7 @@ namespace Pokegotchi {
    public:
     explicit Runner(void);
     void loop(void);
+    void close(void);
 
    private:
     long _last_refresh_time = 0;

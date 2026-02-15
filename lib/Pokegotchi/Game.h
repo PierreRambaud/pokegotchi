@@ -14,12 +14,19 @@ namespace Pokegotchi {
    public:
     Game(poke_config_t*, lv_obj_t*, Pokemon* p);
     Game(poke_config_t*, lv_obj_t*, Pokemon* p, poke_options_t*);
+    ~Game();
 
     void loop(void);
     void switch_to_day(void);
     void switch_to_night(void);
 
     static Game* getInstance(void) { return _instance; }
+    static void destroyInstance(void) {
+      if (_instance != nullptr) {
+        delete _instance;
+        _instance = nullptr;
+      }
+    }
     static void setInstance(Game* instance) { _instance = instance; }
 
     void action_eat(BagItem* item);

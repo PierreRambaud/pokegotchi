@@ -1,5 +1,5 @@
 #ifdef POKEGOTCHI_INCLUDE_GAMES
-#include "M5Core2.h"
+#include <M5Unified.h>
 #include "lv_i18n.h"
 #include "DrawingBoard.h"
 #include "Utils.h"
@@ -15,64 +15,95 @@ Runner::Runner(void) {
   _color = 8;
   _clear_color = 0;
 
-  lv_style_set_text_color(&style_color_label, lv_color_hex3(getColor(_color)));
-  lv_style_set_text_color(&style_size_label, lv_color_white());
-  lv_style_set_text_color(&style_clear_label, lv_color_white());
+  lv_style_init(&style_color_label);
+  lv_style_init(&style_size_label);
+  lv_style_init(&style_clear_label);
 
-  lv_obj_t* main_screen = lv_obj_create(NULL);
-  lv_screen_load(main_screen);
-  lv_obj_remove_style_all(main_screen);
-  lv_obj_set_size(main_screen, LV_HOR_RES_MAX, 20);
-  lv_obj_set_pos(main_screen, 0, LV_VER_RES_MAX - 20);
-  lv_obj_set_scrollbar_mode(main_screen, LV_SCROLLBAR_MODE_OFF);
+  lv_style_set_text_color(&style_color_label, lv_color_hex(getColor(_color)));
+  lv_style_set_text_color(&style_size_label, lv_color_hex(0xFFFFFF));
+  lv_style_set_text_color(&style_clear_label, lv_color_hex(0xFFFFFF));
+
+  lv_obj_t* active_screen = lv_scr_act();
+
+  lv_obj_t* label_container = lv_obj_create(active_screen);
+  lv_obj_remove_style_all(label_container);
+
+  lv_display_t* disp = lv_display_get_default();
+  int32_t hor_res = lv_display_get_horizontal_resolution(disp);
+  int32_t ver_res = lv_display_get_vertical_resolution(disp);
+
+  lv_obj_set_size(label_container, hor_res, 20);
+  lv_obj_align(label_container, LV_ALIGN_BOTTOM_MID, 0, 0);
+  lv_obj_set_scrollbar_mode(label_container, LV_SCROLLBAR_MODE_OFF);
+
+  lv_obj_set_style_bg_opa(label_container, LV_OPA_COVER, LV_PART_MAIN);
+  lv_obj_set_style_bg_color(label_container, lv_color_hex(0x000000), LV_PART_MAIN);
+
+  lv_obj_move_to_index(label_container, -1);
 
   static lv_style_t flex_style;
+  lv_style_init(&flex_style);
   lv_style_set_flex_flow(&flex_style, LV_FLEX_FLOW_ROW_WRAP);
   lv_style_set_flex_main_place(&flex_style, LV_FLEX_ALIGN_SPACE_AROUND);
   lv_style_set_layout(&flex_style, LV_LAYOUT_FLEX);
-  lv_obj_add_style(main_screen, &flex_style, LV_PART_MAIN);
+  lv_obj_add_style(label_container, &flex_style, LV_PART_MAIN);
 
-  _color_label = lv_label_create(main_screen);
+  _color_label = lv_label_create(label_container);
   lv_label_set_text(_color_label, _("game.draw.color"));
   lv_obj_add_style(_color_label, &style_color_label, LV_PART_MAIN);
 
-  _size_label = lv_label_create(main_screen);
+  _size_label = lv_label_create(label_container);
   lv_label_set_text_fmt(_size_label, _("game.draw.size"), _size);
   lv_obj_add_style(_size_label, &style_size_label, LV_PART_MAIN);
 
-  _clear_label = lv_label_create(main_screen);
+  _clear_label = lv_label_create(label_container);
   lv_label_set_text(_clear_label, _("game.draw.clear"));
   lv_obj_add_style(_clear_label, &style_clear_label, LV_PART_MAIN);
 
-  clear();
+  lv_refr_now(disp);
+
+  uint16_t color565 = getColorRGB565(_clear_color);
+  M5.Display.fillScreen(color565);
+  M5.Display.waitDisplay();
+
+  lv_obj_invalidate(label_container);
 }
 
 uint32_t Runner::getColor(uint8_t color) {
   switch (color) {
     case 0:
-      return BLACK;
+      return 0x000000;  // Black
     case 1:
-      return GREEN;
+      return 0x00FF00;  // Green
     case 2:
-      return BLUE;
+      return 0x0000FF;  // Blue
     case 3:
-      return RED;
+      return 0xFF0000;  // Red
     case 4:
-      return YELLOW;
+      return 0xFFFF00;  // Yellow
     case 5:
-      return PINK;
+      return 0xFF00FF;  // Magenta/Pink
     case 6:
-      return CYAN;
+      return 0x00FFFF;  // Cyan
     case 7:
-      return ORANGE;
+      return 0xFF8000;  // Orange
     default:
-      return WHITE;
+      return 0xFFFFFF;  // White
   }
 }
 
+uint16_t Runner::getColorRGB565(uint8_t color) {
+  uint32_t rgb888 = getColor(color);
+  uint8_t r = (rgb888 >> 16) & 0xFF;
+  uint8_t g = (rgb888 >> 8) & 0xFF;
+  uint8_t b = rgb888 & 0xFF;
+  return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
+}
+
 void Runner::drawPoint(uint32_t x, uint32_t y) {
-  M5.Lcd.drawCircle(x, y, _size, getColor(_color));
-  M5.Lcd.fillCircle(x, y, _size, getColor(_color));
+  uint16_t color565 = getColorRGB565(_color);
+  M5.Display.drawCircle(x, y, _size, color565);
+  M5.Display.fillCircle(x, y, _size, color565);
 
   serial_printf("DrawingBoard", "Draw point: %d, %d\r\n", x, y);
 }
@@ -83,8 +114,8 @@ void Runner::changeColor(void) {
     _color = 0;
   }
 
-  lv_style_set_text_color(&style_color_label, lv_color_hex3(getColor(_color)));
-  lv_obj_report_style_change(&style_color_label);
+  lv_style_set_text_color(&style_color_label, lv_color_hex(getColor(_color)));
+  lv_obj_invalidate(_color_label);
 
   serial_printf("DrawingBoard", "Color changed: %d\r\n", _color);
 }
@@ -100,17 +131,18 @@ void Runner::changeSize(void) {
 }
 
 void Runner::drawPoints(void) {
-  if (M5.Touch.ispressed() == false) {
+  auto touch_count = M5.Touch.getCount();
+  if (touch_count == 0) {
     return;
   }
 
-  TouchPoint_t coordinate = M5.Touch.getPressPoint();
-  if (coordinate.y == -1 or coordinate.x == -1) {
+  auto touch_detail = M5.Touch.getDetail();
+  if (touch_detail.y == -1 || touch_detail.x == -1) {
     return;
   }
 
-  if ((coordinate.y >= 220 - _size) == false) {
-    drawPoint(coordinate.x, coordinate.y);
+  if ((touch_detail.y >= 220 - _size) == false) {
+    drawPoint(touch_detail.x, touch_detail.y);
   }
 }
 
@@ -120,9 +152,11 @@ void Runner::clear(void) {
     _clear_color = 0;
   }
 
-  M5.Lcd.fillScreen(getColor(_clear_color));
-  lv_obj_report_style_change(&style_color_label);
-  lv_obj_report_style_change(&style_clear_label);
+  uint16_t color565 = getColorRGB565(_clear_color);
+  M5.Display.fillScreen(color565);
+
+  lv_obj_invalidate(_color_label);
+  lv_obj_invalidate(_clear_label);
   lv_label_set_text_fmt(_size_label, _("game.draw.size"), _size);
 }
 
@@ -137,5 +171,7 @@ void Runner::loop(void) {
 
   drawPoints();
 }
+
+void Runner::close() {}
 
 #endif

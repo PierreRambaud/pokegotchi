@@ -1,5 +1,5 @@
 #include "keyboard_hal.h"
-#include "M5Core2.h"
+#include "M5Unified.h"
 
 bool hal_button_a_pressed(void) { return M5.BtnA.wasPressed(); }
 

@@ -20,6 +20,11 @@ Runner::Runner(void) {
 
 void Runner::switch_game(int8_t game) {
 #ifdef POKEGOTCHI_INCLUDE_GAMES
+  if (_game_instance != nullptr) {
+    _game_instance->close();
+    delete _game_instance;
+  }
+
   switch (game) {
     case GAME_FLOPPYBIRD:
       _game_instance = new FloppyBird::Runner();

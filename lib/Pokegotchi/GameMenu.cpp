@@ -23,7 +23,6 @@ LV_IMG_DECLARE(menu_game_draw_pressed)
 LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 
-
 static void save_game(char*);
 static void cancel_new_save_event_handler(lv_event_t*);
 static void choice_ball_event_cb(lv_event_t*);
@@ -308,7 +307,7 @@ static void create_new_save_event_handler(lv_event_t* e) {
     return;
   }
 
-  save_game((char*) text_content);
+  save_game((char*)text_content);
 }
 
 static void slider_set_brightness_event_cb(lv_event_t* e) {
@@ -340,9 +339,7 @@ static void click_button_save_game_event_handler(lv_event_t* e) { GameMenu::getI
  *
  * @param lv_event_t* e
  */
-static void save_game_event_handler(lv_event_t* e) {
-  save_game(NULL);
-}
+static void save_game_event_handler(lv_event_t* e) { save_game(NULL); }
 
 /**
  * Save game information

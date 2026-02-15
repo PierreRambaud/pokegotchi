@@ -11,6 +11,7 @@ namespace DrawingBoard {
     explicit Runner(void);
     void clear(void);
     void loop(void);
+    void close();
 
    protected:
     uint8_t _size;
@@ -22,12 +23,11 @@ namespace DrawingBoard {
     lv_obj_t* _clear_label;
 
     uint32_t getColor(uint8_t);
+    uint16_t getColorRGB565(uint8_t);
     void changeColor(void);
     void changeSize(void);
     void drawPoint(uint32_t x, uint32_t y);
-
     void drawPoints(void);
-    void drawPoint(void);
   };
 }  // namespace DrawingBoard
 #endif

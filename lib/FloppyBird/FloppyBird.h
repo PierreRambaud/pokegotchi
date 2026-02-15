@@ -5,7 +5,7 @@
 #ifndef FLOPPYBIRD_RUNNER
 #define FLOPPYBIRD_RUNNER
 
-#include "M5Core2.h"
+#include "M5Unified.h"
 #include "EEPROM.h"
 #include "GameInterface.h"
 
@@ -35,36 +35,34 @@
 // bird sprite
 // bird sprite colors (Cx name for values to keep the array readable)
 #define C0 BCKGRDCOL
-#define C1 M5.Lcd.color565(195, 165, 75)
+#define C1 M5.Display.color565(195, 165, 75)
 #define C2 BIRDCOL
 #define C3 TFT_WHITE
 #define C4 TFT_RED
-#define C5 M5.Lcd.color565(251, 216, 114)
+#define C5 M5.Display.color565(251, 216, 114)
 
 // ---------------
 // draw pixel
 // ---------------
-// faster drawPixel method by inlining calls and using setAddrWindow and pushColor
+// faster drawPixel method by inlining calls
 // using macro to force inlining
-#define drawPixel(a, b, c)          \
-  M5.Lcd.setAddrWindow(a, b, a, b); \
-  M5.Lcd.pushColor(c)
+#define drawPixel(a, b, c) M5.Display.writePixel(a, b, c)
 
 // background
-const unsigned int BCKGRDCOL = M5.Lcd.color565(138, 235, 244);
+const unsigned int BCKGRDCOL = M5.Display.color565(138, 235, 244);
 // bird
-const unsigned int BIRDCOL = M5.Lcd.color565(255, 254, 174);
+const unsigned int BIRDCOL = M5.Display.color565(255, 254, 174);
 // pipe
-const unsigned int PIPECOL = M5.Lcd.color565(99, 255, 78);
+const unsigned int PIPECOL = M5.Display.color565(99, 255, 78);
 // pipe highlight
-const unsigned int PIPEHIGHCOL = M5.Lcd.color565(250, 255, 250);
+const unsigned int PIPEHIGHCOL = M5.Display.color565(250, 255, 250);
 // pipe seam
-const unsigned int PIPESEAMCOL = M5.Lcd.color565(0, 0, 0);
+const unsigned int PIPESEAMCOL = M5.Display.color565(0, 0, 0);
 // floor
-const unsigned int FLOORCOL = M5.Lcd.color565(246, 240, 163);
+const unsigned int FLOORCOL = M5.Display.color565(246, 240, 163);
 // grass (col2 is the stripe color)
-const unsigned int GRASSCOL = M5.Lcd.color565(141, 225, 87);
-const unsigned int GRASSCOL2 = M5.Lcd.color565(156, 239, 88);
+const unsigned int GRASSCOL = M5.Display.color565(141, 225, 87);
+const unsigned int GRASSCOL2 = M5.Display.color565(156, 239, 88);
 
 const int buttonPin = 2;
 
@@ -92,6 +90,7 @@ namespace FloppyBird {
     explicit Runner(void);
 
     void loop(void);
+    void close();
 
    private:
     void game_init(void);

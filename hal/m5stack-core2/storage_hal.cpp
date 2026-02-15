@@ -1,4 +1,5 @@
-#include "M5Core2.h"
+#include "SD.h"
+#include "M5Unified.h"
 #include "Utils.h"
 #include "lv_i18n.h"
 #include "storage_hal.h"
@@ -15,7 +16,7 @@ bool hal_remove_file(const char* path) {
   return result;
 }
 
-bool hal_start_storage(void) { return SD.begin(TFCARD_CS_PIN, SPI, 40000000); }
+bool hal_start_storage(void) { return SD.begin(GPIO_NUM_4, SPI, 25000000); }
 
 void hal_stop_storage(void) { SD.end(); }
 
