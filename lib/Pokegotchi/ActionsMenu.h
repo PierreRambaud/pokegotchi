@@ -36,8 +36,8 @@ namespace Pokegotchi {
     void open(void);
     void close(void) {
       if (lv_obj_is_valid(_menu_child_screen)) {
-        // Remove sub menu anyway
-        lv_obj_delete(_menu_child_screen);
+        // Bag screen is built once and reused; just hide it.
+        lv_obj_add_flag(_menu_child_screen, LV_OBJ_FLAG_HIDDEN);
       }
 
       serial_printf("ActionsMenu", "Hide ActionsMenu");
@@ -62,7 +62,8 @@ namespace Pokegotchi {
     BagItem* _items[BAG_ITEMS_SIZE];
 
     Menu* _menu;
-    lv_obj_t* _menu_child_screen;
+    lv_obj_t* _menu_child_screen = nullptr;
+    bool _bag_initialized = false;
 
     lv_obj_t* _bag_button;
     lv_obj_t* _clean_button;

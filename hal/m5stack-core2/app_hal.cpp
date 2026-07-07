@@ -94,3 +94,5 @@ void hal_setup(void) {
 
 // hal loop behavior
 void hal_loop(void) { M5.update(); }
+
+void hal_delay(uint32_t ms) { delay(ms); }

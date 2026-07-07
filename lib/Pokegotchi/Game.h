@@ -70,6 +70,12 @@ namespace Pokegotchi {
 
     bool game_over = false;
 
+    int16_t _last_mood = -1;
+    int16_t _last_life = -1;
+    int16_t _last_sleepiness = -1;
+    int16_t _last_hunger = -1;
+    int16_t _last_level = -1;
+
     std::vector<lv_obj_t*> _poos;
     std::vector<lv_obj_t*> _pees;
   };

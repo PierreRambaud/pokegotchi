@@ -169,11 +169,30 @@ void Game::loop(void) {
 
   p->loop();
 
-  lv_bar_set_value(_mood_bar, p->get_mood(), LV_ANIM_ON);
-  lv_bar_set_value(_life_bar, p->get_life(), LV_ANIM_ON);
-  lv_bar_set_value(_sleepiness_bar, p->get_sleepiness(), LV_ANIM_ON);
-  lv_bar_set_value(_hunger_bar, p->get_hunger(), LV_ANIM_ON);
-  lv_label_set_text_fmt(_level_indic, "%d", p->get_level());
+  if (p->get_mood() != _last_mood) {
+    _last_mood = p->get_mood();
+    lv_bar_set_value(_mood_bar, _last_mood, LV_ANIM_ON);
+  }
+
+  if (p->get_life() != _last_life) {
+    _last_life = p->get_life();
+    lv_bar_set_value(_life_bar, _last_life, LV_ANIM_ON);
+  }
+
+  if (p->get_sleepiness() != _last_sleepiness) {
+    _last_sleepiness = p->get_sleepiness();
+    lv_bar_set_value(_sleepiness_bar, _last_sleepiness, LV_ANIM_ON);
+  }
+
+  if (p->get_hunger() != _last_hunger) {
+    _last_hunger = p->get_hunger();
+    lv_bar_set_value(_hunger_bar, _last_hunger, LV_ANIM_ON);
+  }
+
+  if (p->get_level() != _last_level) {
+    _last_level = p->get_level();
+    lv_label_set_text_fmt(_level_indic, "%d", _last_level);
+  }
 
   if (p->get_poos() != _poos.size()) {
     create_poo();

@@ -138,18 +138,24 @@ void ActionsMenu::open(void) {
 void ActionsMenu::display_bag(void) {
   lv_obj_add_flag(_menu->get_menu_screen(), LV_OBJ_FLAG_HIDDEN);
 
-  _menu_child_screen = create_child_screen(_menu->get_screen());
+  if (!_bag_initialized) {
+    _menu_child_screen = create_child_screen(_menu->get_screen());
 
-  lv_obj_set_flex_flow(_menu_child_screen, LV_FLEX_FLOW_COLUMN);
-  lv_obj_set_flex_grow(_menu_child_screen, 1);
-  lv_obj_add_flag(_menu_child_screen, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
-  lv_obj_set_scroll_dir(_menu_child_screen, LV_DIR_VER);
-  lv_obj_set_scroll_snap_y(_menu_child_screen, LV_SCROLL_SNAP_START);
-  lv_obj_add_flag(_menu_child_screen, LV_OBJ_FLAG_SCROLL_ONE);
-  lv_obj_add_event_cb(_menu_child_screen, options_bag_scroll_value_event_cb, LV_EVENT_SCROLL, NULL);
+    lv_obj_set_flex_flow(_menu_child_screen, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_grow(_menu_child_screen, 1);
+    lv_obj_add_flag(_menu_child_screen, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    lv_obj_set_scroll_dir(_menu_child_screen, LV_DIR_VER);
+    lv_obj_set_scroll_snap_y(_menu_child_screen, LV_SCROLL_SNAP_START);
+    lv_obj_add_flag(_menu_child_screen, LV_OBJ_FLAG_SCROLL_ONE);
+    lv_obj_add_event_cb(_menu_child_screen, options_bag_scroll_value_event_cb, LV_EVENT_SCROLL, NULL);
 
-  for (BagItem* item : _items) {
-    create_row_item(_menu_child_screen, item);
+    for (BagItem* item : _items) {
+      create_row_item(_menu_child_screen, item);
+    }
+
+    _bag_initialized = true;
+  } else {
+    lv_obj_remove_flag(_menu_child_screen, LV_OBJ_FLAG_HIDDEN);
   }
 
   lv_obj_scroll_to_y(_menu_child_screen, options_bag_scroll_value, LV_ANIM_OFF);
