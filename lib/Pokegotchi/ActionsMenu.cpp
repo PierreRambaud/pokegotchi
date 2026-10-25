@@ -149,6 +149,9 @@ void ActionsMenu::display_bag(void) {
     lv_obj_add_flag(_menu_child_screen, LV_OBJ_FLAG_SCROLL_ONE);
     lv_obj_add_event_cb(_menu_child_screen, options_bag_scroll_value_event_cb, LV_EVENT_SCROLL, NULL);
 
+    lv_style_init(&style_default_text);
+    lv_style_set_text_color(&style_default_text, lv_color_white());
+
     for (BagItem* item : _items) {
       create_row_item(_menu_child_screen, item);
     }
@@ -270,9 +273,6 @@ static void toggle_sleep_event_handler(lv_event_t* e) {
 static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
   static int32_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
   static int32_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
-
-  lv_style_init(&style_default_text);
-  lv_style_set_text_color(&style_default_text, lv_color_white());
 
   lv_obj_t* cont = lv_obj_create(parent);
   lv_obj_set_size(cont, LV_PCT(100), LV_SIZE_CONTENT);

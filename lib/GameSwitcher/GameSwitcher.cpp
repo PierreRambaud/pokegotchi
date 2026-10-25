@@ -5,6 +5,7 @@
 #ifdef POKEGOTCHI_INCLUDE_GAMES
 #include "FloppyBird.h"
 #include "DrawingBoard.h"
+#include "SkyRace.h"
 #endif
 
 using namespace GameSwitcher;
@@ -31,6 +32,9 @@ void Runner::switch_game(int8_t game) {
       break;
     case GAME_DRAWING_BOARD:
       _game_instance = new DrawingBoard::Runner();
+      break;
+    case GAME_SKYRACE:
+      _game_instance = new SkyRace::Runner();
       break;
   }
 #endif

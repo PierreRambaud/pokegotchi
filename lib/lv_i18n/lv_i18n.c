@@ -118,6 +118,20 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"game.save.box.delete", "Delete"},
     {"game.save.box.choose", "What to do?"},
     {"game.save.box.replace", "Replace"},
+    {"menu.game.sky", "Sky Race"},
+    {"game.sky.choose", "Choose your Pokemon"},
+    {"game.sky.articuno", "Articuno"},
+    {"game.sky.latios", "Latios"},
+    {"game.sky.latias", "Latias"},
+    {"game.sky.calibrate", "Hold steady..."},
+    {"game.sky.help", "Tilt to fly through the rings"},
+    {"game.sky.score", "Score: %d"},
+    {"game.sky.best", "Best: %d"},
+    {"game.sky.newbest", "NEW RECORD!"},
+    {"game.sky.gameover", "GAME OVER"},
+    {"game.sky.retry", "B: fly again   A: change Pokemon"},
+    {"game.sky.invert.on", "Up/down inverted (tap to change)"},
+    {"game.sky.invert.off", "Up/down normal (tap to change)"},
     {NULL, NULL} // End mark
 };
 
@@ -241,6 +255,20 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"game.save.box.delete", "Supprimer"},
     {"game.save.box.choose", "Que faire ?"},
     {"game.save.box.replace", "Remplacer"},
+    {"menu.game.sky", "Sky Race"},
+    {"game.sky.choose", "Choisis ton Pokemon"},
+    {"game.sky.articuno", "Artikodin"},
+    {"game.sky.latios", "Latios"},
+    {"game.sky.latias", "Latias"},
+    {"game.sky.calibrate", "Ne bouge plus..."},
+    {"game.sky.help", "Incline pour passer dans les anneaux"},
+    {"game.sky.score", "Score : %d"},
+    {"game.sky.best", "Record : %d"},
+    {"game.sky.newbest", "NOUVEAU RECORD !"},
+    {"game.sky.gameover", "FIN DE PARTIE"},
+    {"game.sky.retry", "B : rejouer   A : changer de Pokemon"},
+    {"game.sky.invert.on", "Haut/bas inverses (toucher pour changer)"},
+    {"game.sky.invert.off", "Haut/bas normal (toucher pour changer)"},
     {NULL, NULL} // End mark
 };
 

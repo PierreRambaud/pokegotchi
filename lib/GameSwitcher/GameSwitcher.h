@@ -8,6 +8,7 @@
 #define GAME_POKEGOTCHI 1
 #define GAME_DRAWING_BOARD 2
 #define GAME_FLOPPYBIRD 3
+#define GAME_SKYRACE 4
 
 namespace GameSwitcher {
   class Runner {

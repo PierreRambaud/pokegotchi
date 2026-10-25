@@ -17,7 +17,6 @@ namespace Pokegotchi {
 
    private:
     long _last_refresh_time = 0;
-    Home* _home = nullptr;
     poke_config_t* _config = nullptr;
   };
 }  // namespace Pokegotchi

@@ -113,3 +113,17 @@ fr:
   game.save.box.delete: Supprimer
   game.save.box.choose: Que faire ?
   game.save.box.replace: Remplacer
+  menu.game.sky: Sky Race
+  game.sky.choose: Choisis ton Pokemon
+  game.sky.articuno: Artikodin
+  game.sky.latios: Latios
+  game.sky.latias: Latias
+  game.sky.calibrate: Ne bouge plus...
+  game.sky.help: Incline pour passer dans les anneaux
+  game.sky.score: 'Score : %d'
+  game.sky.best: 'Record : %d'
+  game.sky.newbest: NOUVEAU RECORD !
+  game.sky.gameover: FIN DE PARTIE
+  game.sky.retry: 'B : rejouer   A : changer de Pokemon'
+  game.sky.invert.on: 'Haut/bas inverses (toucher pour changer)'
+  game.sky.invert.off: 'Haut/bas normal (toucher pour changer)'

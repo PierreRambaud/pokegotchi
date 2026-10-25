@@ -19,19 +19,13 @@ Runner::Runner(void) {
   lv_obj_t* main_screen = create_screen();
   lv_screen_load(main_screen);
 
-  Home* home = new Home(_config, main_screen);
-  Home::setInstance(home);
-  _home = home;
+  Home::setInstance(new Home(_config, main_screen));
 }
 
 void Runner::close(void) {
   serial_printf("Runner", "Closing and cleaning up...");
 
-  if (_home != nullptr) {
-    delete _home;
-    _home = nullptr;
-    Home::setInstance(nullptr);
-  }
+  Home::releaseInstance();
 
   if (Game::getInstance() != nullptr) {
     // Assuming you add a static method to delete the instance
@@ -42,14 +36,13 @@ void Runner::close(void) {
 }
 
 void Runner::loop(void) {
-  if (_home != nullptr) {
-    if (_home->isClosed() == false) {
-      _home->load_buttons();
+  // Home deletes itself (releaseInstance) when a game starts, so never keep
+  // a local copy of the pointer: always ask the singleton.
+  Home* home = Home::getInstance();
+  if (home != nullptr) {
+    home->load_buttons();
 
-      return;
-    }
-
-    _home = nullptr;
+    return;
   }
 
   Game::getInstance()->loop();

@@ -42,7 +42,9 @@ void touchpad_read_cb(lv_indev_t *indev, lv_indev_data_t *data) {
 
   auto touch = M5.Touch.getDetail();
 
-  if (touch.isPressed()) {
+  // The touch panel is taller than the screen: the strip below it holds the
+  // A/B/C touch buttons, handled by M5Unified, so keep it away from LVGL.
+  if (touch.isPressed() && touch.y < LV_VER_RES_MAX) {
     data->state = LV_INDEV_STATE_PRESSED;
     data->point.x = touch.x;
     data->point.y = touch.y;

@@ -28,7 +28,9 @@
  * - LV_STDLIB_RTTHREAD:    RT-Thread implementation
  * - LV_STDLIB_CUSTOM:      Implement the functions externally
  */
+#ifndef LV_USE_STDLIB_MALLOC
 #define LV_USE_STDLIB_MALLOC    LV_STDLIB_BUILTIN
+#endif
 #define LV_USE_STDLIB_STRING    LV_STDLIB_BUILTIN
 #define LV_USE_STDLIB_SPRINTF   LV_STDLIB_BUILTIN
 
@@ -327,11 +329,11 @@
 #define LV_ATTRIBUTE_FLUSH_READY
 
 /*Required alignment size for buffers*/
-#define LV_ATTRIBUTE_MEM_ALIGN_SIZE 1
+#define LV_ATTRIBUTE_MEM_ALIGN_SIZE 4
 
 /*Will be added where memories needs to be aligned (with -Os data might not be aligned to boundary by default).
  * E.g. __attribute__((aligned(4)))*/
-#define LV_ATTRIBUTE_MEM_ALIGN
+#define LV_ATTRIBUTE_MEM_ALIGN __attribute__((aligned(LV_ATTRIBUTE_MEM_ALIGN_SIZE)))
 
 /*Attribute to mark large constant arrays for example font's bitmaps*/
 #define LV_ATTRIBUTE_LARGE_CONST

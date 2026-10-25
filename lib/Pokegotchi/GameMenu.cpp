@@ -22,6 +22,8 @@ LV_IMG_DECLARE(menu_game_draw)
 LV_IMG_DECLARE(menu_game_draw_pressed)
 LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
+LV_IMG_DECLARE(menu_game_sky)
+LV_IMG_DECLARE(menu_game_sky_pressed)
 
 static void save_game(char*);
 static void cancel_new_save_event_handler(lv_event_t*);
@@ -182,6 +184,10 @@ void GameMenu::display_games(void) {
   static int8_t game_floppybird = GAME_FLOPPYBIRD;
   lv_obj_t* bird_button = lv_menu_button_create(_menu_child_screen, &menu_game_bird, &menu_game_bird_pressed, _("menu.game.bird"));
   lv_obj_add_event_cb(bird_button, run_game_event_handler, LV_EVENT_CLICKED, &game_floppybird);
+
+  static int8_t game_skyrace = GAME_SKYRACE;
+  lv_obj_t* sky_button = lv_menu_button_create(_menu_child_screen, &menu_game_sky, &menu_game_sky_pressed, _("menu.game.sky"));
+  lv_obj_add_event_cb(sky_button, run_game_event_handler, LV_EVENT_CLICKED, &game_skyrace);
 }
 
 void GameMenu::display_saves(void) {

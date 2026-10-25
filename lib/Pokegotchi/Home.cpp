@@ -169,7 +169,7 @@ static void load_button_event_handler(lv_event_t* e) {
     event_data->storage_config = storage_config;
     event_data->index = i;
 
-    lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
+    lv_obj_t* list_btn = lv_list_add_btn(save_list, LV_SYMBOL_FILE, save_files[i].name);
     lv_obj_add_event_cb(list_btn, load_file_button_event_handler, LV_EVENT_CLICKED, event_data);
     lv_obj_add_event_cb(list_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
   }
