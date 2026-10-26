@@ -336,7 +336,7 @@ void GameMenu::display_saves(void) {
   poke_save_file_info* save_files = storage_config->get_save_files();
 
   for (int i = 0; i < storage_config->get_save_count(); i++) {
-    lv_obj_t* list_btn = lv_list_add_btn(save_list, "X", save_files[i].name);
+    lv_obj_t* list_btn = lv_list_add_btn(save_list, NULL, save_files[i].name);
     lv_obj_add_event_cb(list_btn, choice_save_game_event_handler, LV_EVENT_CLICKED, save_files[i].name);
   }
 
