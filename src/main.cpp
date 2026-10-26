@@ -13,11 +13,8 @@ void custom_log_cb(lv_log_level_t level, const char *buf) {
 void lv_display_initialization(void) {
   lv_init();
 
-  lv_display_t *display = hal_create_display();
-
-  LV_ATTRIBUTE_MEM_ALIGN static uint16_t buf[(LV_HOR_RES_MAX * LV_VER_RES_MAX) / 10];  // Declare a buffer for 1/10 screen size
-  // Initialize `display_buf` display buffer with the buffer(s).
-  lv_display_set_buffers(display, buf, NULL, sizeof(buf), LV_DISPLAY_RENDER_MODE_PARTIAL);
+  // Each HAL creates its display with the buffers fitting its hardware
+  hal_create_display();
 }
 
 void setup(void) {

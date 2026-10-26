@@ -16,17 +16,18 @@ Runner::Runner(void) {
   lv_i18n_init(lv_i18n_language_pack);
   lv_i18n_set_locale(POKEGOTCHI_DEFAULT_LOCALE);
 
-  _game_instance = new Pokegotchi::Runner();
+  _game_instance = new Pokegotchi::Runner(false);
 }
 
 void Runner::switch_game(int8_t game) {
-#ifdef POKEGOTCHI_INCLUDE_GAMES
   if (_game_instance != nullptr) {
     _game_instance->close();
     delete _game_instance;
+    _game_instance = nullptr;
   }
 
   switch (game) {
+#ifdef POKEGOTCHI_INCLUDE_GAMES
     case GAME_FLOPPYBIRD:
       _game_instance = new FloppyBird::Runner();
       break;
@@ -36,8 +37,36 @@ void Runner::switch_game(int8_t game) {
     case GAME_SKYRACE:
       _game_instance = new SkyRace::Runner();
       break;
-  }
 #endif
+    case GAME_POKEGOTCHI:
+    default:
+      _game_instance = new Pokegotchi::Runner(true);
+      break;
+  }
 }
 
-void Runner::loop(void) { _game_instance->loop(); }
+void Runner::finish_minigame(int32_t score) {
+  _has_minigame_result = true;
+  _minigame_score = score;
+  request_switch(GAME_POKEGOTCHI);
+}
+
+bool Runner::take_minigame_result(int32_t* score) {
+  if (!_has_minigame_result) {
+    return false;
+  }
+
+  _has_minigame_result = false;
+  *score = _minigame_score;
+  return true;
+}
+
+void Runner::loop(void) {
+  _game_instance->loop();
+
+  if (_pending_game != 0) {
+    int8_t game = _pending_game;
+    _pending_game = 0;
+    switch_game(game);
+  }
+}

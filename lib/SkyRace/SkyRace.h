@@ -112,6 +112,7 @@ namespace SkyRace {
 
     int32_t _score = 0;
     int32_t _best_score = 0;
+    int32_t _session_best = 0;
     bool _new_best = false;
     uint8_t _combo = 0;
     uint8_t _lives = 0;

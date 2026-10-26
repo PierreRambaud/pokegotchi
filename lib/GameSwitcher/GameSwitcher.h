@@ -15,13 +15,26 @@ namespace GameSwitcher {
    public:
     explicit Runner(void);
     void loop(void);
-    void switch_game(int8_t game);
+
+    // Switch at the end of the loop: a game must never be deleted while one
+    // of its own callbacks is running
+    void request_switch(int8_t game) { _pending_game = game; }
+
+    // A mini-game is over: go back to the Pokemon with its score
+    void finish_minigame(int32_t score);
+    bool take_minigame_result(int32_t* score);
+
     static Runner* getInstance(void) { return _instance; }
     static void setInstance(Runner* instance) { _instance = instance; }
 
    private:
+    void switch_game(int8_t game);
+
     static Runner* _instance;
     GameInterface* _game_instance;
+    int8_t _pending_game = 0;
+    bool _has_minigame_result = false;
+    int32_t _minigame_score = 0;
   };
 }  // namespace GameSwitcher
 #endif

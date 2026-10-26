@@ -4,6 +4,7 @@
 #include "lv_i18n.h"
 #include "Utils.h"
 #include "SkyRace.h"
+#include "GameSwitcher.h"
 
 using namespace SkyRace;
 
@@ -222,11 +223,15 @@ void Runner::loop(void) {
 
   switch (_state) {
     case STATE_TITLE: {
-      if (M5.BtnA.wasPressed()) {
+      // Clicks pick a Pokemon, holding B goes back to the pet
+      if (M5.BtnB.wasHold()) {
+        GameSwitcher::Runner::getInstance()->finish_minigame(_session_best);
+        return;
+      } else if (M5.BtnA.wasClicked()) {
         select_flyer(FLYER_ARTICUNO);
-      } else if (M5.BtnB.wasPressed()) {
+      } else if (M5.BtnB.wasClicked()) {
         select_flyer(FLYER_LATIOS);
-      } else if (M5.BtnC.wasPressed()) {
+      } else if (M5.BtnC.wasClicked()) {
         select_flyer(FLYER_LATIAS);
       } else {
         // Ignore the touch release of the menu button that opened the game
@@ -268,7 +273,10 @@ void Runner::loop(void) {
       break;
 
     case STATE_GAME_OVER:
-      if (M5.BtnB.wasPressed()) {
+      if (M5.BtnC.wasPressed()) {
+        GameSwitcher::Runner::getInstance()->finish_minigame(_session_best);
+        return;
+      } else if (M5.BtnB.wasPressed()) {
         start_countdown();
       } else if (M5.BtnA.wasPressed()) {
         _state = STATE_TITLE;
@@ -328,6 +336,10 @@ void Runner::end_game(void) {
   _state = STATE_GAME_OVER;
   _state_time = 0;
   _needs_redraw = true;
+
+  if (_score > _session_best) {
+    _session_best = _score;
+  }
 
   if (_score > _best_score) {
     _best_score = _score;
@@ -699,6 +711,7 @@ void Runner::draw_title(void) {
   snprintf(buffer, sizeof(buffer), _("game.sky.best"), _best_score);
   draw_centered(buffer, 206, &fonts::DejaVu12, COLOR_RING);
   draw_centered(_invert_pitch ? _("game.sky.invert.on") : _("game.sky.invert.off"), 226, &fonts::DejaVu9, TFT_WHITE);
+  draw_centered(_("game.sky.back"), 7, &fonts::DejaVu9, TFT_WHITE);
 
   _canvas.pushSprite(&M5.Display, 0, 0);
 }

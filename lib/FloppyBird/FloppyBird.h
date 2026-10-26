@@ -102,6 +102,10 @@ namespace FloppyBird {
     int address = 0;
     int maxScore = EEPROM.readInt(address);
     int score = 0;
+
+    // Button C leaves the game, the best score of the session is the reward
+    bool _exit = false;
+    int _session_best = 0;
   };
 }  // namespace FloppyBird
 #endif

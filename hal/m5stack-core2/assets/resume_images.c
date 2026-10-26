@@ -5,3 +5,7 @@ const char const flareon_face[] = "L:/pokemon/face/136.bin";
 const char const pikachu_face[] = "L:/pokemon/face/25.bin";
 const char const raichu_face[] = "L:/pokemon/face/26.bin";
 const char const pichu_face[] = "L:/pokemon/face/172.bin";
+const char const espeon_face[] = "L:/pokemon/face/196.bin";
+const char const umbreon_face[] = "L:/pokemon/face/197.bin";
+const char const leafeon_face[] = "L:/pokemon/face/470.bin";
+const char const glaceon_face[] = "L:/pokemon/face/471.bin";

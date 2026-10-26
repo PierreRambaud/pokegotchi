@@ -47,6 +47,7 @@ LV_IMG_DECLARE(menu_train_pressed)
 static int options_bag_scroll_value = 0;
 
 static lv_obj_t* create_row_item(lv_obj_t*, BagItem*);
+static lv_obj_t* create_stone_row(lv_obj_t*, Stone);
 
 static void clean_event_handler(lv_event_t*);
 static void heal_event_handler(lv_event_t*);
@@ -56,6 +57,10 @@ static void play_event_handler(lv_event_t*);
 static void toggle_sleep_event_handler(lv_event_t*);
 static void train_event_handler(lv_event_t*);
 static void use_item_event_handler(lv_event_t*);
+static void use_stone_event_handler(lv_event_t*);
+
+// Stable addresses to pass the stone as event user data
+static const Stone stones[STONE_COUNT] = {STONE_THUNDER, STONE_WATER, STONE_FIRE, STONE_LEAF, STONE_ICE};
 
 ActionsMenu* ActionsMenu::_instance = nullptr;
 
@@ -64,21 +69,21 @@ void set_heal_menu_text(lv_obj_t* heal_label) { lv_label_set_text_fmt(heal_label
 ActionsMenu::ActionsMenu(Menu* menu) {
   _menu = menu;
 
-  _items[0] = new BagItem{&object_apple, _("bag.apple.name"), _("bag.apple.description"), new BagItemSpecifications{5, 3, 0, 0, 1, 1}};
-  _items[1] = new BagItem{&object_beans, _("bag.beans.name"), _("bag.beans.description"), new BagItemSpecifications{2, 5, 0, 0, 1, 0}};
-  _items[2] = new BagItem{&object_berry, _("bag.berry.name"), _("bag.berry.description"), new BagItemSpecifications{5, 3, 0, 0, 1, 0}};
-  _items[3] = new BagItem{&object_candy_box, _("bag.candy.name"), _("bag.candy.description"), new BagItemSpecifications{20, -5, 0, 0, 1, 0}};
-  _items[4] = new BagItem{&object_cheese, _("bag.cheese.name"), _("bag.cheese.description"), new BagItemSpecifications{10, 5, 0, -2, 1, 0}};
-  _items[5] = new BagItem{&object_chicken, _("bag.chicken.name"), _("bag.chicken.description"), new BagItemSpecifications{7, 10, 0, -5, 1, 0}};
-  _items[6] = new BagItem{&object_coconut_milk, _("bag.coconut_milk.name"), _("bag.coconut_milk.description"), new BagItemSpecifications{0, 5, 0, 0, 1, 3}};
-  _items[7] = new BagItem{&object_frozen_carrots, _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description"), new BagItemSpecifications{3, 4, 0, 0, 1, 0}};
-  _items[8] = new BagItem{&object_haricots, _("bag.haricots.name"), _("bag.haricots.description"), new BagItemSpecifications{3, 5, 0, -3, 0, 0}};
-  _items[9] = new BagItem{&object_honey, _("bag.honey.name"), _("bag.honey.description"), new BagItemSpecifications{10, 1, 0, 0, 0, 1}};
-  _items[10] = new BagItem{&object_milk, _("bag.milk.name"), _("bag.milk.description"), new BagItemSpecifications{15, 3, 0, 0, 0, 3}};
-  _items[11] = new BagItem{&object_noodles, _("bag.noodles.name"), _("bag.noodles.description"), new BagItemSpecifications{10, 10, 0, -10, 1, 2}};
-  _items[12] = new BagItem{&object_spices, _("bag.spices.name"), _("bag.spices.description"), new BagItemSpecifications{5, 5, 0, -5, 0, 0}};
-  _items[13] = new BagItem{&object_sugar_star, _("bag.sugar_star.name"), _("bag.sugar_star.description"), new BagItemSpecifications{2, 2, 0, -2, 1, 0}};
-  _items[14] = new BagItem{&object_water, _("bag.water.name"), _("bag.water.description"), new BagItemSpecifications{15, 0, 0, 0, 0, 4}};
+  _items[0] = new BagItem{&object_apple, _("bag.apple.name"), _("bag.apple.description"), new BagItemSpecifications{5, 3, 0, 0, 1, 1, 0}};
+  _items[1] = new BagItem{&object_beans, _("bag.beans.name"), _("bag.beans.description"), new BagItemSpecifications{2, 5, 0, 0, 1, 0, 0}};
+  _items[2] = new BagItem{&object_berry, _("bag.berry.name"), _("bag.berry.description"), new BagItemSpecifications{5, 3, 0, 0, 1, 0, 0}};
+  _items[3] = new BagItem{&object_candy_box, _("bag.candy.name"), _("bag.candy.description"), new BagItemSpecifications{20, -5, 0, 0, 1, 0, 1}};
+  _items[4] = new BagItem{&object_cheese, _("bag.cheese.name"), _("bag.cheese.description"), new BagItemSpecifications{10, 5, 0, -2, 1, 0, 0}};
+  _items[5] = new BagItem{&object_chicken, _("bag.chicken.name"), _("bag.chicken.description"), new BagItemSpecifications{7, 10, 0, -5, 1, 0, 0}};
+  _items[6] = new BagItem{&object_coconut_milk, _("bag.coconut_milk.name"), _("bag.coconut_milk.description"), new BagItemSpecifications{0, 5, 0, 0, 1, 3, 0}};
+  _items[7] = new BagItem{&object_frozen_carrots, _("bag.frozen_carrots.name"), _("bag.frozen_carrots.description"), new BagItemSpecifications{3, 4, 0, 0, 1, 0, 0}};
+  _items[8] = new BagItem{&object_haricots, _("bag.haricots.name"), _("bag.haricots.description"), new BagItemSpecifications{3, 5, 0, -3, 0, 0, 0}};
+  _items[9] = new BagItem{&object_honey, _("bag.honey.name"), _("bag.honey.description"), new BagItemSpecifications{10, 1, 0, 0, 0, 1, 1}};
+  _items[10] = new BagItem{&object_milk, _("bag.milk.name"), _("bag.milk.description"), new BagItemSpecifications{15, 3, 0, 0, 0, 3, 0}};
+  _items[11] = new BagItem{&object_noodles, _("bag.noodles.name"), _("bag.noodles.description"), new BagItemSpecifications{10, 10, 0, -10, 1, 2, 0}};
+  _items[12] = new BagItem{&object_spices, _("bag.spices.name"), _("bag.spices.description"), new BagItemSpecifications{5, 5, 0, -5, 0, 0, 0}};
+  _items[13] = new BagItem{&object_sugar_star, _("bag.sugar_star.name"), _("bag.sugar_star.description"), new BagItemSpecifications{2, 2, 0, -2, 1, 0, 1}};
+  _items[14] = new BagItem{&object_water, _("bag.water.name"), _("bag.water.description"), new BagItemSpecifications{15, 0, 0, 0, 0, 4, 0}};
 
   _bag_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_bag, &menu_bag_pressed, _("actions.menu.bag"));
   lv_imagebutton_set_src(_bag_button, LV_IMAGEBUTTON_STATE_DISABLED, NULL, &menu_bag_disabled, NULL);
@@ -110,26 +115,39 @@ ActionsMenu::ActionsMenu(Menu* menu) {
 }
 
 /**
+ * The LVGL objects belong to the main screen and are deleted with it
+ */
+ActionsMenu::~ActionsMenu(void) {
+  for (BagItem* item : _items) {
+    delete item->specs;
+    delete item;
+  }
+
+  delete _menu;
+}
+
+static void set_button_enabled(lv_obj_t* button, bool enabled) {
+  if (enabled) {
+    lv_obj_remove_state(button, LV_STATE_DISABLED);
+  } else {
+    lv_imagebutton_set_state(button, LV_IMAGEBUTTON_STATE_DISABLED);
+  }
+}
+
+/**
  * Change the state of buttons depending on pokemon status
  */
 void ActionsMenu::open(void) {
   Pokemon* p = Pokemon::getInstance();
-  if (p->is_sleeping()) {
-    lv_imagebutton_set_state(_bag_button, LV_IMAGEBUTTON_STATE_DISABLED);
-    lv_imagebutton_set_state(_train_button, LV_IMAGEBUTTON_STATE_DISABLED);
-    lv_imagebutton_set_state(_play_button, LV_IMAGEBUTTON_STATE_DISABLED);
-  } else {
-    lv_obj_remove_state(_bag_button, LV_STATE_DISABLED);
-    lv_obj_remove_state(_train_button, LV_STATE_DISABLED);
-    lv_obj_remove_state(_play_button, LV_STATE_DISABLED);
-  }
+  bool awake = !p->is_egg() && !p->is_sleeping();
 
-  if (p->get_potions() == 0 or p->is_sleeping()) {
-    lv_imagebutton_set_state(_heal_button, LV_IMAGEBUTTON_STATE_DISABLED);
-  } else {
-    lv_obj_remove_state(_heal_button, LV_STATE_DISABLED);
-  }
+  set_button_enabled(_bag_button, awake);
+  set_button_enabled(_train_button, awake && !p->is_sick());
+  set_button_enabled(_play_button, awake && !p->is_sick());
+  set_button_enabled(_heal_button, awake && p->get_potions() > 0);
 
+  // The Pokemon can fall asleep or wake up by itself
+  lv_label_set_text(lv_obj_get_child(_sleep_button, -1), p->is_sleeping() ? _("actions.menu.wake_up") : _("actions.menu.sleep"));
   set_heal_menu_text(lv_obj_get_child(_heal_button, -1));
 
   _menu->open();
@@ -152,6 +170,14 @@ void ActionsMenu::display_bag(void) {
     lv_style_init(&style_default_text);
     lv_style_set_text_color(&style_default_text, lv_color_white());
 
+    // Evolution stones first, they are rare
+    Pokemon* p = Pokemon::getInstance();
+    for (uint8_t i = 0; i < STONE_COUNT; i++) {
+      if (p->get_stones(stones[i]) > 0) {
+        create_stone_row(_menu_child_screen, stones[i]);
+      }
+    }
+
     for (BagItem* item : _items) {
       create_row_item(_menu_child_screen, item);
     }
@@ -162,6 +188,18 @@ void ActionsMenu::display_bag(void) {
   }
 
   lv_obj_scroll_to_y(_menu_child_screen, options_bag_scroll_value, LV_ANIM_OFF);
+}
+
+/**
+ * Rebuild the bag next time it is opened, the stones changed
+ */
+void ActionsMenu::invalidate_bag(void) {
+  if (_bag_initialized) {
+    // Deleted later: this can be called from an event of the bag itself
+    lv_obj_delete_async(_menu_child_screen);
+    _menu_child_screen = nullptr;
+    _bag_initialized = false;
+  }
 }
 
 static void options_bag_scroll_value_event_cb(lv_event_t* e) {
@@ -204,6 +242,18 @@ static void use_item_event_handler(lv_event_t* e) {
   ActionsMenu::getInstance()->toggle();
   Game* g = Game::getInstance();
   g->action_eat(item);
+}
+
+/**
+ * Use an evolution stone
+ *
+ * @param lv_event_t* e
+ */
+static void use_stone_event_handler(lv_event_t* e) {
+  const Stone* stone = (const Stone*)lv_event_get_user_data(e);
+
+  ActionsMenu::getInstance()->toggle();
+  Game::getInstance()->action_use_stone(*stone);
 }
 
 /**
@@ -253,13 +303,16 @@ static void toggle_sleep_event_handler(lv_event_t* e) {
   lv_obj_t* label = (lv_obj_t*)lv_event_get_user_data(e);
 
   ActionsMenu::getInstance()->toggle();
+  if (p->is_egg()) {
+    return;
+  }
+
   if (p->is_sleeping() == true) {
     g->action_wake_up();
-    lv_label_set_text(label, _("actions.menu.sleep"));
   } else {
     g->action_sleep();
-    lv_label_set_text(label, _("actions.menu.wake_up"));
   }
+  lv_label_set_text(label, p->is_sleeping() ? _("actions.menu.wake_up") : _("actions.menu.sleep"));
 }
 
 /**
@@ -304,6 +357,44 @@ static lv_obj_t* create_row_item(lv_obj_t* parent, BagItem* item) {
   lv_label_set_text(btn_label, _("actions.menu.use"));
 
   serial_printf("ActionsMenu", "Create bag item: %s", item->name);
+
+  return cont;
+}
+
+/**
+ * Create an evolution stone row, with how many of them are in the bag
+ *
+ * @param lv_obj_t* parent The parent screen
+ * @param const Stone stone The stone to display
+ *
+ * @return lv_obj_t* the row line
+ */
+static lv_obj_t* create_stone_row(lv_obj_t* parent, const Stone stone) {
+  static int32_t grid_col_dsc[] = {LV_GRID_CONTENT, LV_GRID_FR(1), LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
+  static int32_t grid_row_dsc[] = {LV_GRID_CONTENT, LV_GRID_TEMPLATE_LAST};
+
+  lv_obj_t* cont = lv_obj_create(parent);
+  lv_obj_set_size(cont, LV_PCT(100), LV_SIZE_CONTENT);
+  lv_obj_set_style_bg_opa(cont, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_border_side(cont, LV_BORDER_SIDE_BOTTOM, 0);
+  lv_obj_set_style_radius(cont, 0, 0);
+  lv_obj_set_grid_dsc_array(cont, grid_col_dsc, grid_row_dsc);
+
+  lv_obj_t* img = lv_image_create(cont);
+  lv_image_set_src(img, Pokemon::get_stone_image(stone));
+  lv_obj_set_grid_cell(img, LV_GRID_ALIGN_CENTER, 0, 1, LV_GRID_ALIGN_CENTER, 0, 1);
+
+  lv_obj_t* label = lv_label_create(cont);
+  lv_label_set_text_fmt(label, "%s x%d", Pokemon::get_stone_name(stone), Pokemon::getInstance()->get_stones(stone));
+  lv_obj_add_style(label, &style_default_text, 0);
+  lv_obj_set_grid_cell(label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_CENTER, 0, 1);
+
+  lv_obj_t* btn = lv_button_create(cont);
+  lv_obj_set_grid_cell(btn, LV_GRID_ALIGN_CENTER, 2, 1, LV_GRID_ALIGN_CENTER, 0, 1);
+  lv_obj_add_event_cb(btn, use_stone_event_handler, LV_EVENT_CLICKED, (void*)&stones[stone]);
+
+  lv_obj_t* btn_label = lv_label_create(btn);
+  lv_label_set_text(btn_label, _("actions.menu.use"));
 
   return cont;
 }

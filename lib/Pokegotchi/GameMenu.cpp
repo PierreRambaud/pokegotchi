@@ -24,6 +24,7 @@ LV_IMG_DECLARE(menu_game_bird)
 LV_IMG_DECLARE(menu_game_bird_pressed)
 LV_IMG_DECLARE(menu_game_sky)
 LV_IMG_DECLARE(menu_game_sky_pressed)
+LV_IMG_DECLARE(game_egg)
 
 static void save_game(char*);
 static void cancel_new_save_event_handler(lv_event_t*);
@@ -40,6 +41,8 @@ static void run_game_event_handler(lv_event_t*);
 static void save_game_event_handler(lv_event_t*);
 static void slider_set_brightness_event_cb(lv_event_t*);
 static void trainercard_event_handler(lv_event_t*);
+static void set_clock_event_handler(lv_event_t*);
+static void choice_speed_event_cb(lv_event_t*);
 
 struct event_choice_game_data {
   lv_obj_t* selected_row;
@@ -85,12 +88,17 @@ void GameMenu::display_pokemon(void) {
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
   lv_obj_t* img = lv_image_create(_menu_child_screen);
-  lv_image_set_src(img, p->get_avatar());
-  lv_obj_set_pos(img, 10, 20);
+  if (p->is_egg()) {
+    lv_image_set_src(img, &game_egg);
+    lv_obj_set_pos(img, 40, 40);
+  } else {
+    lv_image_set_src(img, p->get_avatar());
+    lv_obj_set_pos(img, 10, 20);
+  }
 
   lv_obj_t* name = lv_label_create(_menu_child_screen);
   lv_obj_set_pos(name, 155, 20);
-  lv_label_set_text(name, p->get_name());
+  lv_label_set_text(name, p->is_egg() ? _("pokemon.egg.name") : p->get_name());
   lv_obj_add_style(name, &style_default_title, 0);
 
   lv_obj_t* description = lv_label_create(_menu_child_screen);
@@ -99,6 +107,31 @@ void GameMenu::display_pokemon(void) {
   lv_label_set_text(description, p->get_description());
   lv_obj_add_style(description, &style_default_text, 0);
   lv_obj_set_style_text_font(description, &pokemon_font_10, 0);
+
+  if (p->is_egg()) {
+    return;
+  }
+
+  // How the Pokemon feels about its trainer, worded like in the games
+  uint8_t friendship = p->get_friendship();
+  const char* feeling = _("pokemon.friendship.1");
+  if (friendship >= 220) {
+    feeling = _("pokemon.friendship.5");
+  } else if (friendship >= FRIENDSHIP_EVOLUTION) {
+    feeling = _("pokemon.friendship.4");
+  } else if (friendship >= 100) {
+    feeling = _("pokemon.friendship.3");
+  } else if (friendship >= 50) {
+    feeling = _("pokemon.friendship.2");
+  }
+
+  lv_obj_t* stats = lv_label_create(_menu_child_screen);
+  lv_obj_set_pos(stats, 10, 142);
+  lv_obj_set_width(stats, LV_HOR_RES_MAX - 20);
+  lv_obj_add_style(stats, &style_default_text, 0);
+  lv_obj_set_style_text_font(stats, &pokemon_font_10, 0);
+  lv_label_set_text_fmt(stats, _("pokemon.stats"), p->get_level(), p->get_xp(), p->get_xp_to_next_level(), (unsigned long)p->get_age_days(), feeling, p->get_care_mistakes(),
+                        p->is_sick() ? _("pokemon.status.sick") : _("pokemon.status.healthy"), (unsigned long)p->get_steps_today(hal_now()), (unsigned long)p->get_total_steps());
 }
 
 void GameMenu::display_options(void) {
@@ -114,7 +147,7 @@ void GameMenu::display_options(void) {
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
   static int32_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 30, LV_GRID_TEMPLATE_LAST};
-  static int32_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, LV_GRID_TEMPLATE_LAST};
+  static int32_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, 24, 36, 24, 44, LV_GRID_TEMPLATE_LAST};
 
   lv_obj_set_grid_dsc_array(_menu_child_screen, options_grid_col_dsc, options_grid_row_dsc);
 
@@ -164,6 +197,87 @@ void GameMenu::display_options(void) {
   _ball_image = lv_image_create(_menu_child_screen);
   lv_image_set_src(_ball_image, balls_choice_images[Game::getInstance()->get_options()->ball]);
   lv_obj_set_grid_cell(_ball_image, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_START, 5, 1);
+
+  // Speed of the days of the Pokemon
+  Pokemon* p = Pokemon::getInstance();
+  lv_obj_t* speed_label = lv_label_create(_menu_child_screen);
+  lv_label_set_text(speed_label, _("menu.options.speed"));
+  lv_obj_set_grid_cell(speed_label, LV_GRID_ALIGN_START, 1, 2, LV_GRID_ALIGN_END, 6, 1);
+  lv_obj_add_style(speed_label, &style_default_text, 0);
+
+  lv_obj_t* speed_dropdown = lv_dropdown_create(_menu_child_screen);
+  lv_dropdown_clear_options(speed_dropdown);
+  lv_dropdown_add_option(speed_dropdown, _("menu.options.speed.fast"), SPEED_FAST);
+  lv_dropdown_add_option(speed_dropdown, _("menu.options.speed.normal"), SPEED_NORMAL);
+  lv_dropdown_add_option(speed_dropdown, _("menu.options.speed.real"), SPEED_REAL);
+  lv_dropdown_set_selected(speed_dropdown, p->get_speed());
+  lv_obj_set_width(speed_dropdown, LV_PCT(100));
+  lv_obj_set_grid_cell(speed_dropdown, LV_GRID_ALIGN_STRETCH, 1, 2, LV_GRID_ALIGN_CENTER, 7, 1);
+  lv_obj_add_event_cb(speed_dropdown, choice_speed_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
+
+  // Clock: the day and night of the Pokemon follow it
+  lv_obj_t* clock_label = lv_label_create(_menu_child_screen);
+  lv_label_set_text(clock_label, _("menu.options.clock"));
+  lv_obj_set_grid_cell(clock_label, LV_GRID_ALIGN_START, 1, 2, LV_GRID_ALIGN_END, 8, 1);
+  lv_obj_add_style(clock_label, &style_default_text, 0);
+
+  lv_obj_t* clock_row = lv_obj_create(_menu_child_screen);
+  lv_obj_remove_style_all(clock_row);
+  lv_obj_set_size(clock_row, LV_PCT(100), 44);
+  lv_obj_set_flex_flow(clock_row, LV_FLEX_FLOW_ROW);
+  lv_obj_set_flex_align(clock_row, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+  lv_obj_set_style_pad_column(clock_row, 6, 0);
+  lv_obj_set_grid_cell(clock_row, LV_GRID_ALIGN_STRETCH, 1, 2, LV_GRID_ALIGN_CENTER, 9, 1);
+
+  static char hours[24 * 3];
+  static char minutes[60 * 3];
+  if (hours[0] == '\0') {
+    for (uint8_t i = 0; i < 24; i++) {
+      lv_snprintf(hours + i * 3, 4, i < 23 ? "%02d\n" : "%02d", i);
+    }
+    for (uint8_t i = 0; i < 60; i++) {
+      lv_snprintf(minutes + i * 3, 4, i < 59 ? "%02d\n" : "%02d", i);
+    }
+  }
+
+  // The clock shown in the game: the real one only at the real speed
+  uint32_t now = p->get_game_time();
+  _hour_roller = lv_roller_create(clock_row);
+  lv_roller_set_options(_hour_roller, hours, LV_ROLLER_MODE_INFINITE);
+  lv_roller_set_visible_row_count(_hour_roller, 1);
+  lv_roller_set_selected(_hour_roller, (now % 86400) / 3600, LV_ANIM_OFF);
+
+  lv_obj_t* separator = lv_label_create(clock_row);
+  lv_label_set_text(separator, ":");
+  lv_obj_add_style(separator, &style_default_text, 0);
+
+  _minute_roller = lv_roller_create(clock_row);
+  lv_roller_set_options(_minute_roller, minutes, LV_ROLLER_MODE_INFINITE);
+  lv_roller_set_visible_row_count(_minute_roller, 1);
+  lv_roller_set_selected(_minute_roller, (now % 3600) / 60, LV_ANIM_OFF);
+
+  lv_obj_t* set_button = lv_button_create(clock_row);
+  lv_obj_add_event_cb(set_button, set_clock_event_handler, LV_EVENT_CLICKED, NULL);
+  lv_obj_t* set_label = lv_label_create(set_button);
+  lv_label_set_text(set_label, _("menu.options.clock.set"));
+}
+
+void GameMenu::set_clock(void) {
+  Pokemon* p = Pokemon::getInstance();
+  uint8_t hour = lv_roller_get_selected(_hour_roller);
+  uint8_t minute = lv_roller_get_selected(_minute_roller);
+
+  if (p->get_speed() == SPEED_REAL) {
+    // The real clock of the device
+    uint32_t now = hal_now();
+    hal_set_now(now - now % 86400 + hour * 3600UL + minute * 60UL);
+  } else {
+    // Only the clock of the Pokemon: handy to skip to the morning
+    p->set_time_of_day(hour, minute);
+  }
+
+  serial_printf("GameMenu", "Clock set to %02d:%02d", hour, minute);
+  create_message_box("", _("menu.options.clock.done"));
 }
 
 void GameMenu::display_games(void) {
@@ -353,65 +467,29 @@ static void save_game_event_handler(lv_event_t* e) { save_game(NULL); }
  * @param char* save_file_name
  */
 static void save_game(char* save_file_name) {
-  if (hal_start_storage() == false) {
-    create_message_box(_("game.error"), _("sd.card.not_found"));
+  Game* g = Game::getInstance();
+  poke_options_t* options = g->get_options();
+
+  char json_path[64];
+  const char* path = options->save_file_path;
+  if (save_file_name != NULL || path == NULL) {
+    lv_snprintf(json_path, sizeof(json_path), "%s/%s.json", g->get_config()->save_files_path, save_file_name);
+    path = json_path;
+  }
+
+  serial_printf("GameMenu", "Save file \"%s\"", path);
+  if (!g->save(path)) {
+    create_message_box(_("game.error"), _("game.save.failed"));
     return;
   }
 
-  hal_file_t file;
-  if (save_file_name == NULL and Game::getInstance()->get_options()->save_file_path) {
-    serial_printf("GameMenu", "Save file \"%s\"", Game::getInstance()->get_options()->save_file_path);
-    file = hal_open_file(Game::getInstance()->get_options()->save_file_path);
-  } else {
-    char json_path[50];
-    strcpy(json_path, Game::getInstance()->get_config()->save_files_path);
-    strcat(json_path, "/");
-    strcat(json_path, save_file_name);
-    strcat(json_path, ".json");
-
-    file = hal_open_file(json_path);
-    serial_printf("GameMenu", "Save file \"%s\"", json_path);
-    if (file) {
-      Game::getInstance()->get_options()->save_file_path = json_path;
-    }
+  // Next saves, and the autosave, go to this file
+  if (path == json_path) {
+    options->save_file_path = strdup(json_path);
   }
 
-  if (!file) {
-    create_message_box(_("game.error"), _("game.save.failed"));
-  } else {
-    Pokemon* p = Pokemon::getInstance();
-    JsonDocument doc;
-    doc["options"]["brightness"] = Game::getInstance()->get_options()->brightness;
-    doc["options"]["ball"] = Game::getInstance()->get_options()->ball;
-
-    JsonObject pokemon = doc["pokemon"].to<JsonObject>();
-    pokemon["number"] = p->get_number();
-    pokemon["level"] = p->get_level();
-    pokemon["life"] = p->get_life();
-    pokemon["mood"] = p->get_mood();
-    pokemon["hunger"] = p->get_hunger();
-    pokemon["sleepiness"] = p->get_sleepiness();
-    pokemon["is_sleeping"] = p->is_sleeping();
-    pokemon["potions"] = p->get_potions();
-    pokemon["poos"] = p->get_poos();
-    pokemon["pees"] = p->get_pees();
-
-    unsigned long current_time = hal_millis();
-    JsonObject pokemon_time = pokemon["time"].to<JsonObject>();
-    pokemon_time["simple_check"] = p->get_last_simple_check_time() - current_time;
-    pokemon_time["boredom"] = p->get_last_boredom_time() - current_time;
-    pokemon_time["hunger"] = p->get_last_hunger_time() - current_time;
-    pokemon_time["sleep"] = p->get_last_sleep_time() - current_time;
-    pokemon_time["without_sleep"] = p->get_last_without_sleep_time() - current_time;
-    pokemon_time["potion"] = p->get_last_potion_time() - current_time;
-    serializeJson(doc, file);
-    file.close();
-
-    create_message_box("", _("game.save.success"));
-    GameMenu::getInstance()->toggle();
-  }
-
-  hal_stop_storage();
+  create_message_box("", _("game.save.success"));
+  GameMenu::getInstance()->toggle();
 }
 
 /**
@@ -442,5 +520,18 @@ static void trainercard_event_handler(lv_event_t* e) { GameMenu::getInstance()->
  */
 static void run_game_event_handler(lv_event_t* e) {
   int8_t game_number = *((int8_t*)lv_event_get_user_data(e));
-  GameSwitcher::Runner::getInstance()->switch_game(game_number);
+
+  // The pet keeps living in memory, but save in case the game never returns
+  Game::getInstance()->autosave();
+  GameSwitcher::Runner::getInstance()->request_switch(game_number);
+}
+
+static void choice_speed_event_cb(lv_event_t* e) {
+  lv_obj_t* dropdown = lv_event_get_target_obj(e);
+  Pokemon::getInstance()->set_speed((TimeSpeed)lv_dropdown_get_selected(dropdown));
+}
+
+static void set_clock_event_handler(lv_event_t* e) {
+  LV_UNUSED(e);
+  GameMenu::getInstance()->set_clock();
 }

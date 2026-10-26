@@ -16,6 +16,8 @@ namespace Pokegotchi {
     int8_t sleepiness;
     int8_t poo;
     int8_t pee;
+    // Sweets: too many of them make the Pokemon sick
+    int8_t snack;
   };
 
   typedef struct bag_item_specifications BagItemSpecifications;
@@ -32,7 +34,9 @@ namespace Pokegotchi {
   class ActionsMenu {
    public:
     explicit ActionsMenu(Menu* menu);
+    ~ActionsMenu(void);
     void display_bag(void);
+    void invalidate_bag(void);
     void open(void);
     void close(void) {
       if (lv_obj_is_valid(_menu_child_screen)) {

@@ -26,11 +26,14 @@ namespace Pokegotchi {
   class GameMenu {
    public:
     explicit GameMenu(Menu*);
+    // The LVGL objects belong to the main screen and are deleted with it
+    ~GameMenu(void) { delete _menu; }
     void display_games(void);
     void display_options(void);
     void display_pokemon(void);
     void display_saves(void);
     void change_ball(uint16_t);
+    void set_clock(void);
 
     void close(void) {
       if (lv_obj_is_valid(_menu_child_screen)) {
@@ -64,6 +67,8 @@ namespace Pokegotchi {
     lv_obj_t* _menu_child_screen;
 
     lv_obj_t* _ball_image;
+    lv_obj_t* _hour_roller;
+    lv_obj_t* _minute_roller;
   };
 }  // namespace Pokegotchi
 #endif

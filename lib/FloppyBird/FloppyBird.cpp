@@ -7,6 +7,7 @@
 
 #include "lv_i18n.h"
 #include "FloppyBird.h"
+#include "GameSwitcher.h"
 
 using namespace FloppyBird;
 
@@ -22,8 +23,21 @@ Runner::Runner(void) {
 void Runner::loop(void) {
   // put your main code here, to run repeatedly:
   game_start();
-  game_loop();
-  game_over();
+  if (!_exit) {
+    game_loop();
+    game_over();
+  }
+
+  if (_exit) {
+    GameSwitcher::Runner::getInstance()->finish_minigame(_session_best);
+  }
+}
+
+static void print_back_hint(void) {
+  M5.Display.setTextColor(TFT_WHITE);
+  M5.Display.setTextSize(1);
+  M5.Display.setCursor(TFTW2 - (M5.Display.textWidth(_("game.minigame.back")) / 2), TFTH - 12);
+  M5.Display.print(_("game.minigame.back"));
 }
 
 void FloppyBird::Runner::close() {}
@@ -229,9 +243,14 @@ void Runner::game_start(void) {
   M5.Display.setTextSize(2);
   M5.Display.setCursor(TFTW2 - (M5.Display.textWidth(_("game.bird.start")) / 2), TFTH2 + 56);
   M5.Display.println(_("game.bird.start"));
+  print_back_hint();
 
   while (1) {
     M5.update();
+    if (M5.BtnC.wasPressed()) {
+      _exit = true;
+      return;
+    }
     // wait for touch or button B press
     if (M5.Touch.getCount() > 0 || M5.BtnB.wasPressed()) {
       break;
@@ -276,9 +295,18 @@ void Runner::game_over(void) {
   M5.Display.print(_("game.bird.maxscore"));
   M5.Display.print(" ");
   M5.Display.print(maxScore);
+  print_back_hint();
+
+  if (score > _session_best) {
+    _session_best = score;
+  }
 
   while (1) {
     M5.update();
+    if (M5.BtnC.wasPressed()) {
+      _exit = true;
+      return;
+    }
     // wait for touch or button B press
     if (M5.Touch.getCount() > 0 || M5.BtnB.wasPressed()) {
       break;

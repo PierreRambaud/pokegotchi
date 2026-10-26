@@ -9,9 +9,6 @@
 #include "Pokemon.h"
 #include "storage_hal.h"
 
-extern const void* eevee_home_face;
-extern const void* pichu_home_face;
-
 using namespace Pokegotchi;
 
 LV_IMG_DECLARE(home_title)
@@ -21,7 +18,6 @@ static void close_msg_box_event_handler(lv_event_t* e);
 static void load_button_event_handler(lv_event_t* e);
 static void load_file_button_event_handler(lv_event_t* e);
 static void start_button_event_handler(lv_event_t* e);
-static void start_new_game_event_handler(lv_event_t* e);
 
 struct event_load_game_data {
   StorageConfig* storage_config;
@@ -96,38 +92,17 @@ void Home::load_buttons(void) {
 }
 
 /**
- * Choice a pokemon to start a new game
+ * Start a new game: like in the games, nobody knows which Pokemon is in the
+ * egg until it hatches
  *
  * @param lv_event_t* e
  */
 static void start_button_event_handler(lv_event_t* e) {
-  poke_messagebox_t* messagebox = create_message_box(_("home.start.choice"), "");
-  lv_obj_t* choice_box_content = lv_msgbox_get_content(messagebox->box);
-  lv_obj_set_flex_flow(choice_box_content, LV_FLEX_FLOW_ROW_WRAP);
+  LV_UNUSED(e);
 
-  static int pichu_value = POKEMON_PICHU;
-  lv_obj_t* pichu_btn = lv_image_create(choice_box_content);
-  lv_image_set_src(pichu_btn, &pichu_home_face);
-  lv_obj_add_flag(pichu_btn, LV_OBJ_FLAG_CLICKABLE);
-  lv_obj_add_event_cb(pichu_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &pichu_value);
-  lv_obj_add_event_cb(pichu_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
-
-  static int eevee_value = POKEMON_EEVEE;
-  lv_obj_t* eevee_btn = lv_image_create(choice_box_content);
-  lv_image_set_src(eevee_btn, &eevee_home_face);
-  lv_obj_add_flag(eevee_btn, LV_OBJ_FLAG_CLICKABLE);
-  lv_obj_add_event_cb(eevee_btn, start_new_game_event_handler, LV_EVENT_CLICKED, &eevee_value);
-  lv_obj_add_event_cb(eevee_btn, close_msg_box_event_handler, LV_EVENT_CLICKED, messagebox->box);
-}
-
-/**
- * Start a new game
- *
- * @param lv_event_t* e
- */
-static void start_new_game_event_handler(lv_event_t* e) {
-  int pokemon_number = *((int*)lv_event_get_user_data(e));
-  serial_printf("Home", "New game start with pokemon number: %d", pokemon_number);
+  static const int eggs[] = {POKEMON_PICHU, POKEMON_EEVEE};
+  int pokemon_number = eggs[hal_random(0, sizeof(eggs) / sizeof(eggs[0]))];
+  serial_printf("Home", "New game, the egg holds pokemon number: %d", pokemon_number);
 
   Home* h = Home::getInstance();
   Pokemon* p = new Pokemon(pokemon_number);

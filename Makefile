@@ -57,5 +57,14 @@ assets-object-bag:
 assets-object-balls:
 	find assets_source/objects/balls/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=ARGB8888 --ofmt=C -o src/assets/objects/balls {} \;
 
+assets-object-stones:
+	for stone in thunder water fire leaf ice; do .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB565A8 --ofmt=C --name stone_$$stone -o src/assets/objects/stones assets_source/objects/stones/$$stone.png; done
+
+assets-emotes:
+	find assets_source/emotes/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB565A8 --ofmt=C -o src/assets/emotes/ {} \;
+
+assets-egg:
+	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB565A8 --ofmt=C -o src/assets/game/ assets_source/game/game_egg.png
+
 %:
     @:

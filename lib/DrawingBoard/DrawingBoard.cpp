@@ -2,6 +2,7 @@
 #include <M5Unified.h>
 #include "lv_i18n.h"
 #include "DrawingBoard.h"
+#include "GameSwitcher.h"
 #include "Utils.h"
 
 using namespace DrawingBoard;
@@ -57,7 +58,7 @@ Runner::Runner(void) {
   lv_obj_add_style(_size_label, &style_size_label, LV_PART_MAIN);
 
   _clear_label = lv_label_create(label_container);
-  lv_label_set_text(_clear_label, _("game.draw.clear"));
+  lv_label_set_text(_clear_label, _("game.draw.clear_back"));
   lv_obj_add_style(_clear_label, &style_clear_label, LV_PART_MAIN);
 
   lv_refr_now(disp);
@@ -165,7 +166,11 @@ void Runner::loop(void) {
     changeColor();
   } else if (M5.BtnB.wasPressed()) {
     changeSize();
-  } else if (M5.BtnC.wasPressed()) {
+  } else if (M5.BtnC.wasHold()) {
+    // Drawing is relaxing: a small reward for the Pokemon
+    GameSwitcher::Runner::getInstance()->finish_minigame(3);
+    return;
+  } else if (M5.BtnC.wasClicked()) {
     clear();
   }
 

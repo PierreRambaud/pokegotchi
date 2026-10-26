@@ -15,4 +15,20 @@ void hal_restart(void);
 
 int hal_random(int min, int max);
 
+// Local wall clock time, in seconds since 1970 (the RTC holds local time)
+uint32_t hal_now(void);
+void hal_set_now(uint32_t now);
+void hal_init_clock(void);
+
+void hal_vibrate(uint16_t duration_ms);
+void hal_beep(uint16_t frequency, uint16_t duration_ms);
+void hal_update_feedback(void);
+
+// Motion from the accelerometer, read regularly by hal_update_motion
+void hal_update_motion(void);
+bool hal_shake_detected(void);
+// Steps walked since the last call
+uint16_t hal_take_steps(void);
+bool hal_user_activity(void);
+
 #endif /*UTILS_HAL_H*/
