@@ -64,9 +64,17 @@ extern const void* pichu_face;
 namespace Pokegotchi {
   // The Pokemon lives on its own clock, faster than the real one so that a
   // whole day (and night) fits in a play session
-  enum TimeSpeed : uint8_t { SPEED_FAST, SPEED_NORMAL, SPEED_REAL, SPEED_COUNT };
-  // Game seconds per real second: a day lasts 1 hour, 4 hours, or 24 hours
-  const uint8_t TIME_SPEEDS[SPEED_COUNT] = {24, 6, 1};
+  // Values are saved: new speeds go at the end
+  enum TimeSpeed : uint8_t { SPEED_FAST, SPEED_NORMAL, SPEED_REAL, SPEED_SLOW, SPEED_COUNT };
+  // Game seconds per real second: a day lasts 10 minutes, 1 hour, 24 hours
+  // or 4 hours
+  const uint8_t TIME_SPEEDS[SPEED_COUNT] = {144, 24, 1, 6};
+  // Order of the speeds in the menus, from the fastest
+  const TimeSpeed SPEEDS_MENU[SPEED_COUNT] = {SPEED_FAST, SPEED_NORMAL, SPEED_SLOW, SPEED_REAL};
+  // The needs never go faster than with 1 hour days: with 10 minutes days,
+  // the clock and the nights fly by but the Pokemon is not starving every
+  // two minutes
+  const uint8_t NEEDS_MAX_SPEED = 24;
   // When the Pokemon sleeps at night, the night goes by faster
   const uint8_t NIGHT_SLEEP_SPEEDUP = 4;
   // A new game starts in the morning
@@ -232,6 +240,7 @@ namespace Pokegotchi {
     static const char* get_name(int number);
     static const lv_image_dsc_t* get_stone_image(Stone stone);
     static const char* get_stone_name(Stone stone);
+    static const char* get_speed_name(TimeSpeed speed);
 
     void load(JsonObject pokemon);
     void save(JsonObject pokemon);
@@ -245,13 +254,14 @@ namespace Pokegotchi {
    private:
     static Pokemon* _instance;
 
-    void _step(uint32_t seconds, uint32_t real_seconds);
+    void _step(uint32_t day_seconds, uint32_t seconds, uint32_t real_seconds);
     void _update_calls(uint32_t seconds, uint32_t real_seconds);
     uint32_t _current_speed(void);
     void _add_xp(uint16_t xp);
     void _evolve_to(int number);
     void _add_friendship(int16_t value);
     void _set_sleeping(bool sleeping);
+    void _count_care_mistake(void);
     void _hatch(uint32_t now);
     int8_t _tick(uint32_t& accumulator, uint32_t seconds, uint32_t period);
     void _update_property(int8_t what, int8_t value);

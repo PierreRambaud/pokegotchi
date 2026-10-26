@@ -172,9 +172,12 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"game.egg.steps", "%d / %d steps"},
     {"game.steps.today", "Today: %lu steps"},
     {"menu.options.speed", "Speed of the days"},
-    {"menu.options.speed.fast", "Fast (1 day = 1 hour)"},
-    {"menu.options.speed.normal", "Normal (1 day = 4 hours)"},
+    {"menu.options.speed.fast", "Fast (1 day = 10 minutes)"},
+    {"menu.options.speed.normal", "Normal (1 day = 1 hour)"},
     {"menu.options.speed.real", "Real (1 day = 24 hours)"},
+    {"menu.options.sound", "Sound effects"},
+    {"home.speed.title", "How fast do the days go by?"},
+    {"menu.options.speed.slow", "Slow (1 day = 4 hours)"},
     {NULL, NULL} // End mark
 };
 
@@ -352,9 +355,12 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"game.egg.steps", "%d / %d pas"},
     {"game.steps.today", "Aujourd'hui : %lu pas"},
     {"menu.options.speed", "Vitesse des journées"},
-    {"menu.options.speed.fast", "Rapide (1 jour = 1 heure)"},
-    {"menu.options.speed.normal", "Normale (1 jour = 4 heures)"},
+    {"menu.options.speed.fast", "Rapide (1 jour = 10 minutes)"},
+    {"menu.options.speed.normal", "Normale (1 jour = 1 heure)"},
     {"menu.options.speed.real", "Réelle (1 jour = 24 heures)"},
+    {"menu.options.sound", "Effets sonores"},
+    {"home.speed.title", "À quelle vitesse passent les journées ?"},
+    {"menu.options.speed.slow", "Lente (1 jour = 4 heures)"},
     {NULL, NULL} // End mark
 };
 

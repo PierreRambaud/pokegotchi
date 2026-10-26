@@ -437,7 +437,7 @@ void Runner::check_crossing(SkyObject& object) {
         _combo = min(_combo + 1, MAX_COMBO);
         _score += _combo;
         // Higher pitch as the combo grows
-        M5.Speaker.tone(1400 + _combo * 200, 60);
+        hal_beep(1400 + _combo * 200, 60);
       } else {
         _combo = 0;
       }
@@ -449,7 +449,7 @@ void Runner::check_crossing(SkyObject& object) {
         _combo = 0;
         _invulnerable = INVULNERABLE_SECONDS;
         _shake = 0.35f;
-        M5.Speaker.tone(180, 200);
+        hal_beep(180, 200);
         if (_lives == 0) {
           end_game();
         }
@@ -461,7 +461,7 @@ void Runner::check_crossing(SkyObject& object) {
         object.type = OBJECT_NONE;
         _lives = min(_lives + 1, MAX_LIVES);
         _score += 2;
-        M5.Speaker.tone(2600, 80);
+        hal_beep(2600, 80);
       }
       break;
 

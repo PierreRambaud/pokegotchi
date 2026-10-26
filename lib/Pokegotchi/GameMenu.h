@@ -61,14 +61,15 @@ namespace Pokegotchi {
     static GameMenu* _instance;
 
     Menu* _menu;
-    poke_options_t* _options;
+    poke_options_t* _options = nullptr;
 
-    lv_obj_t* _menu_screen;
-    lv_obj_t* _menu_child_screen;
+    // Must start empty: close() deletes the child screen when it is valid
+    lv_obj_t* _menu_screen = nullptr;
+    lv_obj_t* _menu_child_screen = nullptr;
 
-    lv_obj_t* _ball_image;
-    lv_obj_t* _hour_roller;
-    lv_obj_t* _minute_roller;
+    lv_obj_t* _ball_image = nullptr;
+    lv_obj_t* _hour_roller = nullptr;
+    lv_obj_t* _minute_roller = nullptr;
   };
 }  // namespace Pokegotchi
 #endif

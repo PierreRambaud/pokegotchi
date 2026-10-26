@@ -65,12 +65,13 @@ Pokegotchi::Game::~Game() {
 }
 
 Game::Game(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
-  _options = new poke_options_t{OPTIONS_BRIGHTNESS_DEFAULT, OPTIONS_BALL_DEFAULT, NULL};
+  _options = new poke_options_t{OPTIONS_BRIGHTNESS_DEFAULT, OPTIONS_BALL_DEFAULT, NULL, OPTIONS_SOUND_DEFAULT};
   _initialize(global_config, main_screen, p);
 }
 
 void Game::_initialize(poke_config_t* global_config, lv_obj_t* main_screen, Pokemon* p) {
   _config = global_config;
+  hal_set_sound(_options->sound);
   _main_screen = main_screen;
   _screen = create_screen(_main_screen);
 
@@ -892,6 +893,7 @@ bool Game::save(const char* path) {
   JsonDocument doc;
   doc["options"]["brightness"] = _options->brightness;
   doc["options"]["ball"] = _options->ball;
+  doc["options"]["sound"] = _options->sound;
   Pokemon::getInstance()->save(doc["pokemon"].to<JsonObject>());
 
   serializeJson(doc, file);

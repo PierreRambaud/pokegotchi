@@ -18,6 +18,7 @@ static void close_msg_box_event_handler(lv_event_t* e);
 static void load_button_event_handler(lv_event_t* e);
 static void load_file_button_event_handler(lv_event_t* e);
 static void start_button_event_handler(lv_event_t* e);
+static void start_new_game_event_handler(lv_event_t* e);
 
 struct event_load_game_data {
   StorageConfig* storage_config;
@@ -91,21 +92,58 @@ void Home::load_buttons(void) {
   }
 }
 
+// Box asking for the speed of the days of a new game
+static lv_obj_t* speed_box = NULL;
+
 /**
- * Start a new game: like in the games, nobody knows which Pokemon is in the
- * egg until it hatches
+ * New game: first choose how fast the days of the Pokemon go by
  *
  * @param lv_event_t* e
  */
 static void start_button_event_handler(lv_event_t* e) {
   LV_UNUSED(e);
 
+  poke_messagebox_t* messagebox = create_message_box(_("home.speed.title"), "");
+  speed_box = messagebox->box;
+  delete messagebox;
+
+  lv_obj_t* content = lv_msgbox_get_content(speed_box);
+  lv_obj_set_flex_flow(content, LV_FLEX_FLOW_COLUMN);
+  lv_obj_set_style_pad_row(content, 6, 0);
+
+  for (uint8_t i = 0; i < SPEED_COUNT; i++) {
+    lv_obj_t* button = lv_button_create(content);
+    lv_obj_set_width(button, LV_PCT(100));
+    lv_obj_add_event_cb(button, start_new_game_event_handler, LV_EVENT_CLICKED, (void*)&SPEEDS_MENU[i]);
+
+    lv_obj_t* label = lv_label_create(button);
+    lv_label_set_text(label, Pokemon::get_speed_name(SPEEDS_MENU[i]));
+    lv_obj_center(label);
+  }
+}
+
+/**
+ * Start a new game: like in the games, nobody knows which Pokemon is in the
+ * egg until it hatches
+ *
+ * @param lv_event_t* e
+ */
+static void start_new_game_event_handler(lv_event_t* e) {
+  TimeSpeed speed = *(const TimeSpeed*)lv_event_get_user_data(e);
+
+  // Closed later: the clicked button belongs to the box
+  if (speed_box != NULL) {
+    lv_msgbox_close_async(speed_box);
+    speed_box = NULL;
+  }
+
   static const int eggs[] = {POKEMON_PICHU, POKEMON_EEVEE};
   int pokemon_number = eggs[hal_random(0, sizeof(eggs) / sizeof(eggs[0]))];
-  serial_printf("Home", "New game, the egg holds pokemon number: %d", pokemon_number);
+  serial_printf("Home", "New game, speed %d, the egg holds pokemon number: %d", speed, pokemon_number);
 
   Home* h = Home::getInstance();
   Pokemon* p = new Pokemon(pokemon_number);
+  p->set_speed(speed);
   Pokemon::setInstance(p);
 
   poke_config_t* global_config = h->get_config();
@@ -183,7 +221,7 @@ static void load_file_button_event_handler(lv_event_t* e) {
 
   JsonObject data = doc["options"];
 
-  poke_options_t* game_options = new poke_options_t{data["brightness"], data["ball"], strdup(save_files[event_data->index].path)};
+  poke_options_t* game_options = new poke_options_t{data["brightness"], data["ball"], strdup(save_files[event_data->index].path), data["sound"] | OPTIONS_SOUND_DEFAULT};
 
   serial_printf("Home", "Brightness value: %d", game_options->brightness);
   serial_printf("Home", "Ball value: %d", game_options->ball);

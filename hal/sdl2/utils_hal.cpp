@@ -40,7 +40,13 @@ void hal_set_now(uint32_t now) { clock_offset = (int32_t)(now - local_time()); }
 
 void hal_vibrate(uint16_t duration_ms) {}
 
+static bool sound_enabled = true;
+
 void hal_beep(uint16_t frequency, uint16_t duration_ms) {}
+
+void hal_set_sound(bool enabled) { sound_enabled = enabled; }
+
+bool hal_sound_enabled(void) { return sound_enabled; }
 
 void hal_update_feedback(void) {}
 

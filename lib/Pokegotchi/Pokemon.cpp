@@ -55,10 +55,11 @@ void Pokemon::update(uint32_t now) {
   while (_last_update < now && !_is_ko) {
     // Small steps of game time, to respect the day/night boundaries
     uint32_t speed = _current_speed();
+    uint32_t needs_speed = LV_MIN(speed, (uint32_t)NEEDS_MAX_SPEED * POKEGOTCHI_TIME_SCALE);
     uint32_t real_step = LV_MIN(now - _last_update, LV_MAX(STEP_SECONDS / speed, 1UL));
     _last_update += real_step;
     _game_time += real_step * speed;
-    _step(real_step * speed, real_step);
+    _step(real_step * speed, real_step * needs_speed, real_step);
   }
 
   _last_update = now;
@@ -107,7 +108,12 @@ int8_t Pokemon::_tick(uint32_t& accumulator, uint32_t seconds, uint32_t period) 
   return count > 100 ? 100 : count;
 }
 
-void Pokemon::_step(uint32_t seconds, uint32_t real_seconds) {
+/**
+ * @param day_seconds game time elapsed: the clock, the energy of the day
+ * @param seconds game time elapsed for the needs, never as fast as the days
+ * @param real_seconds real time elapsed
+ */
+void Pokemon::_step(uint32_t day_seconds, uint32_t seconds, uint32_t real_seconds) {
   if (_is_ko) {
     return;
   }
@@ -142,10 +148,10 @@ void Pokemon::_step(uint32_t seconds, uint32_t real_seconds) {
   }
 
   if (_is_sleeping) {
-    count = _tick(_acc_energy, seconds, ENERGY_SLEEPING_SECONDS);
+    count = _tick(_acc_energy, day_seconds, ENERGY_SLEEPING_SECONDS);
     _update_property(PROPERTY_SLEEPINESS, count);
   } else {
-    count = _tick(_acc_energy, seconds, night ? ENERGY_NIGHT_SECONDS : ENERGY_SECONDS);
+    count = _tick(_acc_energy, day_seconds, night ? ENERGY_NIGHT_SECONDS : ENERGY_SECONDS);
     _update_property(PROPERTY_SLEEPINESS, -count);
   }
 
@@ -227,13 +233,18 @@ void Pokemon::_step(uint32_t seconds, uint32_t real_seconds) {
       _events |= EVENT_WOKE_UP;
     }
   } else if (_sleepiness == 0) {
-    // Exhausted, it falls asleep wherever it is
+    // Exhausted, it falls asleep wherever it is. If it was asking to go to
+    // bed, nobody answered: with fast days, the night can be over before
+    // the time given to answer a call
+    if (_call == CALL_SLEEPY) {
+      _count_care_mistake();
+    }
     _set_sleeping(true);
     _events |= EVENT_FELL_ASLEEP;
   }
   _was_night = night;
 
-  _update_calls(seconds, real_seconds);
+  _update_calls(day_seconds, real_seconds);
 }
 
 /**
@@ -264,7 +275,8 @@ void Pokemon::_update_calls(uint32_t seconds, uint32_t real_seconds) {
     return;
   }
 
-  if (_call == CALL_NONE) {
+  // A new need is a new call, even if another one was not answered
+  if (_call != call) {
     _events |= EVENT_CALL;
     _call_seconds = 0;
     _call_real_seconds = 0;
@@ -276,13 +288,10 @@ void Pokemon::_update_calls(uint32_t seconds, uint32_t real_seconds) {
   _call_real_seconds += real_seconds;
 
   bool ignored = _call_seconds >= CALL_CARE_MISTAKE_SECONDS && _call_real_seconds >= CALL_CARE_MISTAKE_MIN_REAL_SECONDS;
-  if (!_call_mistake_counted && !_catching_up && ignored) {
-    _call_mistake_counted = true;
-    _care_mistakes++;
-    _add_friendship(-20);
-    _events |= EVENT_CARE_MISTAKE;
+  if (!_call_mistake_counted && ignored) {
+    _count_care_mistake();
 
-    if (call == CALL_SLEEPY) {
+    if (call == CALL_SLEEPY && !_catching_up) {
       // Nobody turned off the light: it falls asleep by itself
       _set_sleeping(true);
       _events |= EVENT_FELL_ASLEEP;
@@ -300,6 +309,20 @@ void Pokemon::_set_sleeping(bool sleeping) {
     _acc_energy = 0;
   }
   _is_sleeping = sleeping;
+}
+
+/**
+ * A call was not answered: once per call, never for offline time
+ */
+void Pokemon::_count_care_mistake(void) {
+  if (_call_mistake_counted || _catching_up) {
+    return;
+  }
+
+  _call_mistake_counted = true;
+  _care_mistakes++;
+  _add_friendship(-20);
+  _events |= EVENT_CARE_MISTAKE;
 }
 
 void Pokemon::_update_property(int8_t what, int8_t value) {
@@ -784,6 +807,20 @@ const lv_image_dsc_t* Pokemon::get_stone_image(Stone stone) {
     case STONE_THUNDER:
     default:
       return &stone_thunder;
+  }
+}
+
+const char* Pokemon::get_speed_name(TimeSpeed speed) {
+  switch (speed) {
+    case SPEED_NORMAL:
+      return _("menu.options.speed.normal");
+    case SPEED_SLOW:
+      return _("menu.options.speed.slow");
+    case SPEED_REAL:
+      return _("menu.options.speed.real");
+    case SPEED_FAST:
+    default:
+      return _("menu.options.speed.fast");
   }
 }
 

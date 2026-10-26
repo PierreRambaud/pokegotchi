@@ -43,6 +43,7 @@ static void slider_set_brightness_event_cb(lv_event_t*);
 static void trainercard_event_handler(lv_event_t*);
 static void set_clock_event_handler(lv_event_t*);
 static void choice_speed_event_cb(lv_event_t*);
+static void sound_switch_event_cb(lv_event_t*);
 
 struct event_choice_game_data {
   lv_obj_t* selected_row;
@@ -147,7 +148,7 @@ void GameMenu::display_options(void) {
   lv_style_set_text_color(&style_default_text, lv_color_white());
 
   static int32_t options_grid_col_dsc[] = {10, LV_GRID_FR(1), LV_GRID_FR(1), 30, LV_GRID_TEMPLATE_LAST};
-  static int32_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, 24, 36, 24, 44, LV_GRID_TEMPLATE_LAST};
+  static int32_t options_grid_row_dsc[] = {30, 20, 30, 20, 20, 30, 40, 24, 36, 24, 44, LV_GRID_TEMPLATE_LAST};
 
   lv_obj_set_grid_dsc_array(_menu_child_screen, options_grid_col_dsc, options_grid_row_dsc);
 
@@ -198,27 +199,42 @@ void GameMenu::display_options(void) {
   lv_image_set_src(_ball_image, balls_choice_images[Game::getInstance()->get_options()->ball]);
   lv_obj_set_grid_cell(_ball_image, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_START, 5, 1);
 
+  // Sound effects on or off
+  lv_obj_t* sound_label = lv_label_create(_menu_child_screen);
+  lv_label_set_text(sound_label, _("menu.options.sound"));
+  lv_obj_set_grid_cell(sound_label, LV_GRID_ALIGN_START, 1, 1, LV_GRID_ALIGN_CENTER, 6, 1);
+  lv_obj_add_style(sound_label, &style_default_text, 0);
+
+  lv_obj_t* sound_switch = lv_switch_create(_menu_child_screen);
+  if (Game::getInstance()->get_options()->sound) {
+    lv_obj_add_state(sound_switch, LV_STATE_CHECKED);
+  }
+  lv_obj_set_grid_cell(sound_switch, LV_GRID_ALIGN_START, 2, 1, LV_GRID_ALIGN_CENTER, 6, 1);
+  lv_obj_add_event_cb(sound_switch, sound_switch_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
+
   // Speed of the days of the Pokemon
   Pokemon* p = Pokemon::getInstance();
   lv_obj_t* speed_label = lv_label_create(_menu_child_screen);
   lv_label_set_text(speed_label, _("menu.options.speed"));
-  lv_obj_set_grid_cell(speed_label, LV_GRID_ALIGN_START, 1, 2, LV_GRID_ALIGN_END, 6, 1);
+  lv_obj_set_grid_cell(speed_label, LV_GRID_ALIGN_START, 1, 2, LV_GRID_ALIGN_END, 7, 1);
   lv_obj_add_style(speed_label, &style_default_text, 0);
 
   lv_obj_t* speed_dropdown = lv_dropdown_create(_menu_child_screen);
   lv_dropdown_clear_options(speed_dropdown);
-  lv_dropdown_add_option(speed_dropdown, _("menu.options.speed.fast"), SPEED_FAST);
-  lv_dropdown_add_option(speed_dropdown, _("menu.options.speed.normal"), SPEED_NORMAL);
-  lv_dropdown_add_option(speed_dropdown, _("menu.options.speed.real"), SPEED_REAL);
-  lv_dropdown_set_selected(speed_dropdown, p->get_speed());
+  for (uint8_t i = 0; i < SPEED_COUNT; i++) {
+    lv_dropdown_add_option(speed_dropdown, Pokemon::get_speed_name(SPEEDS_MENU[i]), i);
+    if (SPEEDS_MENU[i] == p->get_speed()) {
+      lv_dropdown_set_selected(speed_dropdown, i);
+    }
+  }
   lv_obj_set_width(speed_dropdown, LV_PCT(100));
-  lv_obj_set_grid_cell(speed_dropdown, LV_GRID_ALIGN_STRETCH, 1, 2, LV_GRID_ALIGN_CENTER, 7, 1);
+  lv_obj_set_grid_cell(speed_dropdown, LV_GRID_ALIGN_STRETCH, 1, 2, LV_GRID_ALIGN_CENTER, 8, 1);
   lv_obj_add_event_cb(speed_dropdown, choice_speed_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
 
   // Clock: the day and night of the Pokemon follow it
   lv_obj_t* clock_label = lv_label_create(_menu_child_screen);
   lv_label_set_text(clock_label, _("menu.options.clock"));
-  lv_obj_set_grid_cell(clock_label, LV_GRID_ALIGN_START, 1, 2, LV_GRID_ALIGN_END, 8, 1);
+  lv_obj_set_grid_cell(clock_label, LV_GRID_ALIGN_START, 1, 2, LV_GRID_ALIGN_END, 9, 1);
   lv_obj_add_style(clock_label, &style_default_text, 0);
 
   lv_obj_t* clock_row = lv_obj_create(_menu_child_screen);
@@ -227,7 +243,7 @@ void GameMenu::display_options(void) {
   lv_obj_set_flex_flow(clock_row, LV_FLEX_FLOW_ROW);
   lv_obj_set_flex_align(clock_row, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
   lv_obj_set_style_pad_column(clock_row, 6, 0);
-  lv_obj_set_grid_cell(clock_row, LV_GRID_ALIGN_STRETCH, 1, 2, LV_GRID_ALIGN_CENTER, 9, 1);
+  lv_obj_set_grid_cell(clock_row, LV_GRID_ALIGN_STRETCH, 1, 2, LV_GRID_ALIGN_CENTER, 10, 1);
 
   static char hours[24 * 3];
   static char minutes[60 * 3];
@@ -526,9 +542,17 @@ static void run_game_event_handler(lv_event_t* e) {
   GameSwitcher::Runner::getInstance()->request_switch(game_number);
 }
 
+static void sound_switch_event_cb(lv_event_t* e) {
+  bool enabled = lv_obj_has_state(lv_event_get_target_obj(e), LV_STATE_CHECKED);
+  Game::getInstance()->get_options()->sound = enabled;
+  hal_set_sound(enabled);
+  // A little beep to hear it is back
+  hal_beep(2000, 50);
+}
+
 static void choice_speed_event_cb(lv_event_t* e) {
   lv_obj_t* dropdown = lv_event_get_target_obj(e);
-  Pokemon::getInstance()->set_speed((TimeSpeed)lv_dropdown_get_selected(dropdown));
+  Pokemon::getInstance()->set_speed(SPEEDS_MENU[lv_dropdown_get_selected(dropdown)]);
 }
 
 static void set_clock_event_handler(lv_event_t* e) {
