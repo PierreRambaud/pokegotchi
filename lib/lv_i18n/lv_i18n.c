@@ -88,9 +88,7 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"pokemon.flareon.name", "Flareon"},
     {"home.start.choice", "Choose wisely"},
     {"actions.menu.clean", "Clean"},
-    {"game.draw.color", "Color"},
-    {"game.draw.size", "Size %d"},
-    {"game.draw.clear", "Clear"},
+    {"game.draw.size", "Brush size %d"},
     {"game.bird.highscore", "NEW RECORD!"},
     {"game.bird.gameover", "GAME OVER"},
     {"game.bird.score", "Score:"},
@@ -131,7 +129,6 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"game.sky.invert.on", "Up/down inverted (tap to change)"},
     {"game.sky.invert.off", "Up/down normal (tap to change)"},
     {"game.minigame.back", "C: back to your Pokemon"},
-    {"game.draw.clear_back", "Clear (hold: back)"},
     {"game.sky.back", "Hold B: back to your Pokemon"},
     {"pokemon.espeon.name", "Espeon"},
     {"pokemon.umbreon.name", "Umbreon"},
@@ -181,6 +178,7 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"game.bird.medal.bronze", "Bronze"},
     {"game.bird.medal.silver", "Silver"},
     {"game.bird.medal.gold", "Gold"},
+    {"game.draw.help", "Draw with your finger! Pick a color, the rainbow, the eraser or the stamps below.\nA: undo  B: size  C: clear  (hold C: back)"},
     {NULL, NULL} // End mark
 };
 
@@ -274,9 +272,7 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"pokemon.flareon.name", "Pyroli"},
     {"home.start.choice", "Choisissez judicieusement"},
     {"actions.menu.clean", "Nettoyer"},
-    {"game.draw.color", "Couleur"},
-    {"game.draw.size", "Taille %d"},
-    {"game.draw.clear", "Effacer"},
+    {"game.draw.size", "Taille du pinceau %d"},
     {"game.bird.highscore", "NOUVEAU RECORD !"},
     {"game.bird.gameover", "FIN DE PARTIE"},
     {"game.bird.score", "Score:"},
@@ -317,7 +313,6 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"game.sky.invert.on", "Haut/bas inverses (toucher pour changer)"},
     {"game.sky.invert.off", "Haut/bas normal (toucher pour changer)"},
     {"game.minigame.back", "C : retour au Pokemon"},
-    {"game.draw.clear_back", "Effacer (maintenir : retour)"},
     {"game.sky.back", "Maintenir B : retour au Pokemon"},
     {"pokemon.espeon.name", "Mentali"},
     {"pokemon.umbreon.name", "Noctali"},
@@ -367,6 +362,7 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"game.bird.medal.bronze", "Bronze"},
     {"game.bird.medal.silver", "Argent"},
     {"game.bird.medal.gold", "Or"},
+    {"game.draw.help", "Dessine avec ton doigt ! Choisis une couleur, l'arc-en-ciel, la gomme ou les tampons en bas.\nA : annuler  B : taille  C : effacer  (maintenir C : retour)"},
     {NULL, NULL} // End mark
 };
 

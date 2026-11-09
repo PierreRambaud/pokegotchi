@@ -3,9 +3,9 @@
 #include "Pokegotchi.h"
 
 #include "FloppyBird.h"
+#include "DrawingBoard.h"
 
 #ifdef POKEGOTCHI_INCLUDE_GAMES
-#include "DrawingBoard.h"
 #include "SkyRace.h"
 #endif
 
@@ -31,10 +31,10 @@ void Runner::switch_game(int8_t game) {
     case GAME_FLOPPYBIRD:
       _game_instance = new FloppyBird::Runner();
       break;
-#ifdef POKEGOTCHI_INCLUDE_GAMES
     case GAME_DRAWING_BOARD:
       _game_instance = new DrawingBoard::Runner();
       break;
+#ifdef POKEGOTCHI_INCLUDE_GAMES
     case GAME_SKYRACE:
       _game_instance = new SkyRace::Runner();
       break;

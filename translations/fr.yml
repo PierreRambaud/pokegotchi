@@ -83,9 +83,7 @@ fr:
   pokemon.flareon.name: Pyroli
   home.start.choice: Choisissez judicieusement
   actions.menu.clean: Nettoyer
-  game.draw.color: Couleur
-  game.draw.size: Taille %d
-  game.draw.clear: Effacer
+  game.draw.size: "Taille du pinceau %d"
   game.bird.highscore: "NOUVEAU RECORD !"
   game.bird.gameover: FIN DE PARTIE
   game.bird.score: 'Score:'
@@ -126,7 +124,6 @@ fr:
   game.sky.invert.on: 'Haut/bas inverses (toucher pour changer)'
   game.sky.invert.off: 'Haut/bas normal (toucher pour changer)'
   game.minigame.back: "C : retour au Pokemon"
-  game.draw.clear_back: "Effacer (maintenir : retour)"
   game.sky.back: "Maintenir B : retour au Pokemon"
   pokemon.espeon.name: "Mentali"
   pokemon.umbreon.name: "Noctali"
@@ -176,3 +173,4 @@ fr:
   game.bird.medal.bronze: "Bronze"
   game.bird.medal.silver: "Argent"
   game.bird.medal.gold: "Or"
+  game.draw.help: "Dessine avec ton doigt ! Choisis une couleur, l'arc-en-ciel, la gomme ou les tampons en bas.\nA : annuler  B : taille  C : effacer  (maintenir C : retour)"

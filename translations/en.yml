@@ -82,9 +82,7 @@ en:
   pokemon.flareon.name: Flareon
   home.start.choice: Choose wisely
   actions.menu.clean: Clean
-  game.draw.color: Color
-  game.draw.size: Size %d
-  game.draw.clear: Clear
+  game.draw.size: "Brush size %d"
   game.bird.highscore: "NEW RECORD!"
   game.bird.gameover: GAME OVER
   game.bird.score: 'Score:'
@@ -125,7 +123,6 @@ en:
   game.sky.invert.on: 'Up/down inverted (tap to change)'
   game.sky.invert.off: 'Up/down normal (tap to change)'
   game.minigame.back: "C: back to your Pokemon"
-  game.draw.clear_back: "Clear (hold: back)"
   game.sky.back: "Hold B: back to your Pokemon"
   pokemon.espeon.name: "Espeon"
   pokemon.umbreon.name: "Umbreon"
@@ -175,3 +172,4 @@ en:
   game.bird.medal.bronze: "Bronze"
   game.bird.medal.silver: "Silver"
   game.bird.medal.gold: "Gold"
+  game.draw.help: "Draw with your finger! Pick a color, the rainbow, the eraser or the stamps below.\nA: undo  B: size  C: clear  (hold C: back)"
