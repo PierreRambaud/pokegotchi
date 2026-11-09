@@ -85,11 +85,9 @@ en:
   game.draw.color: Color
   game.draw.size: Size %d
   game.draw.clear: Clear
-  game.bird.start: Press Button B to start
-  game.bird.highscore: HIGHSCORE
+  game.bird.highscore: "NEW RECORD!"
   game.bird.gameover: GAME OVER
   game.bird.score: 'Score:'
-  game.bird.restart: Press Button B
   game.bird.maxscore: 'Max Score:'
   game.save.create.button: Create
   game.save.replace.button: Replace
@@ -172,3 +170,8 @@ en:
   menu.options.sound: "Sound effects"
   home.speed.title: "How fast do the days go by?"
   menu.options.speed.slow: "Slow (1 day = 4 hours)"
+  game.bird.ready: "Tap the screen or press B to fly!"
+  game.bird.retry: "Tap or B: again  -  C: back"
+  game.bird.medal.bronze: "Bronze"
+  game.bird.medal.silver: "Silver"
+  game.bird.medal.gold: "Gold"

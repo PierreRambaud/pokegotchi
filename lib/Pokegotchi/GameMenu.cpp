@@ -65,10 +65,9 @@ GameMenu::GameMenu(Menu* menu) {
   lv_obj_t* options_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_options, &menu_options_pressed, _("menu.options"));
   lv_obj_add_event_cb(options_button, open_options_event_handler, LV_EVENT_CLICKED, NULL);
 
-#ifdef POKEGOTCHI_INCLUDE_GAMES
+  // Floppy Bird runs everywhere, the other games only on the device
   lv_obj_t* trainercard_button = lv_menu_button_create(_menu->get_menu_screen(), &menu_trainercard, &menu_trainercard_pressed, _("menu.games"));
   lv_obj_add_event_cb(trainercard_button, trainercard_event_handler, LV_EVENT_CLICKED, NULL);
-#endif
 
   serial_printf("GameMenu", "Buttons for menu created");
 
@@ -307,17 +306,20 @@ void GameMenu::display_games(void) {
 
   lv_obj_add_style(_menu_child_screen, &flex_style, 0);
 
-  static int8_t game_drawingboard = GAME_DRAWING_BOARD;
-  lv_obj_t* draw_button = lv_menu_button_create(_menu_child_screen, &menu_game_draw, &menu_game_draw_pressed, _("menu.game.draw"));
-  lv_obj_add_event_cb(draw_button, run_game_event_handler, LV_EVENT_CLICKED, &game_drawingboard);
-
   static int8_t game_floppybird = GAME_FLOPPYBIRD;
   lv_obj_t* bird_button = lv_menu_button_create(_menu_child_screen, &menu_game_bird, &menu_game_bird_pressed, _("menu.game.bird"));
   lv_obj_add_event_cb(bird_button, run_game_event_handler, LV_EVENT_CLICKED, &game_floppybird);
 
+#ifdef POKEGOTCHI_INCLUDE_GAMES
+  // These ones draw directly on the screen of the device
+  static int8_t game_drawingboard = GAME_DRAWING_BOARD;
+  lv_obj_t* draw_button = lv_menu_button_create(_menu_child_screen, &menu_game_draw, &menu_game_draw_pressed, _("menu.game.draw"));
+  lv_obj_add_event_cb(draw_button, run_game_event_handler, LV_EVENT_CLICKED, &game_drawingboard);
+
   static int8_t game_skyrace = GAME_SKYRACE;
   lv_obj_t* sky_button = lv_menu_button_create(_menu_child_screen, &menu_game_sky, &menu_game_sky_pressed, _("menu.game.sky"));
   lv_obj_add_event_cb(sky_button, run_game_event_handler, LV_EVENT_CLICKED, &game_skyrace);
+#endif
 }
 
 void GameMenu::display_saves(void) {

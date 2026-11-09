@@ -3,6 +3,7 @@
 #include "utils_hal.h"
 #include "Calendar.h"
 #include "Motion.h"
+#include "Preferences.h"
 
 // RTC time (local time, stored as if it was UTC) minus the uptime
 static uint32_t clock_offset = 0;
@@ -106,3 +107,16 @@ bool hal_shake_detected(void) { return motion.take_shake(); }
 uint16_t hal_take_steps(void) { return motion.take_steps(); }
 
 bool hal_user_activity(void) { return M5.Touch.getCount() > 0 || M5.BtnA.isPressed() || M5.BtnB.isPressed() || M5.BtnC.isPressed(); }
+
+static Preferences* settings(void) {
+  static Preferences* preferences = nullptr;
+  if (preferences == nullptr) {
+    preferences = new Preferences();
+    preferences->begin("pokegotchi", false);
+  }
+  return preferences;
+}
+
+int32_t hal_settings_get(const char* key, int32_t default_value) { return settings()->getInt(key, default_value); }
+
+void hal_settings_set(const char* key, int32_t value) { settings()->putInt(key, value); }

@@ -91,11 +91,9 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"game.draw.color", "Color"},
     {"game.draw.size", "Size %d"},
     {"game.draw.clear", "Clear"},
-    {"game.bird.start", "Press Button B to start"},
-    {"game.bird.highscore", "HIGHSCORE"},
+    {"game.bird.highscore", "NEW RECORD!"},
     {"game.bird.gameover", "GAME OVER"},
     {"game.bird.score", "Score:"},
-    {"game.bird.restart", "Press Button B"},
     {"game.bird.maxscore", "Max Score:"},
     {"game.save.create.button", "Create"},
     {"game.save.replace.button", "Replace"},
@@ -178,6 +176,11 @@ static lv_i18n_phrase_t en_singulars[] = {
     {"menu.options.sound", "Sound effects"},
     {"home.speed.title", "How fast do the days go by?"},
     {"menu.options.speed.slow", "Slow (1 day = 4 hours)"},
+    {"game.bird.ready", "Tap the screen or press B to fly!"},
+    {"game.bird.retry", "Tap or B: again  -  C: back"},
+    {"game.bird.medal.bronze", "Bronze"},
+    {"game.bird.medal.silver", "Silver"},
+    {"game.bird.medal.gold", "Gold"},
     {NULL, NULL} // End mark
 };
 
@@ -274,11 +277,9 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"game.draw.color", "Couleur"},
     {"game.draw.size", "Taille %d"},
     {"game.draw.clear", "Effacer"},
-    {"game.bird.start", "Appuyer sur le bouton B"},
-    {"game.bird.highscore", "MEILLEUR SCORE"},
+    {"game.bird.highscore", "NOUVEAU RECORD !"},
     {"game.bird.gameover", "FIN DE PARTIE"},
     {"game.bird.score", "Score:"},
-    {"game.bird.restart", "Appuyer sur le bouton B"},
     {"game.bird.maxscore", "Score max:"},
     {"game.save.create.button", "Créer"},
     {"game.save.replace.button", "Remplacer"},
@@ -361,6 +362,11 @@ static lv_i18n_phrase_t fr_singulars[] = {
     {"menu.options.sound", "Effets sonores"},
     {"home.speed.title", "À quelle vitesse passent les journées ?"},
     {"menu.options.speed.slow", "Lente (1 jour = 4 heures)"},
+    {"game.bird.ready", "Touche l'écran ou appuie sur B pour voler !"},
+    {"game.bird.retry", "Touche ou B : rejouer  -  C : retour"},
+    {"game.bird.medal.bronze", "Bronze"},
+    {"game.bird.medal.silver", "Argent"},
+    {"game.bird.medal.gold", "Or"},
     {NULL, NULL} // End mark
 };
 

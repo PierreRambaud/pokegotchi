@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <map>
+#include <string>
 #include "utils_hal.h"
 #include "SDL2/SDL.h"
 
@@ -74,3 +76,13 @@ uint16_t hal_take_steps(void) {
 }
 
 bool hal_user_activity(void) { return (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON_LMASK) != 0; }
+
+// The emulator keeps the settings in memory only
+static std::map<std::string, int32_t> settings;
+
+int32_t hal_settings_get(const char* key, int32_t default_value) {
+  auto value = settings.find(key);
+  return value == settings.end() ? default_value : value->second;
+}
+
+void hal_settings_set(const char* key, int32_t value) { settings[key] = value; }

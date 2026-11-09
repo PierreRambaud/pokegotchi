@@ -1,5 +1,6 @@
 #include "Utils.h"
 #include "Pokemon.h"
+#include "PetClock.h"
 
 using namespace Pokegotchi;
 
@@ -956,4 +957,9 @@ void Pokemon::save(JsonObject pokemon) {
   acc["dirty"] = _acc_dirty;
   acc["snack"] = _acc_snack;
   acc["potion"] = _acc_potion;
+}
+
+uint8_t Pokegotchi::pet_hour(void) {
+  Pokemon* p = Pokemon::getInstance();
+  return p != nullptr ? Pokemon::hour_of(p->get_game_time()) : 12;
 }

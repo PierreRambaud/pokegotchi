@@ -34,4 +34,8 @@ bool hal_shake_detected(void);
 uint16_t hal_take_steps(void);
 bool hal_user_activity(void);
 
+// Small persistent settings, like the best scores of the mini-games
+int32_t hal_settings_get(const char* key, int32_t default_value);
+void hal_settings_set(const char* key, int32_t value);
+
 #endif /*UTILS_HAL_H*/

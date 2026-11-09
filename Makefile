@@ -63,6 +63,9 @@ assets-object-stones:
 assets-emotes:
 	find assets_source/emotes/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB565A8 --ofmt=C -o src/assets/emotes/ {} \;
 
+assets-bird:
+	find assets_source/game/bird/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB565A8 --ofmt=C -o src/assets/game/ {} \;
+
 assets-egg:
 	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB565A8 --ofmt=C -o src/assets/game/ assets_source/game/game_egg.png
 

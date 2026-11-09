@@ -2,8 +2,9 @@
 #include "lv_i18n.h"
 #include "Pokegotchi.h"
 
-#ifdef POKEGOTCHI_INCLUDE_GAMES
 #include "FloppyBird.h"
+
+#ifdef POKEGOTCHI_INCLUDE_GAMES
 #include "DrawingBoard.h"
 #include "SkyRace.h"
 #endif
@@ -27,10 +28,10 @@ void Runner::switch_game(int8_t game) {
   }
 
   switch (game) {
-#ifdef POKEGOTCHI_INCLUDE_GAMES
     case GAME_FLOPPYBIRD:
       _game_instance = new FloppyBird::Runner();
       break;
+#ifdef POKEGOTCHI_INCLUDE_GAMES
     case GAME_DRAWING_BOARD:
       _game_instance = new DrawingBoard::Runner();
       break;

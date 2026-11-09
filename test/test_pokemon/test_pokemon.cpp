@@ -3,6 +3,7 @@
 #include <unity.h>
 #include <stdlib.h>
 #include "Pokemon.h"
+#include "PetClock.h"
 
 using namespace Pokegotchi;
 
@@ -396,6 +397,19 @@ void test_back_to_the_real_clock(void) {
   TEST_ASSERT_EQUAL(at(0, 9) + 10, p.get_game_time());
 }
 
+void test_pet_hour_for_the_mini_games(void) {
+  Pokemon::setInstance(nullptr);
+  TEST_ASSERT_EQUAL(12, pet_hour());
+
+  Pokemon p(POKEMON_PICHU);
+  p.update(at(0, 22));
+  Pokemon::setInstance(&p);
+  TEST_ASSERT_EQUAL(HOUR_GAME_START, pet_hour());
+  p.set_time_of_day(19, 30);
+  TEST_ASSERT_EQUAL(19, pet_hour());
+  Pokemon::setInstance(nullptr);
+}
+
 int main(int argc, char** argv) {
   UNITY_BEGIN();
   RUN_TEST(test_egg_hatches_after_5_minutes);
@@ -419,5 +433,6 @@ int main(int argc, char** argv) {
   RUN_TEST(test_day_at_normal_speed);
   RUN_TEST(test_day_at_fast_speed);
   RUN_TEST(test_back_to_the_real_clock);
+  RUN_TEST(test_pet_hour_for_the_mini_games);
   return UNITY_END();
 }
