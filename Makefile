@@ -66,6 +66,9 @@ assets-emotes:
 assets-bird:
 	find assets_source/game/bird/*.png -type f -exec .pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB565A8 --ofmt=C -o src/assets/game/ {} \;
 
+assets-pokemon:
+	support/pokemon_gif_to_c.py
+
 assets-egg:
 	.pio/libdeps/m5stack-core2/lvgl/scripts/LVGLImage.py --cf=RGB565A8 --ofmt=C -o src/assets/game/ assets_source/game/game_egg.png
 
