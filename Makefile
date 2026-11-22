@@ -3,18 +3,20 @@ SRC_DIRS := lib hal src/main.cpp
 SRC_FILES := $(shell find $(SRC_DIRS) -name "*.cpp" -o -name "*.h")
 CLANG_FORMAT := clang-format
 DEFAULT_ENV=$(if $(filter-out $@,$(MAKECMDGOALS)), -e $(filter-out $@,$(MAKECMDGOALS)), -e m5stack-core2)
+# Language of the build, e.g. make upload LOCALE=fr (default: platformio.ini)
+LOCALE_FLAGS=$(if $(LOCALE),PLATFORMIO_BUILD_FLAGS='-D POKEGOTCHI_LOCALE=\"$(LOCALE)\"' ,)
 
 format: $(SRC_FILES)
 	$(CLANG_FORMAT) -i -style=file $^
 
 build:
-	pio run${DEFAULT_ENV}
+	$(LOCALE_FLAGS)pio run${DEFAULT_ENV}
 
 monitor:
 	pio device monitor
 
 upload:
-	pio run -t upload${DEFAULT_ENV}
+	$(LOCALE_FLAGS)pio run -t upload${DEFAULT_ENV}
 
 uploadfs:
 	pio run -t uploadfs${DEFAULT_ENV}

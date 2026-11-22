@@ -15,7 +15,13 @@ Runner* Runner::_instance = nullptr;
 
 Runner::Runner(void) {
   lv_i18n_init(lv_i18n_language_pack);
+  // The language can be chosen at build time without editing platformio.ini:
+  // make upload LOCALE=fr
+#ifdef POKEGOTCHI_LOCALE
+  lv_i18n_set_locale(POKEGOTCHI_LOCALE);
+#else
   lv_i18n_set_locale(POKEGOTCHI_DEFAULT_LOCALE);
+#endif
 
   _game_instance = new Pokegotchi::Runner(false);
 }
