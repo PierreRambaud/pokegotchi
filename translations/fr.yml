@@ -91,6 +91,8 @@ fr:
   game.save.create.button: Créer
   game.save.replace.button: Remplacer
   game.save.file.invalid: Nom de fichier invalide
+  game.save.keyboard.cancel: Annuler
+  game.save.keyboard.ok: OK
   game.error: Erreur
   menu.game.draw: Dessin
   menu.game.bird: Floppy Bird

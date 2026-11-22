@@ -44,6 +44,12 @@ static void trainercard_event_handler(lv_event_t*);
 static void set_clock_event_handler(lv_event_t*);
 static void choice_speed_event_cb(lv_event_t*);
 static void sound_switch_event_cb(lv_event_t*);
+static void keyboard_event_cb(lv_event_t*);
+
+#define KEYBOARD_DELETE "<-"
+#define KEYBOARD_CANCEL_INDEX 43
+#define KEYBOARD_OK_INDEX 44
+#define SAVE_NAME_MAX_LENGTH 20
 
 struct event_choice_game_data {
   lv_obj_t* selected_row;
@@ -410,6 +416,7 @@ static void game_new_save_event_handler(lv_event_t* e) {
 
   lv_obj_t* keyboard_textarea = lv_textarea_create(screen);
   lv_textarea_set_one_line(keyboard_textarea, true);
+  lv_textarea_set_max_length(keyboard_textarea, SAVE_NAME_MAX_LENGTH);
   lv_obj_align(keyboard_textarea, LV_ALIGN_TOP_MID, 0, 10);
   lv_obj_add_state(keyboard_textarea, LV_STATE_FOCUSED);
   lv_obj_align(keyboard_textarea, LV_ALIGN_TOP_MID, 0, 0);
@@ -418,21 +425,63 @@ static void game_new_save_event_handler(lv_event_t* e) {
   lv_obj_add_event_cb(keyboard, create_new_save_event_handler, LV_EVENT_READY, keyboard_textarea);
   lv_obj_add_event_cb(keyboard, cancel_new_save_event_handler, LV_EVENT_CANCEL, NULL);
 
-  static const char* kb_map[] = {"a", "z", "e",  "r", "t", "y", "u", "i", "o", "p",  LV_SYMBOL_BACKSPACE, "\n",         "q", "s", "d", "f", "g", "j", "k",
-                                 "l", "m", "\n", "w", "x", "c", "v", "b", "n", "\n", LV_SYMBOL_CLOSE,     LV_SYMBOL_OK, NULL};
+  // The Pokemon font has no LVGL symbols, so the special keys are written in
+  // text and handled by keyboard_event_cb instead of the default handler
+  static const char* kb_map[] = {"1",  "2",  "3", "4", "5", "6", "7", "8", "9",
+                                 "0",  "\n",  //
+                                 "a",  "z",  "e", "r", "t", "y", "u", "i", "o",
+                                 "p",  "\n",  //
+                                 "q",  "s",  "d", "f", "g", "h", "j", "k", "l",
+                                 "m",  "\n",  //
+                                 "w",  "x",  "c", "v", "b", "n", "-", "_", KEYBOARD_DELETE,
+                                 "\n",  //
+                                 NULL, NULL, ""};
+  kb_map[KEYBOARD_CANCEL_INDEX] = _("game.save.keyboard.cancel");
+  kb_map[KEYBOARD_OK_INDEX] = _("game.save.keyboard.ok");
 
-  /*Set the relative width of the buttons and other controls*/
+  // Relative widths: the delete key and the last row are wider
+  // clang-format off
+  static const lv_buttonmatrix_ctrl_t W1 = LV_BUTTONMATRIX_CTRL_WIDTH_1;
+  static const lv_buttonmatrix_ctrl_t W2 = LV_BUTTONMATRIX_CTRL_WIDTH_2;
+  static const lv_buttonmatrix_ctrl_t ACTION = (lv_buttonmatrix_ctrl_t)(LV_BUTTONMATRIX_CTRL_WIDTH_1 | LV_BUTTONMATRIX_CTRL_NO_REPEAT);
   static const lv_buttonmatrix_ctrl_t kb_ctrl[] = {
-      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
-      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_HIDDEN,    LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
-      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
-      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_HIDDEN,    LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
-      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_CHECKABLE,
-      LV_BUTTONMATRIX_CTRL_CHECKABLE, LV_BUTTONMATRIX_CTRL_NO_REPEAT, LV_BUTTONMATRIX_CTRL_HIDDEN,    LV_BUTTONMATRIX_CTRL_NO_REPEAT};
+      W1, W1, W1, W1, W1, W1, W1, W1, W1, W1,
+      W1, W1, W1, W1, W1, W1, W1, W1, W1, W1,
+      W1, W1, W1, W1, W1, W1, W1, W1, W1, W1,
+      W1, W1, W1, W1, W1, W1, W1, W1, W2,
+      ACTION, ACTION,
+  };
+  // clang-format on
 
   lv_keyboard_set_map(keyboard, LV_KEYBOARD_MODE_USER_1, kb_map, kb_ctrl);
   lv_keyboard_set_mode(keyboard, LV_KEYBOARD_MODE_USER_1);
   lv_keyboard_set_textarea(keyboard, keyboard_textarea);
+  lv_obj_remove_event_cb(keyboard, lv_keyboard_def_event_cb);
+  lv_obj_add_event_cb(keyboard, keyboard_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
+}
+
+static void keyboard_event_cb(lv_event_t* e) {
+  lv_obj_t* keyboard = lv_event_get_target_obj(e);
+  lv_obj_t* textarea = lv_keyboard_get_textarea(keyboard);
+  uint32_t button = lv_buttonmatrix_get_selected_button(keyboard);
+  if (textarea == NULL || button == LV_BUTTONMATRIX_BUTTON_NONE) {
+    return;
+  }
+
+  const char* text = lv_buttonmatrix_get_button_text(keyboard, button);
+  if (text == NULL) {
+    return;
+  }
+
+  if (lv_strcmp(text, KEYBOARD_DELETE) == 0) {
+    lv_textarea_delete_char(textarea);
+  } else if (lv_strcmp(text, _("game.save.keyboard.cancel")) == 0) {
+    lv_obj_send_event(keyboard, LV_EVENT_CANCEL, NULL);
+  } else if (lv_strcmp(text, _("game.save.keyboard.ok")) == 0) {
+    lv_obj_send_event(keyboard, LV_EVENT_READY, NULL);
+  } else {
+    lv_textarea_add_text(textarea, text);
+  }
 }
 
 static void cancel_new_save_event_handler(lv_event_t* e) { GameMenu::getInstance()->toggle(); }
